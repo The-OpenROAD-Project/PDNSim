@@ -31,6 +31,8 @@
 *.out
 *.app
 
+# Temporary files
+*.sw*
 
 # Build directory
 build
