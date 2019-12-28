@@ -934,7 +934,7 @@ int main() {
     
     //dbDatabase* db = import_db("/home/sachin00/chhab011/PDNA/aes_pdn.db");
     //dbDatabase* db = import_db("/project/parhi-group00/unnik005/temp/PDNA/aes_pdn.db");
-    dbDatabase* db = import_db("/project/parhi-group00/unnik005/temp/PDN.db");
+    dbDatabase* db = import_db("/home/sachin00/chhab011/PDN.db");
     irsolver::IRSolver* irsolve_h = new irsolver::IRSolver(db);
     gmat_obj = irsolve_h->getGMat();
     //gmat_obj->print();
