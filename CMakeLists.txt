@@ -8,14 +8,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Disable compiler specific extensions like gnu++11.
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(USE_CIMG_LIB "Use CImg drawing library for image drawing" OFF)
-if( USE_CIMG_LIB )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -O3 -D_GLIBCXX_USE_CXX11_ABI=0")
-  set(CIMG_HOME ${PROJECT_SOURCE_DIR}/module/CImg)
-else()
-  add_definitions(-DDISABLE_CIMG_LIB=1)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -D_GLIBCXX_USE_CXX11_ABI=0")
-endif()
+#option(USE_CIMG_LIB "Use CImg drawing library for image drawing" OFF)
+#if( USE_CIMG_LIB )
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -O3 -D_GLIBCXX_USE_CXX11_ABI=0")
+#  set(CIMG_HOME ${PROJECT_SOURCE_DIR}/module/CImg)
+#else()
+#  add_definitions(-DDISABLE_CIMG_LIB=1)
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -D_GLIBCXX_USE_CXX11_ABI=0")
+#endif()
 
 # For Multithread
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
@@ -35,27 +35,36 @@ set(BUILD_TCL OFF)
 set(OPENDB_HOME
     ${PROJECT_SOURCE_DIR}/src/OpenDB
   )
+set(OPENSTA_HOME
+${PROJECT_SOURCE_DIR}/src/OpenSTA
+)
+set(SUPERLU_HOME
+${PROJECT_SOURCE_DIR}/modules/superlu
+)
+
 add_subdirectory(${OPENDB_HOME})
+#add_subdirectory(${OPENSTA_HOME})
+add_subdirectory(${SUPERLU_HOME})
 
 set(ENV{TYPE_CALL} library)
 
 
 ## configure settings
-find_package(TCL REQUIRED)
+#find_package(TCL REQUIRED)
 
 
 # for cimg
-if( USE_CIMG_LIB )
-  find_package(X11 REQUIRED)
-  find_package(JPEG REQUIRED)
-  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${X11_LIBRARIES} ${JPEG_LIBRARIES}")
-else()
-  find_package(X11)
-  find_package(JPEG)
-endif()
+#if( USE_CIMG_LIB )
+#  find_package(X11 REQUIRED)
+#  find_package(JPEG REQUIRED)
+#  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${X11_LIBRARIES} ${JPEG_LIBRARIES}")
+#else()
+#  find_package(X11)
+#  find_package(JPEG)
+#endif()
 
 
-find_package(Boost REQUIRED)
+#find_package(Boost REQUIRED)
 #find_package(Threads REQUIRED)
 
 # for multi threads
@@ -63,11 +72,14 @@ find_package(OpenMP)
 
 set (IRSOLVER_SRC 
   src/IRSolver.cpp
+#  src/getPower.cpp
   )
 
 
 set (IRSOLVER_HEADER
   src/IRSolver.hh
+#  src/getPower.h
+#  src/timing.h
 )
 
 set (IRSOLVER_SWIG_FILES
@@ -93,9 +105,9 @@ add_executable( irsolver
   ${IRSOLVER_SRC}
 )  
 
-add_dependencies( irsolver opendb )
+add_dependencies( irsolver opendb superlu )
 
-add_dependencies( irsolverlib opendb )
+add_dependencies( irsolverlib opendb superlu)
 
 ############################################################
 # include directories 
@@ -103,17 +115,49 @@ add_dependencies( irsolverlib opendb )
 target_include_directories( irsolver
   PUBLIC
   ${OPENDB_HOME}/include/opendb
+  ${SUPERLU_HOME}/SRC
+  ${SUPERLU_HOME}/CBLAS
+
+#  ${OPENSTA_HOME}/app
+#  ${OPENSTA_HOME}/dcalc
+#  ${OPENSTA_HOME}/graph
+#  ${OPENSTA_HOME}/liberty
+#  ${OPENSTA_HOME}/network
+#  ${OPENSTA_HOME}/parasitics
+#  ${OPENSTA_HOME}/sdc
+#  ${OPENSTA_HOME}/sdf
+#  ${OPENSTA_HOME}/search
+#  ${OPENSTA_HOME}/tcl
+#  ${OPENSTA_HOME}/util
+#  ${OPENSTA_HOME}/verilog
 )
 
 target_include_directories( irsolverlib 
   PUBLIC
   ${OPENDB_HOME}/include/opendb
+  ${SUPERLU_HOME}/SRC
+  ${SUPERLU_HOME}/CBLAS
+
+#  ${OPENSTA_HOME}/app
+#  ${OPENSTA_HOME}/dcalc
+#  ${OPENSTA_HOME}/graph
+#  ${OPENSTA_HOME}/liberty
+#  ${OPENSTA_HOME}/network
+#  ${OPENSTA_HOME}/parasitics
+#  ${OPENSTA_HOME}/sdc
+#  ${OPENSTA_HOME}/sdf
+#  ${OPENSTA_HOME}/search
+#  ${OPENSTA_HOME}/tcl
+#  ${OPENSTA_HOME}/util
+#  ${OPENSTA_HOME}/verilog
 )
 
 target_link_libraries( irsolver
   PUBLIC
+#  OpenSTA
   ${TCL_LIB}
   opendb
+	superlu
   )
 
 ############################################################
