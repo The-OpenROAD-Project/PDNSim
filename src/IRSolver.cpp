@@ -1,5 +1,4 @@
 #include <vector>
-<<<<<<< HEAD
 #include <math.h>
 #include <cmath>
 #include <iostream>
@@ -14,18 +13,6 @@
 
 #include "slu_ddefs.h"
 #include "db.h"
-=======
-#include "db.h"
-#include <math.h>
-#include <cmath>
-#include <iostream>
-#include <stdlib.h>
-#include <map>
-#include <fstream>
-#include <iomanip>
-
-#include "slu_ddefs.h"
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 
 
 using odb::dbDatabase;
@@ -49,10 +36,6 @@ namespace irsolver {
 typedef pair<int,int> BBox;
 typedef pair<int,int> NodeLoc;
 typedef int NodeIdx; //TODO temp as it interfaces with SUPERLU
-<<<<<<< HEAD
-=======
-//typedef vector<NodeLoc,double> C4Bump;
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 typedef pair<NodeIdx,NodeIdx> GMatLoc;
 typedef struct {
     NodeIdx num_rows;
@@ -96,11 +79,7 @@ public:
     NodeIdx getGLoc() {
         return m_node_loc;
     }
-<<<<<<< HEAD
     void setGLoc(NodeIdx t_loc) {
-=======
-    bool setGLoc(NodeIdx t_loc) {
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         m_node_loc =t_loc;
     }
     void print(){
@@ -151,13 +130,8 @@ typedef map<int,map<int,Node*>> NodeMap;
 class GMat
 {
 public:
-<<<<<<< HEAD
     GMat(int t_num_layers,int t_numC4)
         :m_num_layers(t_num_layers),m_layer_maps(t_num_layers+1,NodeMap()),m_numC4(t_numC4) //as it start from 0 and everywhere we use layer.
-=======
-    GMat(int t_num_layers)
-        :m_num_layers(t_num_layers),m_layer_maps(t_num_layers+1,NodeMap()) //as it start from 0 and everywhere we use layer.
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
     {
     }
     ~GMat()
@@ -221,11 +195,7 @@ public:
             }
         }
     }
-<<<<<<< HEAD
     void setNode(NodeIdx t_node_loc, Node* t_node) {
-=======
-    void setNode(NodeIdx t_node_loc, irsolver::Node* t_node) {
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         if( 0 <= t_node_loc && m_n_nodes > t_node_loc) {
             t_node->setGLoc(t_node_loc);
             m_G_mat_nodes[t_node_loc] = t_node;
@@ -290,11 +260,7 @@ public:
             }
         }
     }
-<<<<<<< HEAD
     void setConductance(Node* t_node1, Node* t_node2, double t_cond) {
-=======
-    void setConductance(irsolver::Node* t_node1, irsolver::Node* t_node2, double t_cond) {
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         //cout<<"1";
         //fflush(stdout);
         NodeIdx node1_r = t_node1->getGLoc();
@@ -321,91 +287,6 @@ public:
         }else{
             m_G_mat_dok.num_cols = m_n_nodes+m_numC4;
             m_G_mat_dok.num_rows = m_n_nodes+m_numC4;
-<<<<<<< HEAD
-=======
-        }
-    }
-    NodeIdx getNumNodes() {//debug
-        return m_n_nodes;
-    }
-    CscMatrix* getGMat() {//Nodes debug
-        return &m_G_mat_csc;
-    }
-    DokMatrix* getGMatDok() {//Nodes debug
-        return &m_G_mat_dok;
-    }
-
-    void generateStripeConductance(int t_l,dbTechLayerDir::Value layer_dir, int t_x_min, int t_x_max, int t_y_min, int t_y_max,double t_rho){
-        NodeMap &layer_map = m_layer_maps[t_l];
-        //cout<<"RHO "<<t_rho<<endl;
-        if(layer_dir == dbTechLayerDir::Value::HORIZONTAL){
-            NodeMap::iterator x_itr;
-            NodeMap::iterator x_prev;
-            int y_loc = (t_y_min+t_y_max)/2;
-            int i = 0;
-            for( x_itr=layer_map.lower_bound(t_x_min); x_itr->first <= t_x_max && x_itr!=layer_map.end(); ++x_itr){
-                if(i == 0 ){
-                    i=1;
-                } else {
-                    Node* node1 = (x_itr->second).at(y_loc);                    
-                    Node* node2 = (x_prev->second).at(y_loc);
-                    int width = t_y_max-t_y_min;
-                    int length = x_itr->first-x_prev->first;
-                    double cond = m_getConductivity(width,length,t_rho);
-                    //cout<<"layer hor "<<t_l<<" cond "<<cond<<endl;
-                    setConductance(node1,node2,cond);
-                }
-                x_prev = x_itr;
-            }            
-        } else {
-            int x_loc = (t_x_min+t_x_max)/2;
-            map<int,Node*> y_map = layer_map.at(x_loc);
-            map<int,Node*>::iterator y_itr;
-            map<int,Node*>::iterator y_prev;
-            int i = 0;
-            for( y_itr=y_map.lower_bound(t_y_min); y_itr->first <= t_y_max && y_itr!=y_map.end(); ++y_itr){
-                if(i == 0 ){
-                    i=1;
-                } else {
-                    Node* node1 = y_itr->second;                    
-                    Node* node2 = y_prev->second;                    
-                    int width = t_x_max-t_x_min;
-                    int length = y_itr->first-y_prev->first;
-                    double cond = m_getConductivity(width,length,t_rho);
-                    //cout<<"layer ver "<<t_l<<" cond "<<cond<<endl;
-                    setConductance(node1,node2,cond);
-                }
-                y_prev = y_itr;
-            }
-        }
-        
-    }
-    void addC4Bump(int t_loc,int t_C4Num){
-        m_setConductance(t_loc, t_C4Num+m_n_nodes,1);     
-        m_setConductance(t_C4Num+m_n_nodes,t_loc,1);     
-    }
-    void setNumC4Bumps(int t_numC4){
-        m_numC4 = t_numC4;
-    }
-    int getNumC4Bumps(){
-        return m_numC4;
-    }
-    void generateCSCMatrix(){
-        m_G_mat_csc.num_cols = m_G_mat_dok.num_cols; 
-        m_G_mat_csc.num_rows = m_G_mat_dok.num_rows; 
-        m_G_mat_csc.nnz = 0;
-
-        for(NodeIdx col = 0; col < m_G_mat_csc.num_cols; ++col){
-            m_G_mat_csc.col_ptr.push_back(m_G_mat_csc.nnz);
-            map<GMatLoc,double>::iterator it;
-            map<GMatLoc,double>::iterator it_lower = m_G_mat_dok.values.lower_bound(make_pair(col,0));    
-            map<GMatLoc,double>::iterator it_upper = m_G_mat_dok.values.upper_bound(make_pair(col,m_G_mat_csc.num_rows));    
-            for( it = it_lower; it != it_upper; ++it ) {
-                m_G_mat_csc.values.push_back( it->second ); //push back value
-                m_G_mat_csc.row_idx.push_back( (it->first).second); // push back row idx
-                m_G_mat_csc.nnz++;
-            }
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         }
         //m_G_mat.assign((m_n_nodes+m_numC4)*( m_n_nodes+m_numC4),0);
     }
@@ -507,16 +388,10 @@ private:
     int m_num_layers;
     DokMatrix m_G_mat_dok;
     CscMatrix m_G_mat_csc;
-<<<<<<< HEAD
     std::vector<Node*> m_G_mat_nodes;
     std::vector<NodeMap> m_layer_maps;
     int m_numC4{1}; 
     //vector<double> m_G_mat;
-=======
-    std::vector<irsolver::Node*> m_G_mat_nodes;
-    std::vector<NodeMap> m_layer_maps;
-    int m_numC4{1}; //TODO get from somewhere.
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 
     double m_getConductance(NodeIdx t_row, NodeIdx t_col) {
         if(m_G_mat_dok.num_cols<=t_col||m_G_mat_dok.num_rows<=t_row ){
@@ -538,41 +413,7 @@ private:
         }
         GMatLoc key = make_pair(t_col,t_row); 
         m_G_mat_dok.values[key] = t_cond;
-<<<<<<< HEAD
         //m_G_mat[( m_n_nodes+m_numC4)*t_col+t_row] =t_cond;
-=======
-    }
-
-    Node* m_nearestYNode(NodeMap::iterator x_itr,int t_y) {
-        map<int,Node*> &y_map = x_itr->second;
-        map<int,Node*>::iterator y_itr = y_map.lower_bound(t_y);
-        if(y_map.size() == 1 || y_itr==y_map.end() || y_itr==y_map.begin() ) {
-            if(y_map.size() == 1 ){
-                y_itr = y_map.begin();
-            } else if (y_itr==y_map.end()) {
-                y_itr = prev(y_itr);
-            } else {
-            }
-            return y_itr->second;
-        } else {
-            map<int,Node*>::iterator y_prev;
-            y_prev = prev(y_itr);
-            int dist1 = abs(y_prev->first - t_y);
-            int dist2 = abs(y_itr->first - t_y);
-            if(dist1<dist2) {
-                return y_prev->second;
-            } else {
-                return y_itr->second;
-            }
-        }
-    }
-    double m_getConductivity(double width,double length,double rho){
-        if (0>=length || 0>= width || 0>=rho) {
-            return 0.0;
-        } else {
-            return width/(rho*length);
-        }
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
     }
 
     Node* m_nearestYNode(NodeMap::iterator x_itr,int t_y) {
@@ -656,20 +497,12 @@ public:
      //constructor   
         m_db = t_db;
         m_readC4Data();
-<<<<<<< HEAD
 
-=======
-        //cout<<" c4 "<<endl;
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         m_createGmat();
         //cout<<" gmat "<<endl;
         m_createJ();
         //cout<<" J "<<endl;
-<<<<<<< HEAD
         m_addC4Bump();
-=======
-        addC4Bump();
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         //cout<<" bump "<<endl;
         m_Gmat->generateCSCMatrix();
     }
@@ -680,7 +513,6 @@ public:
     irsolver::GMat* getGMat() {
         return m_Gmat;
     }
-<<<<<<< HEAD
     vector<double> getJ(){
         return m_J;
     }
@@ -735,24 +567,11 @@ public:
         Destroy_CompCol_Matrix(&U);
         StatFree(&stat);
     }
-=======
-    void setNodeCurrent(){
-    }
-    void addC4Bump(){ //TODO temporary where to set it from? 
-        //nodes 1 5 9 13 m7 via nodes //temp at 9
-        m_Gmat -> addC4Bump(9,0); //add the 0th bump
-        m_J.push_back(1.1);//push back first vdd
-    }
-    vector<double> getJ(){
-        return m_J;
-    }
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 private:
     dbDatabase* m_db;
     GMat* m_Gmat;
     int m_node_density{2800};//TODO get from somehwere
     vector<double> m_J;
-<<<<<<< HEAD
     vector<tuple<int,int,int,double>> m_C4Bumps;
     vector<NodeIdx> m_C4GLoc;
 
@@ -763,15 +582,6 @@ private:
             m_Gmat -> addC4Bump(node_loc,it); //add the 0th bump
             m_J.push_back(voltage);//push back first vdd
         }
-=======
-//    C4Bump m_c4_bump;
-    
-    void m_readC4Data() {
-        
-    }
-    void m_createJ(){ //take current_map as an input? 
-        m_J.resize(m_Gmat->getNumNodes(),0);             
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
     }
 
     void m_readC4Data() {
@@ -926,10 +736,7 @@ private:
         //initialize G Matrix
         cout<<" number of nodes "<<m_Gmat->getNumNodes()<<endl;
         m_Gmat->initializeGmatDok();
-<<<<<<< HEAD
         //m_Gmat->print();
-=======
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
         for(vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {//only 1 is expected?
             //std::cout<<"Operating on VDD net"<<endl;
             dbNet* curDnet = *vIter;
@@ -996,12 +803,9 @@ private:
             //cout<<"added vdd"<<endl;
         }
     }
-<<<<<<< HEAD
 
     
 
-=======
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 };
 
 
@@ -1023,7 +827,6 @@ dbDatabase*  import_db(const char* dbLoc) {
     }
 
 
-<<<<<<< HEAD
 //void test_solving( irsolver::CscMatrix& t_G_mat,vector<double>& t_J) {
 //    SuperMatrix A, L, U, B;
 //    SuperLUStat_t stat;
@@ -1107,91 +910,6 @@ dbDatabase*  import_db(const char* dbLoc) {
 //    StatFree(&stat);
 //    cout<<"8 "<<endl;
 //}
-=======
-void test_solving( irsolver::CscMatrix& t_G_mat,vector<double>& t_J) {
-    SuperMatrix A, L, U, B;
-    SuperLUStat_t stat;
-    superlu_options_t options;
-    int nrhs = 1;
-    int m = t_G_mat.num_rows;
-    int n = t_G_mat.num_cols;
-    int info;
-    //cout<<"GMAT size "<<t_G_mat.size()<<endl;
-    
-    int      *perm_r; /* row permutations from partial pivoting */
-    int      *perm_c; /* column permutation vector */
-    double *rhs = &t_J[0];
-    double *end = rhs+m;
-    for(double *i = rhs; i!=end; ++i){
-        cout<<*i<<endl;
-    }
-    cout<<"size J"<<t_J.size()<<endl;
-    cout<<"1 ";
-    fflush(stdout);
-    //dCreate_Dense_Matrix(&A, m, n, G_mat, m, SLU_DN, SLU_D, SLU_GE);
-    //if ( !(rhs = doubleMalloc(m * nrhs)) ) ABORT("Malloc fails for rhs[].");
-    cout<<"2 ";
-    fflush(stdout);
-    dCreate_Dense_Matrix(&B, m, nrhs, rhs, m, SLU_DN, SLU_D, SLU_GE);
-    cout<<"3 ";
-    fflush(stdout);
-    dPrint_Dense_Matrix("B", &B);
-   
-    int nnz =  t_G_mat.nnz;
-    double* values = &t_G_mat.values[0];
-    int* row_idx = &t_G_mat.row_idx[0];
-    int* col_ptr = &t_G_mat.col_ptr[0];
-
-    dCreate_CompCol_Matrix(&A, m, n, nnz, values, row_idx, col_ptr, SLU_NC, SLU_D, SLU_GE);
-    if ( !(perm_r = intMalloc(m)) ) ABORT("Malloc fails for perm_r[].");
-    if ( !(perm_c = intMalloc(n)) ) ABORT("Malloc fails for perm_c[].");
-    /* Set the default input options. */
-    set_default_options(&options);
-    options.ColPerm = NATURAL;
-    cout<<"4 ";
-    fflush(stdout);
-
-    /* Initialize the statistics variables. */
-    StatInit(&stat);
-    cout<<"5 ";
-    fflush(stdout);
-    /* Solve the linear system. */
-    dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-    cout<<"6 ";
-    fflush(stdout);
-    
-    dPrint_CompCol_Matrix("A", &A);
-    //dPrint_CompCol_Matrix("U", &U);
-    //dPrint_SuperNode_Matrix("L", &L);
-    dPrint_Dense_Matrix("B", &B);
-    //print_int_vec("\nperm_r", m, perm_r);
-    cout<<"7 ";
-    fflush(stdout);
-    ofstream myfile;
-    myfile.open ("V_mat.csv");
-    DNformat     *Bstore = (DNformat *) B.Store;
-    register int i, j, lda = Bstore->lda;
-    double       *dp;
-    dp = (double *) Bstore->nzval;
-    for (j = 0; j < B.ncol; ++j) {
-        for (i = 0; i < B.nrow; ++i) 
-            myfile<<setprecision(10)<<dp[i + j*lda]<<",";
-        myfile<<"\n";
-    }
-    myfile.close();
-
-    /* De-allocate storage */
-    //SUPERLU_FREE (rhs);
-    SUPERLU_FREE (perm_r);
-    SUPERLU_FREE (perm_c);
-    Destroy_SuperMatrix_Store(&A);
-    Destroy_SuperMatrix_Store(&B);
-    Destroy_SuperNode_Matrix(&L);
-    Destroy_CompCol_Matrix(&U);
-    StatFree(&stat);
-    cout<<"8 "<<endl;
-}
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
 
 int main() {
     //vector<irsolver::Node*> test;
@@ -1220,16 +938,9 @@ int main() {
     irsolver::IRSolver* irsolve_h = new irsolver::IRSolver(db);
     gmat_obj = irsolve_h->getGMat();
     //gmat_obj->print();
-<<<<<<< HEAD
     //irsolver::CscMatrix& test_gmat = *(gmat_obj->getGMat());
     ofstream myfile;
     int vsize;
-=======
-    irsolver::CscMatrix& test_gmat = *(gmat_obj->getGMat());
-    ofstream myfile;
-    int vsize;
-    //TODO for debug write it from csc format or is it too big?
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
     //myfile.open ("G_mat.csv");
     //vsize = test_gmat.size();
     //for (int n=0; n<vsize; n++)
@@ -1250,11 +961,7 @@ int main() {
     }
 
     myfile.close();
-<<<<<<< HEAD
     irsolve_h->solve_ir();
-=======
-    test_solving(test_gmat,test_J);
->>>>>>> f2540afe42910a6530b1671bb32449f934d2271c
     return 1;
 
 }
