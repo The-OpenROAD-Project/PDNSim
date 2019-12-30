@@ -33,10 +33,10 @@ set(BUILD_PYTHON OFF)
 set(BUILD_TCL OFF)
 
 set(OPENDB_HOME
-    ${PROJECT_SOURCE_DIR}/src/OpenDB
+    ${PROJECT_SOURCE_DIR}/modules/OpenDB
   )
 set(OPENSTA_HOME
-${PROJECT_SOURCE_DIR}/src/OpenSTA
+${PROJECT_SOURCE_DIR}/modules/OpenSTA
 )
 set(SUPERLU_HOME
 ${PROJECT_SOURCE_DIR}/modules/superlu
@@ -80,7 +80,6 @@ set (IRSOLVER_SRC
 
 
 set (IRSOLVER_HEADER
-#  src/IRSolver.hh
   src/ir_solver.h
   src/node.h
   src/gmat.h
@@ -163,7 +162,7 @@ target_link_libraries( irsolver
 #  OpenSTA
   ${TCL_LIB}
   opendb
-	superlu
+  superlu
   )
 
 ############################################################
