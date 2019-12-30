@@ -1,4 +1,4 @@
-V_superlu = csvread("V_mat.csv");
-v_lower= reshape(V_superlu(196:1876),41,41);
+V_superlu = csvread("build/V_mat.csv");
+v_lower= reshape(V_superlu(7775:38377), 101,303);
 min(v_lower(:))
 surf(v_lower,'linestyle','none');

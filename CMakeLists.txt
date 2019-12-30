@@ -71,13 +71,19 @@ set(ENV{TYPE_CALL} library)
 find_package(OpenMP)
 
 set (IRSOLVER_SRC 
-  src/IRSolver.cpp
+  src/main.cpp
+  src/node.cpp
+  src/gmat.cpp
+  src/ir_solver.cpp
 #  src/getPower.cpp
   )
 
 
 set (IRSOLVER_HEADER
-  src/IRSolver.hh
+#  src/IRSolver.hh
+  src/ir_solver.h
+  src/node.h
+  src/gmat.h
 #  src/getPower.h
 #  src/timing.h
 )
