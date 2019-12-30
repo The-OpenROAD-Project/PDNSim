@@ -83,11 +83,13 @@ set (IRSOLVER_HEADER
   src/ir_solver.h
   src/node.h
   src/gmat.h
+  src/main.h
 #  src/getPower.h
 #  src/timing.h
 )
 
 set (IRSOLVER_SWIG_FILES
+src/ir_solver.i
 )
 
   
@@ -105,6 +107,13 @@ set_target_properties( irsolverlib
 ############################################################
 # Create an executable
 ############################################################
+add_custom_command(OUTPUT ${IRSOLVER_HOME}/src/irsolver_wrap.cpp
+  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o  ${IRSOLVER_HOME}/src/irsolver_wrap.cpp ${IRSOLVER_HOME}/src/irsolver.i   
+  WORKING_DIRECTORY ${IRSOLVER_HOME}
+  DEPENDS ${IRSOLVER_SWIG_FILES}
+)
+
+
 
 add_executable( irsolver
   ${IRSOLVER_SRC}

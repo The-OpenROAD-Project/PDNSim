@@ -1,28 +1,135 @@
-# PGA
+# OpenIRA
+[![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
+[![Download](https://img.shields.io/badge/Download-here-red)](https://github.com/VidyaChhabria/PDNA/archive/master.zip)
+[![Version](https://img.shields.io/badge/version-0.1-green)](https://github.com/VidyaChhabria/PDNA/tree/master)
+[![AskMe](https://img.shields.io/badge/ask-me-yellow)](https://github.com/VidyaChhabria/PDNA/issues)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-OpenPGA: Open-source static power-grid analyzer.
+OpenIRA: Open-source static power-grid IR analyzer
 
-Inputs
+<img align = "right" width="50%" src="doc/irmap.jpg">
 
-DEF : Placed and PDN synthesized
-LEF : Tech and Cell LEF
-LIB
+## Getting Started
 
-Outputs:
-Static IR drop reports
-Static IR drop maps for VDD and GND networks
+### Clone Repository and Submodules
+`git clone --recursive https://github.com/VidyaChhabria/PDNA.git`
+
+### Inputs
+* DEF : Placed and PDN synthesized
+* LEF : Tech and Cell LEF
+* LIB : Liberty files for OpenSTA power report
+* Verilog : Gate-level netlist for OpenSTA power report
+* SDC : Constraints for OpenSTA power report
+
+###  Outputs
+* Static IR drop report, worst case IR drop
+* Static IR drop plots
 
 
-Dependencies:
-    OpenDB
-    OpenSTA
+### Dependencies:
+- OpenDB
+- OpenSTA
+- SuperLU
    
-Commands in TCL shell:
-analyze_pg
 
-Default it runs lower most layer and VSS net
+### Install and Run using Docker
 
-analyze_pg -layer M2 -net VDD
-analyze_pg -layer M5 -net VSS
+- Install Docker
+
+- Navigate to the directory where you have the input files.
+
+- Run OpenIRA container:
+
+`docker run -it -v $(pwd):/data openroad/openira bash`
+
+- From the interactive bash terminal, use OpenIRA scripts which reside under /OpenIRA. You can read input files from /data directory inside the docker container - which mirrors the host machine directory you are in.
+
+- The Docker image is self-contained and includes everything that RePlAce needs to work properly.
+
+### Install and Run on Bare Metal Machine
+
+#### Pre-requisutes
+- GCC compiler and libstdc++ static library >= 4.8.5
+- tcl > = 8.4
+- BLAS library >= 3.8 for SuperLU
 
 
+#### Build and Install
+
+
+#### Check the Installation
+- To make sure your installation is correct and the current tool version is
+  stable:
+
+```
+$ cd OpenIRA/test
+$ openira < gcd_test.tcl
+```
+
+
+### Usage
+
+Open the tcl interpreter for OpenIRA.
+
+
+`$ openira`
+
+Run the following tcl commands:
+
+```
+openira ira
+ira import_lef /path/to/lef/file.lef
+ira import_def /path/to/def/file.def
+ira import_verilog /path/to/gate-level/netlist/file.v
+ira import_sdc /path/to/constraints/file.sdc 
+ira import_lib /path/to/liberty/file.lib
+ira analyze_power_grid
+```
+
+The analyze_power_grid command supports the following optional arguments:
+analyzer_power+grid -layer <str> -net VDD/VSS
+
+
+analyze_power_grid -layer M1 -net VSS
+
+| Argument              	| Comments                                                                             	|
+|-----------------------	|--------------------------------------------------------------------------------------	|
+| -layer <str>              | Reports the worst case IR on the specifed layer and plots the IR map (optional, str)  |
+| -net <str>          	    | Specifies which net to analyzer VDD/VSS (optional, str)   	                        |
+
+
+If the above two arguments are not specified, the default arguments are net VSS and layer 1.
+
+## License
+The rest of this repository is licensed under BSD 3-Clause License.
+
+>BSD 3-Clause License
+>
+>Copyright (c) 2019, The Regents of the University of Minnesota
+>
+>All rights reserved.
+>
+>Redistribution and use in source and binary forms, with or without
+>modification, are permitted provided that the following conditions are met:
+>
+>* Redistributions of source code must retain the above copyright notice, this
+>  list of conditions and the following disclaimer.
+>
+>* Redistributions in binary form must reproduce the above copyright notice,
+>  this list of conditions and the following disclaimer in the documentation
+>  and/or other materials provided with the distribution.
+>
+>* Neither the name of the copyright holder nor the names of its
+>  contributors may be used to endorse or promote products derived from
+>  this software without specific prior written permission.
+>
+>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+>AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+>IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+>DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+>FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+>DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+>SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+>CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+>OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+>OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

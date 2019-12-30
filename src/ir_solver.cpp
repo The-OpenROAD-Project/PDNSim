@@ -68,12 +68,11 @@ void IRSolver::solve_ir() {
     options.ColPerm = NATURAL;
     /* Initialize the statistics variables. */
     StatInit(&stat);
-    dPrint_CompCol_Matrix("A", &A);
-    cout<<"just starting solving"<<endl;
-
+    //dPrint_CompCol_Matrix("A", &A);
+    cout << "Begin SuperLU solver" << endl;
     /* Solve the linear system. */
     dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-    cout<<"just finished solving"<<endl;
+    cout << "End SuperLU solver" << endl;
     ofstream myfile;
     myfile.open ("V_mat.csv");
     DNformat     *Bstore = (DNformat *) B.Store;

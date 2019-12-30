@@ -14,7 +14,7 @@ message(STATUS "TCL lib: ${TCL_LIB}")
 message(STATUS "TCL header: ${TCL_HEADER}")
 
 
-set(BUILD_PYTHON true)
+set(BUILD_PYTHON false)
 set(BUILD_TCL true)
 add_subdirectory(OpenDB)
 
