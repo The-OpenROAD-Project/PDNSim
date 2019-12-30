@@ -1,6 +1,6 @@
-[submodule "src/OpenSTA"]
-	path = src/OpenSTA
-	url = https://github.com/The-OpenROAD-Project/OpenSTA.git
 [submodule "modules/superlu"]
 	path = modules/superlu
 	url = https://github.com/xiaoyeli/superlu.git
+[submodule "modules/OpenSTA"]
+	path = modules/OpenSTA
+	url = https://github.com/The-OpenROAD-Project/OpenSTA.git
