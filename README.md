@@ -1,5 +1,5 @@
 # OpenIRA
-[![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
+[![Standard](https://img.shields.io/badge/C%2B%2B-17-blue)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![Download](https://img.shields.io/badge/Download-here-red)](https://github.com/VidyaChhabria/PDNA/archive/master.zip)
 [![Version](https://img.shields.io/badge/version-0.1-green)](https://github.com/VidyaChhabria/PDNA/tree/master)
 [![AskMe](https://img.shields.io/badge/ask-me-yellow)](https://github.com/VidyaChhabria/PDNA/issues)
@@ -7,7 +7,8 @@
 
 OpenIRA: Open-source static power-grid IR analyzer
 
-<img align = "right" width="50%" src="doc/irmap.jpg">
+<img align = "right" width="50%" src="doc/current_map.jpg">
+<img align = "right" width="50%" src="doc/ir_map.jpg">
 
 ## Getting Started
 
@@ -27,9 +28,9 @@ OpenIRA: Open-source static power-grid IR analyzer
 
 
 ### Dependencies:
-- OpenDB
-- OpenSTA
-- SuperLU
+- [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB/tree/develop)
+- [OpenSTA](https://github.com/The-OpenROAD-Project/OpenSTA)
+- [SuperLU](https://github.com/xiaoyeli/superlu)
    
 
 ### Install and Run using Docker
@@ -95,7 +96,7 @@ analyze_power_grid -layer M1 -net VSS
 | Argument              	| Comments                                                                             	|
 |-----------------------	|--------------------------------------------------------------------------------------	|
 | -layer <str>              | Reports the worst case IR on the specifed layer and plots the IR map (optional, str)  |
-| -net <str>          	    | Specifies which net to analyzer VDD/VSS (optional, str)   	                        |
+| -net <str>          	    | Specifies which net to analyze: VDD/VSS (optional, str)   	                        |
 
 
 If the above two arguments are not specified, the default arguments are net VSS and layer 1.
