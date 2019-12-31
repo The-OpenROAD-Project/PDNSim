@@ -8,7 +8,7 @@
 OpenIRA: Open-source static power-grid IR analyzer
 
 <img align = "right" width="50%" src="doc/current_map.jpg">
-<img align = "right" width="50%" src="doc/ir_map.jpg">
+<img align = "right" width="50%" src="doc/IR_map.jpg">
 
 ## Getting Started
 
