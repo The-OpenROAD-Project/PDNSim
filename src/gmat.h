@@ -30,6 +30,7 @@ public:
     void GenerateStripeConductance(int t_l, odb::dbTechLayerDir::Value layer_dir, int t_x_min, int t_x_max, int t_y_min, int t_y_max,double t_rho);
     void AddC4Bump(int t_loc,int t_C4Num);
     void GenerateCSCMatrix();
+    std::vector<Node*> getNodes();
 private:
     NodeIdx m_n_nodes{0};
     int m_num_layers;

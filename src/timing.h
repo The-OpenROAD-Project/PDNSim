@@ -3,7 +3,7 @@
 
 
 #include <fstream>
-#include <boost/functional/hash.hpp>
+//#include <boost/functional/hash.hpp>
 #include <tcl.h>
 #include <limits>
 
@@ -40,23 +40,7 @@ class Timing {
   void UpdateNetWeightSta();
 
  public:
- // Timing(MODULE* modules, TERM* terms, NET* nets, int netCnt, PIN* pins,
- //        int pinCnt, 
- //        std::vector< std::vector< std::string > >& mPinName,
- //        std::vector< std::vector< std::string > >& tPinName, 
- //        std::string clkName, float clkPeriod);
-
-  // Steiner point generating
-  // it assumes that pin location is updated
-  //
-  // store wireSegment into wireSegStor
-  //void BuildSteiner(bool scaleApplied = false);
-
-  // ? not sure, but needs to be sliced?
-  //        void SliceLongWire();
-
-  //void WriteSpef(const std::string& spefFile);
-  void executePowerPerInst(std::string topCellName, std::string verilogName,
+   std::vector<std::pair<std::string, double>>  executePowerPerInst(std::string topCellName, std::string verilogName,
                        std::vector< std::string >& libName, std::string sdcName);
   //void ExecuteStaLater();
 };

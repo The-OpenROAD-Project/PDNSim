@@ -16,6 +16,7 @@
 #include "ir_solver.h"
 #include "node.h"
 #include "gmat.h"
+#include "timing.h"
 
 using odb::dbDatabase;
 using odb::dbSet;
@@ -30,6 +31,7 @@ using odb::dbBox;
 using odb::dbTechLayer;
 using odb::dbTechLayerDir;
 using odb::dbSWire;
+using odb::dbInst;
 
 using namespace std;
 using std::vector;
@@ -68,23 +70,34 @@ void IRSolver::solve_ir() {
     options.ColPerm = NATURAL;
     /* Initialize the statistics variables. */
     StatInit(&stat);
-    //dPrint_CompCol_Matrix("A", &A);
+    dPrint_CompCol_Matrix("A", &A);
+    dPrint_Dense_Matrix("B", &B);
     cout << "Begin SuperLU solver" << endl;
     /* Solve the linear system. */
     dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
     cout << "End SuperLU solver" << endl;
+    dPrint_Dense_Matrix("B", &B);
     ofstream myfile;
     myfile.open ("V_mat.csv");
     DNformat     *Bstore = (DNformat *) B.Store;
     register int i, j, lda = Bstore->lda;
     double       *dp;
+    int node_num = 0;
     dp = (double *) Bstore->nzval;
+    int num_nodes = m_Gmat->GetNumNodes();
     for (j = 0; j < B.ncol; ++j) {
-        for (i = 0; i < B.nrow; ++i) 
-            myfile<<setprecision(10)<<dp[i + j*lda]<<",";
-        myfile<<"\n";
+        for (i = 0; i < B.nrow; ++i) {
+            if(node_num>=num_nodes){
+                break;
+            }
+            Node* node = m_Gmat->GetNode(node_num);  
+            node->setVoltage(dp[i+j*lda]);
+            node_num++;
+            //myfile<<setprecision(10)<<dp[i + j*lda]<<",";
+        }
+        //myfile<<"\n";
     }
-    myfile.close();
+    //myfile.close();
 
     //TODO keep copies fo LU for later?
     /* De-allocate storage */
@@ -98,8 +111,8 @@ void IRSolver::solve_ir() {
     StatFree(&stat);
 }
 
-void IRSolver::m_addC4Bump(){
-    for(int it = 0; it<m_C4Bumps.size(); ++it){
+void IRSolver::m_addC4Bump() {
+    for(int it = 0; it<m_C4Bumps.size(); ++it) {
         double voltage = get<3>(m_C4Bumps[it]);            
         NodeIdx node_loc = m_C4GLoc[it];
         m_Gmat -> AddC4Bump(node_loc,it); //add the 0th bump
@@ -136,11 +149,33 @@ void  IRSolver::m_readC4Data() {
     file.close();
 
 }
-void  IRSolver::m_createJ(){ //take current_map as an input? 
-    m_J.resize(m_Gmat->GetNumNodes(),0);             
+void  IRSolver::m_createJ(){ //take current_map as an input?
+    int num_nodes = m_Gmat->GetNumNodes();
+    m_J.resize(num_nodes,0);             
+
+	vector<pair<string, double>>  power_report = m_getPower();
+	dbChip* chip = m_db->getChip();
+    dbBlock* block = chip->getBlock();
+    for(vector<pair<string, double>>::iterator it = power_report.begin(); it!=power_report.end();++it){
+        dbInst* inst = block->findInst(it->first.c_str());
+        if(inst == NULL){
+            cout<<"Warning instance "<<it->first<<" not found within database"<<endl;
+            continue;
+        }
+        int x,y;
+        inst->getLocation(x,y);
+        int l = 1;  //atach to the bottom most routing layer
+        Node* node_J = m_Gmat->GetNode(x,y,l);
+        node_J->addCurrentSrc(it->second);
+    }
+    for(int i =0;i <num_nodes; ++i) {
+        Node* node_J = m_Gmat->GetNode(i);
+        m_J[i] = -1 * (node_J->getCurrent());//as MNA needs negative
+        cout << m_J[i] <<endl;
+    }
     //TODO temp making for checking
-    for(int i = 195; i<1875;i++)
-        m_J[i]=-1e-6;
+    //for(int i = 195; i<1875;i++)
+    //    m_J[i]=-1e-6;
 }
 
 void  IRSolver::m_createGmat()
@@ -275,7 +310,7 @@ void  IRSolver::m_createGmat()
                     // //TODO assuming default if zero
                     double R  = via_layer->getUpperLayer()->getResistance();
                     if(R<=0.01){
-                        R=1.0;
+                        R=10.0; /// Must figure out via resistance value
                     }
                     Node* node_bot = m_Gmat->GetNode(x, y, l) ;
 
@@ -300,3 +335,21 @@ void  IRSolver::m_createGmat()
     }
 }
 
+
+vector<pair<string,double>> IRSolver::m_getPower() {
+	//string topCellName = "aes_cipher_top";
+	//string verilogName = "../../aes/2_floorplan.v";
+	//vector< string > libStor;
+	//libStor.push_back("../../aes/NangateOpenCellLibrary_typical.lib");
+	//string sdcName =  "../../aes/2_floorplan.sdc";
+	string topCellName = "gcd";
+	string verilogName = "/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v";
+	vector< string > libStor;
+	libStor.push_back("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
+	string sdcName =  "./home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc";
+	Timing::Timing timing;
+	//string spefFile =  "/home/sachin00/chhab011/PDNA/test/aes_cipher_top/ ";
+	vector<pair<string, double>>  power_report = timing.executePowerPerInst (topCellName,verilogName, libStor, sdcName); 
+	
+	return power_report;
+}

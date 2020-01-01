@@ -22,31 +22,36 @@ typedef struct {
 } CscMatrix;
 
 class Node {
-    public:
-        Node()
-            :m_loc(std::make_pair(0.0,0.0)), m_bBox(std::make_pair(0.0,0.0)){ 
-            }  
-        ~Node() { 
-        }
-        int GetLayerNum();
-        void SetLayerNum(int layer);
-        NodeLoc GetLoc();
-        void SetLoc(int x, int y);
-        void SetLoc(int x, int y, int l);
-        NodeIdx GetGLoc();
-        void SetGLoc(NodeIdx loc);
-        void print();
-        void SetBbox(int dX, int dY);
-        BBox GetBbox();
-        //bool withinBoundingBox(NodeLoc t_nodeLoc, BBox t_bBox, int &t_dist ) {
-        void UpdateMaxBbox(int dX, int dY); 
+public:
+    Node()
+        :m_loc(std::make_pair(0.0,0.0)), m_bBox(std::make_pair(0.0,0.0)){ 
+        }  
+    ~Node() { 
+    }
+    int GetLayerNum();
+    void SetLayerNum(int layer);
+    NodeLoc GetLoc();
+    void SetLoc(int x, int y);
+    void SetLoc(int x, int y, int l);
+    NodeIdx GetGLoc();
+    void SetGLoc(NodeIdx loc);
+    void print();
+    void SetBbox(int dX, int dY);
+    BBox GetBbox();
+    //bool withinBoundingBox(NodeLoc t_nodeLoc, BBox t_bBox, int &t_dist ) {
+    void UpdateMaxBbox(int dX, int dY);
+    void setCurrent(double t_current);
+    double getCurrent();
+    void addCurrentSrc(double t_current);
+    void setVoltage(double t_voltage);
+    double getVoltage();
 
 private:
     int m_layer ;
     NodeLoc m_loc; //layer,x,y
     NodeIdx m_node_loc{0} ;
     BBox m_bBox;
-    double m_current_src;
-    double m_voltage;
+    double m_current_src{0.0};
+    double m_voltage{0.0};
 };
 #endif

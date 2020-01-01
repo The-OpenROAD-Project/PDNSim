@@ -33,5 +33,6 @@ private:
     void m_readC4Data();
     void m_createJ();
     void m_createGmat();
+    std::vector<std::pair<std::string,double>> m_getPower();
 };
 #endif

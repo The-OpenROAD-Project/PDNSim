@@ -11,6 +11,7 @@
 #include "defin.h"
 #include "ir_solver.h"
 #include "gmat.h"
+#include "node.h"
 
 using odb::dbDatabase;
 using namespace std;
@@ -129,29 +130,43 @@ void IRSolverExternal::import_db(const char* dbLoc) {
 
 int main() {
     GMat* gmat_obj;
-
+    dbDatabase* db_obj;
     //dbDatabase* db = import_db("/home/sachin00/chhab011/PDNA/aes_pdn.db");
     IRSolverExternal*  ir_obj = new IRSolverExternal();
     ir_obj->import_lef("/home/sachin00/chhab011/OpeNPDN/platforms/nangate45/NangateOpenCellLibrary.mod.lef");
-    ir_obj->import_def("/home/sachin00/chhab011/PDNA_clean/gcd_pdn.def");
+    ir_obj->import_def("/home/sachin00/chhab011/PDNA_clean/gcd/3_place.def");
     //ir_obj->import_db("/home/sachin00/chhab011/PDN.db");
     cout<< "here2" << endl;
     IRSolver* irsolve_h = new IRSolver(ir_obj->db);
     gmat_obj = irsolve_h->GetGMat();
     gmat_obj->print();
-    ofstream myfile;
+    irsolve_h->solve_ir();
+    db_obj = ir_obj->db;
+    std::vector<Node*> nodes = gmat_obj->getNodes();    
+    int unit_micron = (db_obj->getTech())->getDbUnitsPerMicron();
+
+    ofstream current_file;
+    ofstream voltage_file;
     int vsize;
-    vector<double> test_J = irsolve_h->getJ();//need a copy as superlu destros that loc
-    myfile.open ("J.csv");
-    vsize = test_J.size();
+    current_file.open ("J.csv");
+    voltage_file.open ("V.csv");
+    vsize = nodes.size();
     for (int n=0; n<vsize; n++)
     {
-        myfile <<  std::setprecision(10)<<test_J[n] <<"\n";
+        //myfile <<  std::setprecision(10)<<test_J[n] <<"\n";
+        Node* node = nodes[n];
+        if(node->GetLayerNum() !=1)
+            continue;
+        NodeLoc loc = node->GetLoc();
+        current_file << double(loc.first)/unit_micron<<","<<double(loc.second)/unit_micron<<","<< std::setprecision(10)<<node->getCurrent() <<"\n";
+        voltage_file << double(loc.first)/unit_micron<<","<<double(loc.second)/unit_micron<<","<< std::setprecision(10)<<node->getVoltage() <<"\n";
     }
 
-    myfile.close();
-    irsolve_h->solve_ir();
+    current_file.close();
+    voltage_file.close();
+
+
     return 1;
 
 }
-
+   

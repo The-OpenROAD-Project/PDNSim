@@ -290,4 +290,7 @@ double GMat::m_getConductivity(double width,double length,double rho){
     }
 }
 
+std::vector<Node*> GMat::getNodes() {
+        return m_G_mat_nodes;
+    }
 

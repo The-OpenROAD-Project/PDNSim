@@ -53,7 +53,7 @@ OpenIRA: Open-source static power-grid IR analyzer
 - GCC compiler and libstdc++ static library >= 4.8.5
 - tcl > = 8.4
 - BLAS library >= 3.8 for SuperLU
-
+- FORTRAN compiler 
 
 #### Build and Install
 

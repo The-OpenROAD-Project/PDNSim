@@ -30,6 +30,8 @@ void Node::print(){
     cout <<"Node: "<<m_node_loc<<endl;
     cout <<"    Location: Layer "<<m_layer<<", x "<<m_loc.first<<", y "<<m_loc.second<<endl; 
     cout <<"    Bounding box: x "<<m_bBox.first<<", y "<<m_bBox.second<<endl; 
+    cout <<"    Current: "<<m_current_src<<endl;
+    cout <<"    Voltage: "<<m_voltage<<endl;
 }
 void Node::SetBbox(int t_dX, int t_dY){
      m_bBox = make_pair(t_dX,t_dY);
@@ -42,5 +44,21 @@ void Node::UpdateMaxBbox(int t_dX,int t_dY) {
     int DX = max(nodeBbox.first ,t_dX);
     int DY = max(nodeBbox.second,t_dY);
     SetBbox(DX,DY);
+}
+void Node::setCurrent(double t_current){
+        m_current_src = t_current; 
+}    
+double Node::getCurrent(){
+    return  m_current_src; 
+}
+void Node::addCurrentSrc(double t_current){
+    double node_cur = getCurrent();
+    setCurrent(node_cur+t_current);
+}
+void Node::setVoltage(double t_voltage){
+    m_voltage = t_voltage; 
+}    
+double Node::getVoltage(){
+    return  m_voltage; 
 }
 

@@ -18,9 +18,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #endif()
 
 # For Multithread
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -ld -pthread")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -42,30 +42,36 @@ set(SUPERLU_HOME
 ${PROJECT_SOURCE_DIR}/modules/superlu
 )
 
-add_subdirectory(${OPENDB_HOME})
-#add_subdirectory(${OPENSTA_HOME})
+
+set(BUILD_PYTHON OFF)
+set(BUILD_TCL OFF)
+
+add_subdirectory(${OPENDB_HOME} ${CMAKE_CURRENT_BINARY_DIR}/module/OpenDB)
+add_subdirectory(${OPENSTA_HOME})
 add_subdirectory(${SUPERLU_HOME})
 
 set(ENV{TYPE_CALL} library)
 
 
 ## configure settings
-#find_package(TCL REQUIRED)
+find_package(TCL REQUIRED)
+
+find_package(ZLIB REQUIRED)
 
 
 # for cimg
-#if( USE_CIMG_LIB )
-#  find_package(X11 REQUIRED)
-#  find_package(JPEG REQUIRED)
-#  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${X11_LIBRARIES} ${JPEG_LIBRARIES}")
-#else()
-#  find_package(X11)
-#  find_package(JPEG)
-#endif()
+if( USE_CIMG_LIB )
+  find_package(X11 REQUIRED)
+  find_package(JPEG REQUIRED)
+  set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${X11_LIBRARIES} ${JPEG_LIBRARIES}")
+else()
+  find_package(X11)
+  find_package(JPEG)
+endif()
 
 
 #find_package(Boost REQUIRED)
-#find_package(Threads REQUIRED)
+find_package(Threads REQUIRED)
 
 # for multi threads
 find_package(OpenMP)
@@ -75,7 +81,7 @@ set (IRSOLVER_SRC
   src/node.cpp
   src/gmat.cpp
   src/ir_solver.cpp
-#  src/getPower.cpp
+  src/get_power.cpp
   )
 
 
@@ -84,8 +90,8 @@ set (IRSOLVER_HEADER
   src/node.h
   src/gmat.h
   src/main.h
-#  src/getPower.h
-#  src/timing.h
+  src/get_power.h
+  src/timing.h
 )
 
 set (IRSOLVER_SWIG_FILES
@@ -119,9 +125,14 @@ add_executable( irsolver
   ${IRSOLVER_SRC}
 )  
 
-add_dependencies( irsolver opendb superlu )
+add_dependencies( irsolver opendb )
+add_dependencies( irsolver superlu )
+add_dependencies( irsolver opendb )
 
-add_dependencies( irsolverlib opendb superlu)
+
+add_dependencies( irsolverlib opendb )
+add_dependencies( irsolverlib superlu )
+add_dependencies( irsolverlib opendb )
 
 ############################################################
 # include directories 
@@ -132,18 +143,18 @@ target_include_directories( irsolver
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
 
-#  ${OPENSTA_HOME}/app
-#  ${OPENSTA_HOME}/dcalc
-#  ${OPENSTA_HOME}/graph
-#  ${OPENSTA_HOME}/liberty
-#  ${OPENSTA_HOME}/network
-#  ${OPENSTA_HOME}/parasitics
-#  ${OPENSTA_HOME}/sdc
-#  ${OPENSTA_HOME}/sdf
-#  ${OPENSTA_HOME}/search
-#  ${OPENSTA_HOME}/tcl
-#  ${OPENSTA_HOME}/util
-#  ${OPENSTA_HOME}/verilog
+  ${OPENSTA_HOME}/app
+  ${OPENSTA_HOME}/dcalc
+  ${OPENSTA_HOME}/graph
+  ${OPENSTA_HOME}/liberty
+  ${OPENSTA_HOME}/network
+  ${OPENSTA_HOME}/parasitics
+  ${OPENSTA_HOME}/sdc
+  ${OPENSTA_HOME}/sdf
+  ${OPENSTA_HOME}/search
+  ${OPENSTA_HOME}/tcl
+  ${OPENSTA_HOME}/util
+  ${OPENSTA_HOME}/verilog
 )
 
 target_include_directories( irsolverlib 
@@ -152,26 +163,27 @@ target_include_directories( irsolverlib
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
 
-#  ${OPENSTA_HOME}/app
-#  ${OPENSTA_HOME}/dcalc
-#  ${OPENSTA_HOME}/graph
-#  ${OPENSTA_HOME}/liberty
-#  ${OPENSTA_HOME}/network
-#  ${OPENSTA_HOME}/parasitics
-#  ${OPENSTA_HOME}/sdc
-#  ${OPENSTA_HOME}/sdf
-#  ${OPENSTA_HOME}/search
-#  ${OPENSTA_HOME}/tcl
-#  ${OPENSTA_HOME}/util
-#  ${OPENSTA_HOME}/verilog
+  ${OPENSTA_HOME}/app
+  ${OPENSTA_HOME}/dcalc
+  ${OPENSTA_HOME}/graph
+  ${OPENSTA_HOME}/liberty
+  ${OPENSTA_HOME}/network
+  ${OPENSTA_HOME}/parasitics
+  ${OPENSTA_HOME}/sdc
+  ${OPENSTA_HOME}/sdf
+  ${OPENSTA_HOME}/search
+  ${OPENSTA_HOME}/tcl
+  ${OPENSTA_HOME}/util
+  ${OPENSTA_HOME}/verilog
 )
 
-target_link_libraries( irsolver
+target_link_libraries(irsolver
   PUBLIC
-#  OpenSTA
-  ${TCL_LIB}
-  opendb
+  OpenSTA
   superlu
+  ${TCL_LIB}
+  ${ZLIB_LIBRARIES}
+  opendb
   )
 
 ############################################################
