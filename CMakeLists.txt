@@ -78,7 +78,7 @@ find_package(Threads REQUIRED)
 find_package(OpenMP)
 
 set (IRSOLVER_SRC 
-  src/main.cpp
+  src/openira_external.cpp
   src/node.cpp
   src/gmat.cpp
   src/ir_solver.cpp
@@ -91,7 +91,7 @@ set (IRSOLVER_HEADER
   src/ir_solver.h
   src/node.h
   src/gmat.h
-  src/main.h
+  src/openira_external.h
   src/get_power.h
 )
 

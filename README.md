@@ -93,10 +93,10 @@ analyzer_power+grid -layer <str> -net VDD/VSS
 
 analyze_power_grid -layer M1 -net VSS
 
-| Argument              	| Comments                                                                             	|
-|-----------------------	|--------------------------------------------------------------------------------------	|
-| -layer <str>              | Reports the worst case IR on the specifed layer and plots the IR map (optional, str)  |
-| -net <str>          	    | Specifies which net to analyze: VDD/VSS (optional, str)   	                        |
+| Argument          | Comments                                                                             	|
+|-------------------|--------------------------------------------------------------------------------------	|
+| layer <str>       | Reports the worst case IR on the specifed layer and plots the IR map (optional, str)  |
+| net <str>         | Specifies which net to analyze: VDD/VSS (optional, str)   	                        |
 
 
 If the above two arguments are not specified, the default arguments are net VSS and layer 1.
