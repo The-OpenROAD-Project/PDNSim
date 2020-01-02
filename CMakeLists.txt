@@ -57,6 +57,7 @@ set(ENV{TYPE_CALL} library)
 find_package(TCL REQUIRED)
 
 find_package(ZLIB REQUIRED)
+find_package(SWIG REQUIRED)
 
 
 # for cimg
@@ -82,6 +83,7 @@ set (IRSOLVER_SRC
   src/gmat.cpp
   src/ir_solver.cpp
   src/get_power.cpp
+  src/irsolver_wrap.cpp
   )
 
 
@@ -94,7 +96,7 @@ set (IRSOLVER_HEADER
 )
 
 set (IRSOLVER_SWIG_FILES
-src/ir_solver.i
+  ${IRSOLVER_HOME}/src/ir_solver.i
 )
 
   
@@ -113,7 +115,8 @@ set_target_properties( irsolverlib
 # Create an executable
 ############################################################
 add_custom_command(OUTPUT ${IRSOLVER_HOME}/src/irsolver_wrap.cpp
-  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o  ${IRSOLVER_HOME}/src/irsolver_wrap.cpp ${IRSOLVER_HOME}/src/irsolver.i   
+  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o
+  ${IRSOLVER_HOME}/src/irsolver_wrap.cpp ${IRSOLVER_HOME}/src/ir_solver.i 
   WORKING_DIRECTORY ${IRSOLVER_HOME}
   DEPENDS ${IRSOLVER_SWIG_FILES}
 )

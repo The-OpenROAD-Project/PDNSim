@@ -1,7 +1,7 @@
 %module irsolver 
 
 %{
-#include "ir_solver.h"
+#include "main.h"
 %}
 
 %include <stl.i>
@@ -10,4 +10,4 @@
 %include <std_vector.i>
 %include <std_pair.i>
 
-%include "ir_solver.h"
+%include "main.h"
