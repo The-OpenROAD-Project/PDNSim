@@ -135,11 +135,11 @@ int main() {
     dbDatabase* db_obj;
     //dbDatabase* db = import_db("/home/sachin00/chhab011/PDNA/aes_pdn.db");
     IRSolverExternal*  ir_obj = new IRSolverExternal();
-    ir_obj->import_lef("/home/sachin00/chhab011/OpeNPDN/platforms/nangate45/NangateOpenCellLibrary.mod.lef");
-    ir_obj->import_def("/home/sachin00/chhab011/PDNA_clean/gcd/3_place.def");
-    ir_obj->import_verilog("/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v");
-    ir_obj->import_lib("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
-    ir_obj->import_sdc("/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc");
+    ir_obj->import_lef("/home/chhab011/OpeNPDN/platforms/nangate45/Nangate45.lef");
+    ir_obj->import_def("/home/chhab011/PDNA_clean/gcd/3_place.def");
+    ir_obj->import_verilog("/home/chhab011/PDNA_clean/gcd/2_floorplan.v");
+    ir_obj->import_lib("/home/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
+    ir_obj->import_sdc("/home/chhab011/PDNA_clean/gcd/2_floorplan.sdc");
     //ir_obj->import_db("/home/sachin00/chhab011/PDN.db");
     cout<< "here2" << endl;
     cout << "Verilog file after here2" << ir_obj->verilog_stor << endl;

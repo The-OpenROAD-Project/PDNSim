@@ -30,7 +30,7 @@ RUN make
 
 FROM centos:centos6 AS runner
 RUN yum update -y && yum install -y tcl-devel libSM libX11-devel libXext libjpeg libgomp
-COPY --from=builder /PDNA_clean/build/PDNA_clean /build/PDNA_clean
+COPY --from=builder /PDNA_clean/build/irsolver /build/irsolver
 COPY --from=builder /PDNA_clean/modules/OpenSTA/app/sta /build/sta
 RUN useradd -ms /bin/bash openroad
 USER openroad

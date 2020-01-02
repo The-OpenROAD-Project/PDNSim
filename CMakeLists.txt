@@ -18,9 +18,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #endif()
 
 # For Multithread
- set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Dcimg_use_jpeg=1 -pthread -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -ld -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -ld -lpthread")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
