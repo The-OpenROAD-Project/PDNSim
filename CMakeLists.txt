@@ -91,7 +91,6 @@ set (IRSOLVER_HEADER
   src/gmat.h
   src/main.h
   src/get_power.h
-  src/timing.h
 )
 
 set (IRSOLVER_SWIG_FILES

@@ -94,11 +94,13 @@ void IRSolverExternal::import_def(const char* def){
 void 
 IRSolverExternal::import_sdc(const char* sdc) {
   sdc_file = sdc;
+  cout<< "SDC file :" << sdc_file << endl;
 }
 
 void
 IRSolverExternal::import_verilog(const char* verilog) {
-  verilog_stor.push_back(verilog);
+  verilog_stor = verilog;//.push_back(verilog);
+  cout<< "Verilog file :" << verilog_stor << endl;
 }
 
 void 
@@ -135,9 +137,13 @@ int main() {
     IRSolverExternal*  ir_obj = new IRSolverExternal();
     ir_obj->import_lef("/home/sachin00/chhab011/OpeNPDN/platforms/nangate45/NangateOpenCellLibrary.mod.lef");
     ir_obj->import_def("/home/sachin00/chhab011/PDNA_clean/gcd/3_place.def");
+    ir_obj->import_verilog("/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v");
+    ir_obj->import_lib("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
+    ir_obj->import_sdc("/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc");
     //ir_obj->import_db("/home/sachin00/chhab011/PDN.db");
     cout<< "here2" << endl;
-    IRSolver* irsolve_h = new IRSolver(ir_obj->db);
+    cout << "Verilog file after here2" << ir_obj->verilog_stor << endl;
+    IRSolver* irsolve_h = new IRSolver(ir_obj->db, ir_obj->verilog_stor, ir_obj->sdc_file, ir_obj->lib_stor);
     gmat_obj = irsolve_h->GetGMat();
     gmat_obj->print();
     irsolve_h->solve_ir();

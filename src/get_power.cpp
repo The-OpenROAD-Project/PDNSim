@@ -1,7 +1,6 @@
 #include "get_power.h"
 #include "util.h"
 #include <iostream>
-#include "timing.h"
 #include <tcl.h>
 namespace sta {
 class Sta;
@@ -11,9 +10,8 @@ using namespace sta;
 using namespace std;
 using std::vector;
 
-namespace Timing {
 
-vector<pair<string, double>> Timing::executePowerPerInst (string topCellName, string verilogName, vector< string >& libStor, string sdcName) {
+vector<pair<string, double>> PowerInst::executePowerPerInst (string topCellName, string verilogName, vector< string > libStor, string sdcName) {
     std::cout << " Executing STA for Power" << endl;
     std::cout << "Execute STA" << endl;
     std::cout << "topCellName: " << topCellName << endl;
@@ -112,7 +110,7 @@ vector<pair<string, double>> Timing::executePowerPerInst (string topCellName, st
     Tcl_Eval(_interp, string("sta::read_sdc " + sdcName).c_str());
     //}
 
-    UpdateTimingSta();
+    PowerInst::UpdateTimingSta();
     
     //UpdateNetWeightSta();
     
@@ -144,10 +142,9 @@ vector<pair<string, double>> Timing::executePowerPerInst (string topCellName, st
 
 }
 
-void Timing::UpdateTimingSta() {
+void PowerInst::UpdateTimingSta() {
   _sta->updateTiming(true);
 }
 
 
-}
 

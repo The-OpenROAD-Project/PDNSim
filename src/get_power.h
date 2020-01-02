@@ -1,3 +1,11 @@
+#ifndef __IRSOLVER_Power__
+#define __IRSOLVER_Power__ 0
+
+#include <fstream>
+#include <tcl.h>
+#include <limits>
+
+
 #include "Machine.hh"
 #include "Liberty.hh"
 #include "StringUtil.hh"
@@ -67,9 +75,6 @@
 #include "ParasiticsClass.hh"
 #include "ParseBus.hh"
 
-#ifdef YY_INPUT
-#undef YY_INPUT
-#endif
 
 // to import Swig
 extern "C" {
@@ -78,7 +83,30 @@ extern int Sta_Init(Tcl_Interp *interp);
 
 // to import TCL functions
 namespace sta {
+class Sta;
 extern const char *tcl_inits[];
 }
 
+class PowerInst {
+ private:
+ 
+  sta::Sta* _sta;
+  Tcl_Interp* _interp;
 
+  float _targetTop;
+
+
+  // For OpenSTA
+
+  void UpdateTimingSta();
+
+ public:
+   std::vector<std::pair<std::string, double>>  executePowerPerInst(std::string topCellName, std::string verilogName,
+                       std::vector< std::string > libName, std::string sdcName);
+  //void ExecuteStaLater();
+};
+
+
+
+
+#endif

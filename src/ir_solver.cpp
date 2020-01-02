@@ -16,7 +16,7 @@
 #include "ir_solver.h"
 #include "node.h"
 #include "gmat.h"
-#include "timing.h"
+#include "get_power.h"
 
 using odb::dbDatabase;
 using odb::dbSet;
@@ -343,13 +343,14 @@ vector<pair<string,double>> IRSolver::m_getPower() {
 	//libStor.push_back("../../aes/NangateOpenCellLibrary_typical.lib");
 	//string sdcName =  "../../aes/2_floorplan.sdc";
 	string topCellName = "gcd";
-	string verilogName = "/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v";
-	vector< string > libStor;
-	libStor.push_back("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
-	string sdcName =  "./home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc";
-	Timing::Timing timing;
+	//string verilogName = verilog_stor;//"/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v";
+	//vector< string > libStor;
+    //libStor = lib_stor;
+	//libStor.push_back("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
+	//string sdcName = sdc_file;// "./home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc";
+	PowerInst power_inst;
 	//string spefFile =  "/home/sachin00/chhab011/PDNA/test/aes_cipher_top/ ";
-	vector<pair<string, double>>  power_report = timing.executePowerPerInst (topCellName,verilogName, libStor, sdcName); 
+	vector<pair<string, double>>  power_report = power_inst.executePowerPerInst (topCellName,m_verilog_stor, m_lib_stor, m_sdc_file); 
 	
 	return power_report;
 }
