@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "main.h"
+#include "openira_external.h"
 #include "db.h"
 #include "lefin.h"
 #include "defin.h"
