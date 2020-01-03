@@ -13,7 +13,7 @@ OpenIRA: Open-source static power-grid IR analyzer
 ## Getting Started
 
 ### Clone Repository and Submodules
-`git clone --recursive https://github.com/VidyaChhabria/PDNA.git`
+`git clone --recursive https://github.com/VidyaChhabria/OpenIRA.git`
 
 ### Inputs
 * DEF : Placed and PDN synthesized
@@ -33,20 +33,6 @@ OpenIRA: Open-source static power-grid IR analyzer
 - [SuperLU](https://github.com/xiaoyeli/superlu)
    
 
-### Install and Run using Docker
-
-- Install Docker
-
-- Navigate to the directory where you have the input files.
-
-- Run OpenIRA container:
-
-`docker run -it -v $(pwd):/data openroad/openira bash`
-
-- From the interactive bash terminal, use OpenIRA scripts which reside under /OpenIRA. You can read input files from /data directory inside the docker container - which mirrors the host machine directory you are in.
-
-- The Docker image is self-contained and includes everything that RePlAce needs to work properly.
-
 ### Install and Run on Bare Metal Machine
 
 #### Pre-requisutes
@@ -57,6 +43,18 @@ OpenIRA: Open-source static power-grid IR analyzer
 
 #### Build and Install
 
+After  cloning the repository and its submodules, build and install using the
+following commands:
+
+```
+$ cd OpenIRA
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
+
 
 #### Check the Installation
 - To make sure your installation is correct and the current tool version is
@@ -64,7 +62,7 @@ OpenIRA: Open-source static power-grid IR analyzer
 
 ```
 $ cd OpenIRA/test
-$ openira < gcd_test.tcl
+$ ../build/openira < gcd_test.tcl
 ```
 
 

@@ -1,4 +1,4 @@
-mkdir -p /PDNA/build
-cd /PDNA/build
+mkdir -p /OpenIRA/build
+cd /OpenIRA/build
 cmake ..
 make
