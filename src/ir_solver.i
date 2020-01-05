@@ -1,7 +1,7 @@
 %module irsolver 
 
 %{
-#include "main.h"
+#include "openira_external.h"
 %}
 
 %include <stl.i>
@@ -10,4 +10,4 @@
 %include <std_vector.i>
 %include <std_pair.i>
 
-%include "main.h"
+%include "openira_external.h"

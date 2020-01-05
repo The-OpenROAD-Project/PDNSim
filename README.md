@@ -61,8 +61,8 @@ $ make
   stable:
 
 ```
-$ cd OpenIRA/test
-$ ../build/openira < gcd_test.tcl
+$ ./irsolver
+% source ../test/gcd_test.tcl
 ```
 
 

@@ -12,15 +12,17 @@ using std::vector;
 
 
 vector<pair<string, double>> PowerInst::executePowerPerInst (string topCellName, string verilogName, vector< string > libStor, string sdcName) {
-    std::cout << " Executing STA for Power" << endl;
-    std::cout << "Execute STA" << endl;
-    std::cout << "topCellName: " << topCellName << endl;
-    std::cout << "verilog    : " << verilogName << endl;
+    std::cout << "\n" << endl;
+    std::cout << "INFO: Executing STA for Power" << endl;
+    std::cout << "INFO: Execute STA" << endl;
+    std::cout << "INFO: Files for STA" << endl;
+    std::cout << "Verilog      : " << verilogName << endl;
+    std::cout << "topCellName  : " << topCellName << endl;
    // cout << "spefFileName" << spefFile << endl;
     for(auto& libName : libStor) {
-      cout << "liberty    : " << libName << endl;
+      cout << "Liberty      : " << libName << endl;
     }
-    cout << "sdcName    : " << sdcName << endl << endl;
+    cout << "SDCName      : " << sdcName << endl << endl;
 
     // STA object create
     _sta = new Sta;
@@ -87,7 +89,7 @@ vector<pair<string, double>> PowerInst::executePowerPerInst (string topCellName,
 
     bool is_linked = networkReader->isLinked();
     if(is_linked) {
-        cout << "Design in linked" << endl;
+        cout << "INFO: Design in linked" << endl;
     }
     else {
       cout << "ERROR:  Linking Fail. Please put liberty files ";
@@ -131,13 +133,13 @@ vector<pair<string, double>> PowerInst::executePowerPerInst (string topCellName,
         power->power(inst, corner, inst_power);
         total_calc.incr(inst_power);
         power_report.push_back(make_pair(string(network->name(inst)),inst_power.total()));
-        cout << string(network->name(inst)) << inst_power.total() << endl;
+        //cout << string(network->name(inst)) << inst_power.total() << endl;
       }
     }
     delete inst_iter;
 
-    cout <<"Total power:" << total.total() << endl;
-    cout <<"Total power calculated:" << total_calc.total() << endl;
+    //cout <<"Total power:" << total.total() << endl;
+    //cout <<"Total power calculated:" << total_calc.total() << endl;
     return power_report;
 
 }

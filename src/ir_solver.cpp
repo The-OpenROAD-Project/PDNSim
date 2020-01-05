@@ -70,19 +70,22 @@ void IRSolver::solve_ir() {
     options.ColPerm = NATURAL;
     /* Initialize the statistics variables. */
     StatInit(&stat);
-    dPrint_CompCol_Matrix("A", &A);
-    dPrint_Dense_Matrix("B", &B);
-    cout << "Begin SuperLU solver" << endl;
+    //dPrint_CompCol_Matrix("A", &A);
+    //dPrint_Dense_Matrix("B", &B);
+    cout << "\n" <<endl;
+    cout << "INFO: Solving GV=J" << endl;
+    cout << "INFO: SuperLU begin solving" << endl;
     /* Solve the linear system. */
     dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-    cout << "End SuperLU solver" << endl;
-    dPrint_Dense_Matrix("B", &B);
-    ofstream myfile;
-    myfile.open ("V_mat.csv");
+    cout << "INFO: SuperLU finished solving" << endl;
+    //dPrint_Dense_Matrix("B", &B);
     DNformat     *Bstore = (DNformat *) B.Store;
     register int i, j, lda = Bstore->lda;
     double       *dp;
+    double volt;
+    double sum_volt = 0;
     int node_num = 0;
+    wc_voltage = vdd;
     dp = (double *) Bstore->nzval;
     int num_nodes = m_Gmat->GetNumNodes();
     for (j = 0; j < B.ncol; ++j) {
@@ -90,15 +93,17 @@ void IRSolver::solve_ir() {
             if(node_num>=num_nodes){
                 break;
             }
-            Node* node = m_Gmat->GetNode(node_num);  
-            node->setVoltage(dp[i+j*lda]);
+            Node* node = m_Gmat->GetNode(node_num); 
+            volt = dp[i+j*lda];
+            sum_volt = sum_volt + volt;
+            if(volt< wc_voltage) {
+                wc_voltage = volt;
+            }
+            node->setVoltage(volt);
             node_num++;
-            //myfile<<setprecision(10)<<dp[i + j*lda]<<",";
         }
-        //myfile<<"\n";
     }
-    //myfile.close();
-
+    avg_voltage = sum_volt/num_nodes;
     //TODO keep copies fo LU for later?
     /* De-allocate storage */
     //SUPERLU_FREE (rhs);
@@ -117,11 +122,13 @@ void IRSolver::m_addC4Bump() {
         NodeIdx node_loc = m_C4GLoc[it];
         m_Gmat -> AddC4Bump(node_loc,it); //add the 0th bump
         m_J.push_back(voltage);//push back first vdd
+        vdd = voltage;
     }
 }
 
 void  IRSolver::m_readC4Data() {
-    std::ifstream file("../c4BumpLoc.txt_gcd"); //TODO read file as an input 
+    cout << "Voltage file" << m_vsrc_file << endl;
+    std::ifstream file(m_vsrc_file); //TODO read file as an input 
     std::string line = "";
     // Iterate through each line and split the content using delimeter
     while (getline(file, line))
@@ -143,8 +150,10 @@ void  IRSolver::m_readC4Data() {
                 voltage = stod(val);
             }
         }
-        cout<<"location "<<first<<" "<<second<<" "<<layer<<" value "<<voltage<<endl;
-    	m_C4Bumps.push_back(make_tuple(first,second,layer,voltage));
+        cout<< "\n" <<endl;
+        cout << "INFO: Location of VDD and VSS sources "<< endl;
+        cout<<"Location: "<<first<<" "<<second<<" "<<layer<<" Voltage "<<voltage<<endl;
+    	m_C4Bumps.push_back(make_tuple(first, second, layer, voltage));
     }
     file.close();
 
@@ -171,8 +180,9 @@ void  IRSolver::m_createJ(){ //take current_map as an input?
     for(int i =0;i <num_nodes; ++i) {
         Node* node_J = m_Gmat->GetNode(i);
         m_J[i] = -1 * (node_J->getCurrent());//as MNA needs negative
-        cout << m_J[i] <<endl;
+        //cout << m_J[i] <<endl;
     }
+    cout << "INFO: Created J vector" <<endl;
     //TODO temp making for checking
     //for(int i = 195; i<1875;i++)
     //    m_J[i]=-1e-6;
@@ -282,9 +292,10 @@ void  IRSolver::m_createGmat()
                     
     // All new nodes must be inserted by this point
     //initialize G Matrix
-    cout<<" number of nodes "<<m_Gmat->GetNumNodes()<<endl;
+    cout<< "INFO: G matrix created " <<endl;
+    cout<< "INFO: Number of nodes: "<<m_Gmat->GetNumNodes()<<endl;
     m_Gmat->InitializeGmatDok();
-    m_Gmat->print();
+    //m_Gmat->print();
     for(vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {//only 1 is expected?
         //std::cout<<"Operating on VDD net"<<endl;
         dbNet* curDnet = *vIter;
@@ -337,20 +348,9 @@ void  IRSolver::m_createGmat()
 
 
 vector<pair<string,double>> IRSolver::m_getPower() {
-	//string topCellName = "aes_cipher_top";
-	//string verilogName = "../../aes/2_floorplan.v";
-	//vector< string > libStor;
-	//libStor.push_back("../../aes/NangateOpenCellLibrary_typical.lib");
-	//string sdcName =  "../../aes/2_floorplan.sdc";
-	string topCellName = "gcd";
-	//string verilogName = verilog_stor;//"/home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.v";
-	//vector< string > libStor;
-    //libStor = lib_stor;
-	//libStor.push_back("/home/sachin00/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
-	//string sdcName = sdc_file;// "./home/sachin00/chhab011/PDNA_clean/gcd/2_floorplan.sdc";
+	//string topCellName = "gcd";
 	PowerInst power_inst;
-	//string spefFile =  "/home/sachin00/chhab011/PDNA/test/aes_cipher_top/ ";
-	vector<pair<string, double>>  power_report = power_inst.executePowerPerInst (topCellName,m_verilog_stor, m_lib_stor, m_sdc_file); 
+	vector<pair<string, double>>  power_report = power_inst.executePowerPerInst (m_top_module, m_verilog_stor, m_lib_stor, m_sdc_file); 
 	
 	return power_report;
 }

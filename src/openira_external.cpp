@@ -9,8 +9,8 @@
 #include "db.h"
 #include "lefin.h"
 #include "defin.h"
-#include "ir_solver.h"
 #include "gmat.h"
+#include "ir_solver.h"
 #include "node.h"
 
 using odb::dbDatabase;
@@ -59,7 +59,6 @@ cout << endl;
 }
 
 void IRSolverExternal::import_lef(const char* lef){ 
-  //odb::dbDatabase * db = NULL;
   if( db_id == INT_MAX ) {
     db = odb::dbDatabase::create();
     db_id = db->getId();
@@ -72,7 +71,6 @@ void IRSolverExternal::import_lef(const char* lef){
 }
 
 void IRSolverExternal::import_def(const char* def){
- // odb::dbDatabase * db = NULL;
   if( db_id == INT_MAX ) {
     db = odb::dbDatabase::create();
     db_id = db->getId();
@@ -94,13 +92,20 @@ void IRSolverExternal::import_def(const char* def){
 void 
 IRSolverExternal::import_sdc(const char* sdc) {
   sdc_file = sdc;
-  cout<< "SDC file :" << sdc_file << endl;
+  cout<< "INFO: Reading SDC file " << sdc_file << endl;
 }
+
+void 
+IRSolverExternal::set_top_module(const char* topCellName) {
+  top_cell_name = topCellName;
+  cout<< "INFO: Top module set " << top_cell_name << endl;
+}
+
 
 void
 IRSolverExternal::import_verilog(const char* verilog) {
   verilog_stor = verilog;//.push_back(verilog);
-  cout<< "Verilog file :" << verilog_stor << endl;
+  cout<< "INFO: Reading Verilog file " << verilog_stor << endl;
 }
 
 void 
@@ -108,10 +113,13 @@ IRSolverExternal::import_lib(const char* lib){
   lib_stor.push_back(lib);
 }
 
+void
+IRSolverExternal::read_voltage_src(const char* vsrc) {
+  vsrc_loc = vsrc;
+  cout<< "INFO: Reading Voltage source file " << vsrc_loc << endl;
+}
 
 void IRSolverExternal::import_db(const char* dbLoc) {
-      //odb::dbDatabase* db = NULL;
-      //dbDatabase* db_h = new dbDatabase();
       if( db_id == INT_MAX ) {
         db = odb::dbDatabase::create();
         db_id = db->getId();
@@ -129,27 +137,13 @@ void IRSolverExternal::import_db(const char* dbLoc) {
 
 }
 
-
-int main() {
+void IRSolverExternal::analyze_power_grid() {
     GMat* gmat_obj;
-    dbDatabase* db_obj;
-    //dbDatabase* db = import_db("/home/sachin00/chhab011/PDNA/aes_pdn.db");
-    IRSolverExternal*  ir_obj = new IRSolverExternal();
-    ir_obj->import_lef("/home/chhab011/OpeNPDN/platforms/nangate45/Nangate45.lef");
-    ir_obj->import_def("/home/chhab011/PDNA_clean/gcd/3_place.def");
-    ir_obj->import_verilog("/home/chhab011/PDNA_clean/gcd/2_floorplan.v");
-    ir_obj->import_lib("/home/chhab011/PDNA_clean/gcd/NangateOpenCellLibrary_typical.lib");
-    ir_obj->import_sdc("/home/chhab011/PDNA_clean/gcd/2_floorplan.sdc");
-    //ir_obj->import_db("/home/sachin00/chhab011/PDN.db");
-    cout<< "here2" << endl;
-    cout << "Verilog file after here2" << ir_obj->verilog_stor << endl;
-    IRSolver* irsolve_h = new IRSolver(ir_obj->db, ir_obj->verilog_stor, ir_obj->sdc_file, ir_obj->lib_stor);
+    IRSolver* irsolve_h = new IRSolver(db, verilog_stor,top_cell_name, sdc_file, lib_stor, vsrc_loc);
     gmat_obj = irsolve_h->GetGMat();
-    gmat_obj->print();
     irsolve_h->solve_ir();
-    db_obj = ir_obj->db;
     std::vector<Node*> nodes = gmat_obj->getNodes();    
-    int unit_micron = (db_obj->getTech())->getDbUnitsPerMicron();
+    int unit_micron = (db->getTech())->getDbUnitsPerMicron();
 
     ofstream current_file;
     ofstream voltage_file;
@@ -159,7 +153,6 @@ int main() {
     vsize = nodes.size();
     for (int n=0; n<vsize; n++)
     {
-        //myfile <<  std::setprecision(10)<<test_J[n] <<"\n";
         Node* node = nodes[n];
         if(node->GetLayerNum() !=1)
             continue;
@@ -167,12 +160,14 @@ int main() {
         current_file << double(loc.first)/unit_micron<<","<<double(loc.second)/unit_micron<<","<< std::setprecision(10)<<node->getCurrent() <<"\n";
         voltage_file << double(loc.first)/unit_micron<<","<<double(loc.second)/unit_micron<<","<< std::setprecision(10)<<node->getVoltage() <<"\n";
     }
-
+    cout << "\n" <<endl;
+    cout << "######################################" <<endl;
+    cout<< "Worstcase Voltage: " << irsolve_h->wc_voltage << endl;
+    cout<< "Average IR drop  : " << irsolve_h->vdd - irsolve_h->avg_voltage << endl;
+    cout<< "Worstcase IR drop: " << irsolve_h->vdd - irsolve_h->wc_voltage << endl;
+    cout << "######################################" <<endl;
     current_file.close();
     voltage_file.close();
-
-
-    return 1;
-
 }
-   
+
+

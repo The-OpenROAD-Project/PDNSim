@@ -83,7 +83,6 @@ Node* GMat::SetNode(int t_x, int t_y, int t_layer, BBox t_bBox) {
         node->SetLoc(t_x,t_y,t_layer);
         node->UpdateMaxBbox(t_bBox.first,t_bBox.second);
         InsertNode(node);
-        //cout<<"layer empty inserting node\n";
         //node->print();
         return(node);
     }
