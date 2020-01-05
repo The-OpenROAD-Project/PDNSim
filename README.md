@@ -69,6 +69,9 @@ $ ./irsolver
 
 
 ### Usage
+| <img src="/doc/OpenIRA.gif" width=900px> |
+|:--:|
+| *Example usages with TCL interpreter* |
 
 Open the TCL interpreter for OpenIRA.
 
@@ -78,7 +81,7 @@ Open the TCL interpreter for OpenIRA.
 Run the following TCL commands:
 
 ```
-openira ira
+OpenIRA ira
 ira import_lef /path/to/lef/file.lef
 ira import_def /path/to/def/file.def
 ira import_verilog /path/to/gate-level/netlist/file.v

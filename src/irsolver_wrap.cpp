@@ -1649,7 +1649,7 @@ SWIG_Tcl_GetArgs(Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[], const char
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_IRSolverExternal swig_types[0]
+#define SWIGTYPE_p_OpenIRA swig_types[0]
 #define SWIGTYPE_p_char swig_types[1]
 #define SWIGTYPE_p_odb__dbDatabase swig_types[2]
 #define SWIGTYPE_p_std__vectorT_std__string_t swig_types[3]
@@ -1840,12 +1840,12 @@ SWIG_From_std_string  (const std::string& s)
 extern "C" {
 #endif
 SWIGINTERN int
-_wrap_new_IRSolverExternal(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *result = 0 ;
+_wrap_new_OpenIRA(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,":new_IRSolverExternal ") == TCL_ERROR) SWIG_fail;
-  result = (IRSolverExternal *)new IRSolverExternal();
-  Tcl_SetObjResult(interp, SWIG_NewInstanceObj( SWIG_as_voidptr(result), SWIGTYPE_p_IRSolverExternal,0));
+  if (SWIG_GetArgs(interp, objc, objv,":new_OpenIRA ") == TCL_ERROR) SWIG_fail;
+  result = (OpenIRA *)new OpenIRA();
+  Tcl_SetObjResult(interp, SWIG_NewInstanceObj( SWIG_as_voidptr(result), SWIGTYPE_p_OpenIRA,0));
   return TCL_OK;
 fail:
   return TCL_ERROR;
@@ -1853,17 +1853,17 @@ fail:
 
 
 SWIGINTERN int
-_wrap_delete_IRSolverExternal(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_delete_OpenIRA(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:delete_IRSolverExternal self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, SWIG_POINTER_DISOWN |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:delete_OpenIRA self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_IRSolverExternal" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_OpenIRA" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   delete arg1;
   
   return TCL_OK;
@@ -1873,23 +1873,23 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_db_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_db_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   odb::dbDatabase *arg2 = (odb::dbDatabase *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_db_set self db ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_db_set self db ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_db_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_db_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_ConvertPtr(objv[2], &argp2,SWIGTYPE_p_odb__dbDatabase, SWIG_POINTER_DISOWN |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_db_set" "', argument " "2"" of type '" "odb::dbDatabase *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_db_set" "', argument " "2"" of type '" "odb::dbDatabase *""'"); 
   }
   arg2 = reinterpret_cast< odb::dbDatabase * >(argp2);
   if (arg1) (arg1)->db = arg2;
@@ -1901,18 +1901,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_db_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_db_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   odb::dbDatabase *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_db_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_db_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_db_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_db_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (odb::dbDatabase *) ((arg1)->db);
   Tcl_SetObjResult(interp, SWIG_NewInstanceObj( SWIG_as_voidptr(result), SWIGTYPE_p_odb__dbDatabase,0));
   return TCL_OK;
@@ -1922,27 +1922,27 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_verilog_stor_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_verilog_stor_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_verilog_stor_set self verilog_stor ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_verilog_stor_set self verilog_stor ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_verilog_stor_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_verilog_stor_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string SWIG_TCL_CALL_ARGS_2(objv[2], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_verilog_stor_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_verilog_stor_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IRSolverExternal_verilog_stor_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "OpenIRA_verilog_stor_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -1957,18 +1957,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_verilog_stor_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_verilog_stor_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   std::string *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_verilog_stor_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_verilog_stor_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_verilog_stor_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_verilog_stor_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (std::string *) & ((arg1)->verilog_stor);
   Tcl_SetObjResult(interp,SWIG_From_std_string(static_cast< std::string >(*result)));
   return TCL_OK;
@@ -1978,23 +1978,23 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_lib_stor_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_lib_stor_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   std::vector< std::string > *arg2 = (std::vector< std::string > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_lib_stor_set self lib_stor ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_lib_stor_set self lib_stor ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_lib_stor_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_lib_stor_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_ConvertPtr(objv[2], &argp2,SWIGTYPE_p_std__vectorT_std__string_t, 0 |  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_lib_stor_set" "', argument " "2"" of type '" "std::vector< std::string > *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_lib_stor_set" "', argument " "2"" of type '" "std::vector< std::string > *""'"); 
   }
   arg2 = reinterpret_cast< std::vector< std::string > * >(argp2);
   if (arg1) (arg1)->lib_stor = *arg2;
@@ -2006,18 +2006,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_lib_stor_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_lib_stor_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   std::vector< std::string > *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_lib_stor_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_lib_stor_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_lib_stor_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_lib_stor_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (std::vector< std::string > *)& ((arg1)->lib_stor);
   Tcl_SetObjResult(interp, SWIG_NewInstanceObj( SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_std__string_t,0));
   return TCL_OK;
@@ -2027,27 +2027,27 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_sdc_file_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_sdc_file_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_sdc_file_set self sdc_file ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_sdc_file_set self sdc_file ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_sdc_file_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_sdc_file_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string SWIG_TCL_CALL_ARGS_2(objv[2], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_sdc_file_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_sdc_file_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IRSolverExternal_sdc_file_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "OpenIRA_sdc_file_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -2062,18 +2062,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_sdc_file_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_sdc_file_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   std::string *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_sdc_file_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_sdc_file_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_sdc_file_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_sdc_file_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (std::string *) & ((arg1)->sdc_file);
   Tcl_SetObjResult(interp,SWIG_From_std_string(static_cast< std::string >(*result)));
   return TCL_OK;
@@ -2083,27 +2083,27 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_top_cell_name_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_top_cell_name_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_top_cell_name_set self top_cell_name ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_top_cell_name_set self top_cell_name ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_top_cell_name_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_top_cell_name_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string SWIG_TCL_CALL_ARGS_2(objv[2], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_top_cell_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_top_cell_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IRSolverExternal_top_cell_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "OpenIRA_top_cell_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -2118,18 +2118,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_top_cell_name_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_top_cell_name_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   std::string *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_top_cell_name_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_top_cell_name_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_top_cell_name_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_top_cell_name_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (std::string *) & ((arg1)->top_cell_name);
   Tcl_SetObjResult(interp,SWIG_From_std_string(static_cast< std::string >(*result)));
   return TCL_OK;
@@ -2139,27 +2139,27 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_vsrc_loc_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_vsrc_loc_set(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   std::string *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   int res2 = SWIG_OLDOBJ ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_vsrc_loc_set self vsrc_loc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_vsrc_loc_set self vsrc_loc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_vsrc_loc_set" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_vsrc_loc_set" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   {
     std::string *ptr = (std::string *)0;
     res2 = SWIG_AsPtr_std_string SWIG_TCL_CALL_ARGS_2(objv[2], &ptr);
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_vsrc_loc_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_vsrc_loc_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     if (!ptr) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IRSolverExternal_vsrc_loc_set" "', argument " "2"" of type '" "std::string const &""'"); 
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "OpenIRA_vsrc_loc_set" "', argument " "2"" of type '" "std::string const &""'"); 
     }
     arg2 = ptr;
   }
@@ -2174,18 +2174,18 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_vsrc_loc_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_vsrc_loc_get(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   std::string *result = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_vsrc_loc_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_vsrc_loc_get self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_vsrc_loc_get" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_vsrc_loc_get" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   result = (std::string *) & ((arg1)->vsrc_loc);
   Tcl_SetObjResult(interp,SWIG_From_std_string(static_cast< std::string >(*result)));
   return TCL_OK;
@@ -2195,17 +2195,17 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_help(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_help(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_help self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_help self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_help" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_help" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   (arg1)->help();
   
   return TCL_OK;
@@ -2215,8 +2215,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_lef(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_lef(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2224,15 +2224,15 @@ _wrap_IRSolverExternal_import_lef(ClientData clientData SWIGUNUSED, Tcl_Interp *
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_lef self lef ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_lef self lef ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_lef" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_lef" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_lef" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_lef" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_lef((char const *)arg2);
@@ -2246,8 +2246,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_def(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_def(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2255,15 +2255,15 @@ _wrap_IRSolverExternal_import_def(ClientData clientData SWIGUNUSED, Tcl_Interp *
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_def self def ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_def self def ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_def" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_def" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_def" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_def" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_def((char const *)arg2);
@@ -2277,8 +2277,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_sdc(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_sdc(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2286,15 +2286,15 @@ _wrap_IRSolverExternal_import_sdc(ClientData clientData SWIGUNUSED, Tcl_Interp *
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_sdc self sdc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_sdc self sdc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_sdc" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_sdc" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_sdc" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_sdc" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_sdc((char const *)arg2);
@@ -2308,8 +2308,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_set_top_module(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_set_top_module(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2317,15 +2317,15 @@ _wrap_IRSolverExternal_set_top_module(ClientData clientData SWIGUNUSED, Tcl_Inte
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_set_top_module self verilogModule ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_set_top_module self verilogModule ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_set_top_module" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_set_top_module" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_set_top_module" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_set_top_module" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->set_top_module((char const *)arg2);
@@ -2339,8 +2339,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_verilog(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_verilog(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2348,15 +2348,15 @@ _wrap_IRSolverExternal_import_verilog(ClientData clientData SWIGUNUSED, Tcl_Inte
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_verilog self verilog ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_verilog self verilog ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_verilog" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_verilog" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_verilog" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_verilog" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_verilog((char const *)arg2);
@@ -2370,8 +2370,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_lib(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_lib(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2379,15 +2379,15 @@ _wrap_IRSolverExternal_import_lib(ClientData clientData SWIGUNUSED, Tcl_Interp *
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_lib self lib ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_lib self lib ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_lib" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_lib" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_lib" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_lib" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_lib((char const *)arg2);
@@ -2401,8 +2401,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_import_db(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_import_db(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2410,15 +2410,15 @@ _wrap_IRSolverExternal_import_db(ClientData clientData SWIGUNUSED, Tcl_Interp *i
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_import_db self dbLoc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_import_db self dbLoc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_import_db" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_import_db" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_import_db" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_import_db" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->import_db((char const *)arg2);
@@ -2432,8 +2432,8 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_read_voltage_src(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_read_voltage_src(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   char *arg2 = (char *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -2441,15 +2441,15 @@ _wrap_IRSolverExternal_read_voltage_src(ClientData clientData SWIGUNUSED, Tcl_In
   char *buf2 = 0 ;
   int alloc2 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"oo:IRSolverExternal_read_voltage_src self vsrc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"oo:OpenIRA_read_voltage_src self vsrc ",(void *)0,(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_read_voltage_src" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_read_voltage_src" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   res2 = SWIG_AsCharPtrAndSize(objv[2], &buf2, NULL, &alloc2);
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "IRSolverExternal_read_voltage_src" "', argument " "2"" of type '" "char const *""'");
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "OpenIRA_read_voltage_src" "', argument " "2"" of type '" "char const *""'");
   }
   arg2 = reinterpret_cast< char * >(buf2);
   (arg1)->read_voltage_src((char const *)arg2);
@@ -2463,17 +2463,17 @@ fail:
 
 
 SWIGINTERN int
-_wrap_IRSolverExternal_analyze_power_grid(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
-  IRSolverExternal *arg1 = (IRSolverExternal *) 0 ;
+_wrap_OpenIRA_analyze_power_grid(ClientData clientData SWIGUNUSED, Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]) {
+  OpenIRA *arg1 = (OpenIRA *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
-  if (SWIG_GetArgs(interp, objc, objv,"o:IRSolverExternal_analyze_power_grid self ",(void *)0) == TCL_ERROR) SWIG_fail;
-  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_IRSolverExternal, 0 |  0 );
+  if (SWIG_GetArgs(interp, objc, objv,"o:OpenIRA_analyze_power_grid self ",(void *)0) == TCL_ERROR) SWIG_fail;
+  res1 = SWIG_ConvertPtr(objv[1], &argp1,SWIGTYPE_p_OpenIRA, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IRSolverExternal_analyze_power_grid" "', argument " "1"" of type '" "IRSolverExternal *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OpenIRA_analyze_power_grid" "', argument " "1"" of type '" "OpenIRA *""'"); 
   }
-  arg1 = reinterpret_cast< IRSolverExternal * >(argp1);
+  arg1 = reinterpret_cast< OpenIRA * >(argp1);
   (arg1)->analyze_power_grid();
   
   return TCL_OK;
@@ -2482,62 +2482,62 @@ fail:
 }
 
 
-SWIGINTERN void swig_delete_IRSolverExternal(void *obj) {
-IRSolverExternal *arg1 = (IRSolverExternal *) obj;
+SWIGINTERN void swig_delete_OpenIRA(void *obj) {
+OpenIRA *arg1 = (OpenIRA *) obj;
 delete arg1;
 }
-static swig_method swig_IRSolverExternal_methods[] = {
-    {"help", _wrap_IRSolverExternal_help}, 
-    {"import_lef", _wrap_IRSolverExternal_import_lef}, 
-    {"import_def", _wrap_IRSolverExternal_import_def}, 
-    {"import_sdc", _wrap_IRSolverExternal_import_sdc}, 
-    {"set_top_module", _wrap_IRSolverExternal_set_top_module}, 
-    {"import_verilog", _wrap_IRSolverExternal_import_verilog}, 
-    {"import_lib", _wrap_IRSolverExternal_import_lib}, 
-    {"import_db", _wrap_IRSolverExternal_import_db}, 
-    {"read_voltage_src", _wrap_IRSolverExternal_read_voltage_src}, 
-    {"analyze_power_grid", _wrap_IRSolverExternal_analyze_power_grid}, 
+static swig_method swig_OpenIRA_methods[] = {
+    {"help", _wrap_OpenIRA_help}, 
+    {"import_lef", _wrap_OpenIRA_import_lef}, 
+    {"import_def", _wrap_OpenIRA_import_def}, 
+    {"import_sdc", _wrap_OpenIRA_import_sdc}, 
+    {"set_top_module", _wrap_OpenIRA_set_top_module}, 
+    {"import_verilog", _wrap_OpenIRA_import_verilog}, 
+    {"import_lib", _wrap_OpenIRA_import_lib}, 
+    {"import_db", _wrap_OpenIRA_import_db}, 
+    {"read_voltage_src", _wrap_OpenIRA_read_voltage_src}, 
+    {"analyze_power_grid", _wrap_OpenIRA_analyze_power_grid}, 
     {0,0}
 };
-static swig_attribute swig_IRSolverExternal_attributes[] = {
-    { "-db",_wrap_IRSolverExternal_db_get, _wrap_IRSolverExternal_db_set},
-    { "-verilog_stor",_wrap_IRSolverExternal_verilog_stor_get, _wrap_IRSolverExternal_verilog_stor_set},
-    { "-lib_stor",_wrap_IRSolverExternal_lib_stor_get, _wrap_IRSolverExternal_lib_stor_set},
-    { "-sdc_file",_wrap_IRSolverExternal_sdc_file_get, _wrap_IRSolverExternal_sdc_file_set},
-    { "-top_cell_name",_wrap_IRSolverExternal_top_cell_name_get, _wrap_IRSolverExternal_top_cell_name_set},
-    { "-vsrc_loc",_wrap_IRSolverExternal_vsrc_loc_get, _wrap_IRSolverExternal_vsrc_loc_set},
+static swig_attribute swig_OpenIRA_attributes[] = {
+    { "-db",_wrap_OpenIRA_db_get, _wrap_OpenIRA_db_set},
+    { "-verilog_stor",_wrap_OpenIRA_verilog_stor_get, _wrap_OpenIRA_verilog_stor_set},
+    { "-lib_stor",_wrap_OpenIRA_lib_stor_get, _wrap_OpenIRA_lib_stor_set},
+    { "-sdc_file",_wrap_OpenIRA_sdc_file_get, _wrap_OpenIRA_sdc_file_set},
+    { "-top_cell_name",_wrap_OpenIRA_top_cell_name_get, _wrap_OpenIRA_top_cell_name_set},
+    { "-vsrc_loc",_wrap_OpenIRA_vsrc_loc_get, _wrap_OpenIRA_vsrc_loc_set},
     {0,0,0}
 };
-static swig_class *swig_IRSolverExternal_bases[] = {0};
-static const char * swig_IRSolverExternal_base_names[] = {0};
-static swig_class _wrap_class_IRSolverExternal = { "IRSolverExternal", &SWIGTYPE_p_IRSolverExternal,_wrap_new_IRSolverExternal, swig_delete_IRSolverExternal, swig_IRSolverExternal_methods, swig_IRSolverExternal_attributes, swig_IRSolverExternal_bases,swig_IRSolverExternal_base_names, &swig_module, SWIG_TCL_HASHTABLE_INIT };
+static swig_class *swig_OpenIRA_bases[] = {0};
+static const char * swig_OpenIRA_base_names[] = {0};
+static swig_class _wrap_class_OpenIRA = { "OpenIRA", &SWIGTYPE_p_OpenIRA,_wrap_new_OpenIRA, swig_delete_OpenIRA, swig_OpenIRA_methods, swig_OpenIRA_attributes, swig_OpenIRA_bases,swig_OpenIRA_base_names, &swig_module, SWIG_TCL_HASHTABLE_INIT };
 
 static swig_command_info swig_commands[] = {
-    { SWIG_prefix "new_IRSolverExternal", (swig_wrapper_func) _wrap_new_IRSolverExternal, NULL},
-    { SWIG_prefix "delete_IRSolverExternal", (swig_wrapper_func) _wrap_delete_IRSolverExternal, NULL},
-    { SWIG_prefix "IRSolverExternal_db_set", (swig_wrapper_func) _wrap_IRSolverExternal_db_set, NULL},
-    { SWIG_prefix "IRSolverExternal_db_get", (swig_wrapper_func) _wrap_IRSolverExternal_db_get, NULL},
-    { SWIG_prefix "IRSolverExternal_verilog_stor_set", (swig_wrapper_func) _wrap_IRSolverExternal_verilog_stor_set, NULL},
-    { SWIG_prefix "IRSolverExternal_verilog_stor_get", (swig_wrapper_func) _wrap_IRSolverExternal_verilog_stor_get, NULL},
-    { SWIG_prefix "IRSolverExternal_lib_stor_set", (swig_wrapper_func) _wrap_IRSolverExternal_lib_stor_set, NULL},
-    { SWIG_prefix "IRSolverExternal_lib_stor_get", (swig_wrapper_func) _wrap_IRSolverExternal_lib_stor_get, NULL},
-    { SWIG_prefix "IRSolverExternal_sdc_file_set", (swig_wrapper_func) _wrap_IRSolverExternal_sdc_file_set, NULL},
-    { SWIG_prefix "IRSolverExternal_sdc_file_get", (swig_wrapper_func) _wrap_IRSolverExternal_sdc_file_get, NULL},
-    { SWIG_prefix "IRSolverExternal_top_cell_name_set", (swig_wrapper_func) _wrap_IRSolverExternal_top_cell_name_set, NULL},
-    { SWIG_prefix "IRSolverExternal_top_cell_name_get", (swig_wrapper_func) _wrap_IRSolverExternal_top_cell_name_get, NULL},
-    { SWIG_prefix "IRSolverExternal_vsrc_loc_set", (swig_wrapper_func) _wrap_IRSolverExternal_vsrc_loc_set, NULL},
-    { SWIG_prefix "IRSolverExternal_vsrc_loc_get", (swig_wrapper_func) _wrap_IRSolverExternal_vsrc_loc_get, NULL},
-    { SWIG_prefix "IRSolverExternal_help", (swig_wrapper_func) _wrap_IRSolverExternal_help, NULL},
-    { SWIG_prefix "IRSolverExternal_import_lef", (swig_wrapper_func) _wrap_IRSolverExternal_import_lef, NULL},
-    { SWIG_prefix "IRSolverExternal_import_def", (swig_wrapper_func) _wrap_IRSolverExternal_import_def, NULL},
-    { SWIG_prefix "IRSolverExternal_import_sdc", (swig_wrapper_func) _wrap_IRSolverExternal_import_sdc, NULL},
-    { SWIG_prefix "IRSolverExternal_set_top_module", (swig_wrapper_func) _wrap_IRSolverExternal_set_top_module, NULL},
-    { SWIG_prefix "IRSolverExternal_import_verilog", (swig_wrapper_func) _wrap_IRSolverExternal_import_verilog, NULL},
-    { SWIG_prefix "IRSolverExternal_import_lib", (swig_wrapper_func) _wrap_IRSolverExternal_import_lib, NULL},
-    { SWIG_prefix "IRSolverExternal_import_db", (swig_wrapper_func) _wrap_IRSolverExternal_import_db, NULL},
-    { SWIG_prefix "IRSolverExternal_read_voltage_src", (swig_wrapper_func) _wrap_IRSolverExternal_read_voltage_src, NULL},
-    { SWIG_prefix "IRSolverExternal_analyze_power_grid", (swig_wrapper_func) _wrap_IRSolverExternal_analyze_power_grid, NULL},
-    { SWIG_prefix "IRSolverExternal", (swig_wrapper_func) SWIG_ObjectConstructor, (ClientData)&_wrap_class_IRSolverExternal},
+    { SWIG_prefix "new_OpenIRA", (swig_wrapper_func) _wrap_new_OpenIRA, NULL},
+    { SWIG_prefix "delete_OpenIRA", (swig_wrapper_func) _wrap_delete_OpenIRA, NULL},
+    { SWIG_prefix "OpenIRA_db_set", (swig_wrapper_func) _wrap_OpenIRA_db_set, NULL},
+    { SWIG_prefix "OpenIRA_db_get", (swig_wrapper_func) _wrap_OpenIRA_db_get, NULL},
+    { SWIG_prefix "OpenIRA_verilog_stor_set", (swig_wrapper_func) _wrap_OpenIRA_verilog_stor_set, NULL},
+    { SWIG_prefix "OpenIRA_verilog_stor_get", (swig_wrapper_func) _wrap_OpenIRA_verilog_stor_get, NULL},
+    { SWIG_prefix "OpenIRA_lib_stor_set", (swig_wrapper_func) _wrap_OpenIRA_lib_stor_set, NULL},
+    { SWIG_prefix "OpenIRA_lib_stor_get", (swig_wrapper_func) _wrap_OpenIRA_lib_stor_get, NULL},
+    { SWIG_prefix "OpenIRA_sdc_file_set", (swig_wrapper_func) _wrap_OpenIRA_sdc_file_set, NULL},
+    { SWIG_prefix "OpenIRA_sdc_file_get", (swig_wrapper_func) _wrap_OpenIRA_sdc_file_get, NULL},
+    { SWIG_prefix "OpenIRA_top_cell_name_set", (swig_wrapper_func) _wrap_OpenIRA_top_cell_name_set, NULL},
+    { SWIG_prefix "OpenIRA_top_cell_name_get", (swig_wrapper_func) _wrap_OpenIRA_top_cell_name_get, NULL},
+    { SWIG_prefix "OpenIRA_vsrc_loc_set", (swig_wrapper_func) _wrap_OpenIRA_vsrc_loc_set, NULL},
+    { SWIG_prefix "OpenIRA_vsrc_loc_get", (swig_wrapper_func) _wrap_OpenIRA_vsrc_loc_get, NULL},
+    { SWIG_prefix "OpenIRA_help", (swig_wrapper_func) _wrap_OpenIRA_help, NULL},
+    { SWIG_prefix "OpenIRA_import_lef", (swig_wrapper_func) _wrap_OpenIRA_import_lef, NULL},
+    { SWIG_prefix "OpenIRA_import_def", (swig_wrapper_func) _wrap_OpenIRA_import_def, NULL},
+    { SWIG_prefix "OpenIRA_import_sdc", (swig_wrapper_func) _wrap_OpenIRA_import_sdc, NULL},
+    { SWIG_prefix "OpenIRA_set_top_module", (swig_wrapper_func) _wrap_OpenIRA_set_top_module, NULL},
+    { SWIG_prefix "OpenIRA_import_verilog", (swig_wrapper_func) _wrap_OpenIRA_import_verilog, NULL},
+    { SWIG_prefix "OpenIRA_import_lib", (swig_wrapper_func) _wrap_OpenIRA_import_lib, NULL},
+    { SWIG_prefix "OpenIRA_import_db", (swig_wrapper_func) _wrap_OpenIRA_import_db, NULL},
+    { SWIG_prefix "OpenIRA_read_voltage_src", (swig_wrapper_func) _wrap_OpenIRA_read_voltage_src, NULL},
+    { SWIG_prefix "OpenIRA_analyze_power_grid", (swig_wrapper_func) _wrap_OpenIRA_analyze_power_grid, NULL},
+    { SWIG_prefix "OpenIRA", (swig_wrapper_func) SWIG_ObjectConstructor, (ClientData)&_wrap_class_OpenIRA},
     {0, 0, 0}
 };
 
@@ -2551,7 +2551,7 @@ static swig_const_info swig_constants[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static swig_type_info _swigt__p_IRSolverExternal = {"_p_IRSolverExternal", "IRSolverExternal *", 0, 0, (void*)&_wrap_class_IRSolverExternal, 0};
+static swig_type_info _swigt__p_OpenIRA = {"_p_OpenIRA", "OpenIRA *", 0, 0, (void*)&_wrap_class_OpenIRA, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_odb__dbDatabase = {"_p_odb__dbDatabase", "odb::dbDatabase *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__vectorT_std__string_t = {"_p_std__vectorT_std__string_t", "std::vector< std::string > *", 0, 0, (void*)0, 0};
@@ -2559,7 +2559,7 @@ static swig_type_info _swigt__std__ptrdiff_t = {"_std__ptrdiff_t", "std::ptrdiff
 static swig_type_info _swigt__std__size_t = {"_std__size_t", "std::size_t", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
-  &_swigt__p_IRSolverExternal,
+  &_swigt__p_OpenIRA,
   &_swigt__p_char,
   &_swigt__p_odb__dbDatabase,
   &_swigt__p_std__vectorT_std__string_t,
@@ -2567,7 +2567,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__std__size_t,
 };
 
-static swig_cast_info _swigc__p_IRSolverExternal[] = {  {&_swigt__p_IRSolverExternal, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_OpenIRA[] = {  {&_swigt__p_OpenIRA, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_odb__dbDatabase[] = {  {&_swigt__p_odb__dbDatabase, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_std__string_t[] = {  {&_swigt__p_std__vectorT_std__string_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -2575,7 +2575,7 @@ static swig_cast_info _swigc__std__ptrdiff_t[] = {  {&_swigt__std__ptrdiff_t, 0,
 static swig_cast_info _swigc__std__size_t[] = {  {&_swigt__std__size_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
-  _swigc__p_IRSolverExternal,
+  _swigc__p_OpenIRA,
   _swigc__p_char,
   _swigc__p_odb__dbDatabase,
   _swigc__p_std__vectorT_std__string_t,

@@ -2,10 +2,10 @@
 #define __IRSOLVER_EXTERNAL__
 
 #include "db.h"
-class IRSolverExternal {
+class OpenIRA {
 public:
-    IRSolverExternal();
-    ~IRSolverExternal();
+    OpenIRA();
+    ~OpenIRA();
     odb::dbDatabase* db = NULL;
     std::string verilog_stor;
     std::vector<std::string> lib_stor;

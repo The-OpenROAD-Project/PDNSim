@@ -17,16 +17,16 @@ using odb::dbDatabase;
 using namespace std;
 using std::vector;
 
-IRSolverExternal::
-IRSolverExternal() : 
+OpenIRA::
+OpenIRA() : 
   db_id(INT_MAX) {
 };
 
-IRSolverExternal::
-~IRSolverExternal() {};
+OpenIRA::
+~OpenIRA() {};
 
 void
-IRSolverExternal::help() {
+OpenIRA::help() {
 cout <<endl;
 cout << "import_lef [file_name]" << endl;
 cout << "    *.lef location " << endl;
@@ -58,7 +58,7 @@ cout << "    Solver for IR drop on VSS net and layer 1" << endl;
 cout << endl; 
 }
 
-void IRSolverExternal::import_lef(const char* lef){ 
+void OpenIRA::import_lef(const char* lef){ 
   if( db_id == INT_MAX ) {
     db = odb::dbDatabase::create();
     db_id = db->getId();
@@ -70,7 +70,7 @@ void IRSolverExternal::import_lef(const char* lef){
   lefReader.createTechAndLib("testlib", lef);
 }
 
-void IRSolverExternal::import_def(const char* def){
+void OpenIRA::import_def(const char* def){
   if( db_id == INT_MAX ) {
     db = odb::dbDatabase::create();
     db_id = db->getId();
@@ -90,36 +90,36 @@ void IRSolverExternal::import_def(const char* def){
 }
 
 void 
-IRSolverExternal::import_sdc(const char* sdc) {
+OpenIRA::import_sdc(const char* sdc) {
   sdc_file = sdc;
   cout<< "INFO: Reading SDC file " << sdc_file << endl;
 }
 
 void 
-IRSolverExternal::set_top_module(const char* topCellName) {
+OpenIRA::set_top_module(const char* topCellName) {
   top_cell_name = topCellName;
   cout<< "INFO: Top module set " << top_cell_name << endl;
 }
 
 
 void
-IRSolverExternal::import_verilog(const char* verilog) {
+OpenIRA::import_verilog(const char* verilog) {
   verilog_stor = verilog;//.push_back(verilog);
   cout<< "INFO: Reading Verilog file " << verilog_stor << endl;
 }
 
 void 
-IRSolverExternal::import_lib(const char* lib){
+OpenIRA::import_lib(const char* lib){
   lib_stor.push_back(lib);
 }
 
 void
-IRSolverExternal::read_voltage_src(const char* vsrc) {
+OpenIRA::read_voltage_src(const char* vsrc) {
   vsrc_loc = vsrc;
   cout<< "INFO: Reading Voltage source file " << vsrc_loc << endl;
 }
 
-void IRSolverExternal::import_db(const char* dbLoc) {
+void OpenIRA::import_db(const char* dbLoc) {
       if( db_id == INT_MAX ) {
         db = odb::dbDatabase::create();
         db_id = db->getId();
@@ -137,7 +137,7 @@ void IRSolverExternal::import_db(const char* dbLoc) {
 
 }
 
-void IRSolverExternal::analyze_power_grid() {
+void OpenIRA::analyze_power_grid() {
     GMat* gmat_obj;
     IRSolver* irsolve_h = new IRSolver(db, verilog_stor,top_cell_name, sdc_file, lib_stor, vsrc_loc);
     gmat_obj = irsolve_h->GetGMat();

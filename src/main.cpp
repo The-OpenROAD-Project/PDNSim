@@ -30,9 +30,9 @@ int OpeniraTclAppInit(Tcl_Interp *interp) {
 
 
 
-int OpenIRA(Parameters* parmsToOpenira) {
+int Openira(Parameters* parmsToOpenira) {
     GMat* gmat_obj;
-    IRSolverExternal*  ir_obj = new IRSolverExternal();
+    OpenIRA* ir_obj = new OpenIRA();
     ir_obj->import_lef(parmsToOpenira->getInputLefFile().c_str()); 
     ir_obj->import_def(parmsToOpenira->getInputDefFile().c_str()); ;
     ir_obj->import_verilog(parmsToOpenira->getInputVerilogFile().c_str());
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
         if (parmsToOpenira->isInteractiveMode()) {
                 Tcl_Main(argc, argv, OpeniraTclAppInit);
         } else {
-                OpenIRA(parmsToOpenira);
+                Openira(parmsToOpenira);
         }
 
         return 0;
