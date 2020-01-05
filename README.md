@@ -21,6 +21,7 @@ OpenIRA: Open-source static power-grid IR analyzer
 * LIB : Liberty files for OpenSTA power report
 * Verilog : Gate-level netlist for OpenSTA power report
 * SDC : Constraints for OpenSTA power report
+* VSRC.loc: Voltage source location [file](test/gcd/Vsrc.loc)
 
 ###  Outputs
 * Static IR drop report, worst case IR drop
@@ -37,9 +38,10 @@ OpenIRA: Open-source static power-grid IR analyzer
 
 #### Pre-requisutes
 - GCC compiler and libstdc++ static library >= 4.8.5
-- tcl > = 8.4
+- TCL > = 8.4
 - BLAS library >= 3.8 for SuperLU
-- FORTRAN compiler 
+- FORTRAN compiler
+- Boost Libraries >= 1.53
 
 #### Build and Install
 
@@ -68,20 +70,22 @@ $ ./irsolver
 
 ### Usage
 
-Open the tcl interpreter for OpenIRA.
+Open the TCL interpreter for OpenIRA.
 
 
 `$ openira`
 
-Run the following tcl commands:
+Run the following TCL commands:
 
 ```
 openira ira
 ira import_lef /path/to/lef/file.lef
 ira import_def /path/to/def/file.def
 ira import_verilog /path/to/gate-level/netlist/file.v
+ira set_top_module moduleName
 ira import_sdc /path/to/constraints/file.sdc 
 ira import_lib /path/to/liberty/file.lib
+ira read_voltage_src /path/to/Vsrc.loc
 ira analyze_power_grid
 ```
 
