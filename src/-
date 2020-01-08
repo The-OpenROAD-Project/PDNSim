@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.9)
 project(IRSolver VERSION 0.1.0)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Disable compiler specific extensions like gnu++11.
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -18,33 +18,31 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #endif()
 
 # For Multithread
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Dcimg_use_jpeg=1 -pthread -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -pthread -O3")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dcimg_use_jpeg=1 -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
 
-#set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -ld   -ltcl -lm  -ltk -lboost_program_options")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3  -ltcl -lm -ltk -lboost_program_options")
-set(CMAKE_EXE_LINKER_FLAGS "-ltcl")
-#set(THREADS_PREFER_PTHREAD_FLAG ON)
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(IRSOLVER_HOME ${PROJECT_SOURCE_DIR} )
 
+set(BUILD_PYTHON OFF)
+set(BUILD_TCL OFF)
+
 set(OPENDB_HOME
-    ${PROJECT_SOURCE_DIR}/modules/OpenDB
+    ${PROJECT_SOURCE_DIR}/src/OpenDB
   )
 set(OPENSTA_HOME
-${PROJECT_SOURCE_DIR}/modules/OpenSTA
+${PROJECT_SOURCE_DIR}/src/OpenSTA
 )
 set(SUPERLU_HOME
 ${PROJECT_SOURCE_DIR}/modules/superlu
 )
 
-
-set(BUILD_PYTHON OFF)
-set(BUILD_TCL ON)
-
-add_subdirectory(${OPENDB_HOME} ${CMAKE_CURRENT_BINARY_DIR}/module/OpenDB)
+add_subdirectory(${OPENDB_HOME})
 add_subdirectory(${OPENSTA_HOME})
 add_subdirectory(${SUPERLU_HOME})
 
@@ -52,10 +50,7 @@ set(ENV{TYPE_CALL} library)
 
 
 ## configure settings
-find_package(TCL REQUIRED)
-
-find_package(ZLIB REQUIRED)
-find_package(SWIG REQUIRED)
+#find_package(TCL REQUIRED)
 
 
 # for cimg
@@ -68,33 +63,26 @@ find_package(SWIG REQUIRED)
 #  find_package(JPEG)
 #endif()
 
-set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+#find_package(Boost REQUIRED)
+#find_package(Threads REQUIRED)
+
+# for multi threads
+find_package(OpenMP)
 
 set (IRSOLVER_SRC 
-  src/openira_external.cpp
-  src/node.cpp
-  src/gmat.cpp
-  src/ir_solver.cpp
-  src/get_power.cpp
-  src/parameters.cpp
-  src/main.cpp
-  src/irsolver_wrap.cpp
+  src/IRSolver.cpp
+  src/getPower.cpp
   )
 
 
 set (IRSOLVER_HEADER
-  src/ir_solver.h
-  src/node.h
-  src/gmat.h
-  src/openira_external.h
-  src/parameters.h
-  src/get_power.h
+  src/IRSolver.hh
+  src/getPower.h
+  src/timing.h
 )
 
 set (IRSOLVER_SWIG_FILES
-  ${IRSOLVER_HOME}/src/ir_solver.i
 )
 
   
@@ -112,35 +100,20 @@ set_target_properties( irsolverlib
 ############################################################
 # Create an executable
 ############################################################
-add_custom_command(OUTPUT ${IRSOLVER_HOME}/src/irsolver_wrap.cpp
-  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o ${IRSOLVER_HOME}/src/irsolver_wrap.cpp ${IRSOLVER_HOME}/src/ir_solver.i 
-  WORKING_DIRECTORY ${IRSOLVER_HOME}
-  DEPENDS ${IRSOLVER_SWIG_FILES}
-)
-
-
 
 add_executable( irsolver
   ${IRSOLVER_SRC}
 )  
 
-add_dependencies( irsolver opendb )
-add_dependencies( irsolver superlu )
-add_dependencies( irsolver opendb )
-#add_dependencies( irsolver irsolver_wrap )
+add_dependencies( irsolver opendb superlu )
 
-
-#add_dependencies( irsolverlib opendb )
-#add_dependencies( irsolverlib superlu )
-#add_dependencies( irsolverlib opendb )
-#add_dependencies( irsolverlib irsolver_wrap )
+add_dependencies( irsolverlib opendb superlu)
 
 ############################################################
 # include directories 
 ############################################################
 target_include_directories( irsolver
   PUBLIC
-  ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
@@ -161,7 +134,6 @@ target_include_directories( irsolver
 
 target_include_directories( irsolverlib 
   PUBLIC
-  ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
@@ -180,14 +152,12 @@ target_include_directories( irsolverlib
   ${OPENSTA_HOME}/verilog
 )
 
-target_link_libraries(irsolver
+target_link_libraries( irsolver
   PUBLIC
-  ${TCL_LIBRARY}
-  ${Boost_LIBRARIES}
   OpenSTA
-  ${ZLIB_LIBRARIES}
-  superlu
+  ${TCL_LIB}
   opendb
+	superlu
   )
 
 ############################################################
@@ -197,4 +167,3 @@ target_link_libraries(irsolver
 install(FILES ${IRSOLVER_HEADER} DESTINATION include)
 install(TARGETS irsolver DESTINATION bin)
 install(TARGETS irsolverlib DESTINATION lib)
-

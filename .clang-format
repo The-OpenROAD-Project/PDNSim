@@ -29,4 +29,5 @@ BraceWrapping:
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Custom
 DerivePointerAlignment: false
+SortIncludes: false
 SpaceAfterCStyleCast: true
