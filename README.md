@@ -1,11 +1,10 @@
-# OpenIRA
+# PDNSim
 [![Standard](https://img.shields.io/badge/C%2B%2B-17-blue)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![Download](https://img.shields.io/badge/Download-here-red)](https://github.com/VidyaChhabria/PDNA/archive/master.zip)
 [![Version](https://img.shields.io/badge/version-0.1-green)](https://github.com/VidyaChhabria/PDNA/tree/master)
 [![AskMe](https://img.shields.io/badge/ask-me-yellow)](https://github.com/VidyaChhabria/PDNA/issues)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-OpenIRA: Open-source static power-grid IR analyzer
 
 <img align = "right" width="50%" src="doc/current_map.jpg">
 <img align = "right" width="50%" src="doc/IR_map.jpg">
@@ -49,7 +48,7 @@ After  cloning the repository and its submodules, build and install using the
 following commands:
 
 ```
-$ cd OpenIRA
+$ cd PDNSim
 $ mkdir build
 $ cd build
 $ cmake ..
@@ -81,19 +80,19 @@ Open the TCL interpreter for OpenIRA.
 Run the following TCL commands:
 
 ```
-OpenIRA ira
-ira import_lef /path/to/lef/file.lef
-ira import_def /path/to/def/file.def
-ira import_verilog /path/to/gate-level/netlist/file.v
-ira set_top_module moduleName
-ira import_sdc /path/to/constraints/file.sdc 
-ira import_lib /path/to/liberty/file.lib
-ira read_voltage_src /path/to/Vsrc.loc
-ira analyze_power_grid
+PDNSim pdn
+pdn import_lef /path/to/lef/file.lef
+pdn import_def /path/to/def/file.def
+pdn import_verilog /path/to/gate-level/netlist/file.v
+pdn set_top_module moduleName
+pdn import_sdc /path/to/constraints/file.sdc 
+pdn import_lib /path/to/liberty/file.lib
+pdn read_voltage_src /path/to/Vsrc.loc
+pdn analyze_power_grid
 ```
 
 The analyze_power_grid command supports the following optional arguments:
-analyzer_power+grid -layer <str> -net VDD/VSS
+analyzer_power_grid -layer <str> -net VDD/VSS
 
 
 analyze_power_grid -layer M1 -net VSS
