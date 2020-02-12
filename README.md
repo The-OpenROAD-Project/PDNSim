@@ -12,7 +12,7 @@
 ## Getting Started
 
 ### Clone Repository and Submodules
-`git clone --recursive https://github.com/VidyaChhabria/OpenIRA.git`
+`git clone --recursive https://github.com/VidyaChhabria/PDNSim.git`
 
 ### Inputs
 * DEF : Placed and PDN synthesized
