@@ -12,7 +12,7 @@
 ## Getting Started
 
 ### Clone Repository and Submodules
-`git clone --recursive https://github.com/VidyaChhabria/PDNSim.git`
+`git clone --recursive https://github.com/The-OpenROAD-Project/PDNSim.git`
 
 ### Inputs
 * DEF : Placed and PDN synthesized
@@ -63,7 +63,7 @@ $ make
 
 ```
 $ ./irsolver
-% source ../test/gcd_test.tcl
+% source ../test/regression.sh
 ```
 
 
@@ -72,10 +72,10 @@ $ ./irsolver
 |:--:|
 | *Example usages with TCL interpreter* |
 
-Open the TCL interpreter for OpenIRA.
+Open the TCL interpreter for PDNSim.
 
 
-`$ openira`
+`$ pdnsim`
 
 Run the following TCL commands:
 

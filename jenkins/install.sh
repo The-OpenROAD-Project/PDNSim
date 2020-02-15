@@ -1,4 +1,4 @@
-mkdir -p /OpenIRA/build
-cd /OpenIRA/build
+mkdir -p /PDNSim/build
+cd /PDNSim/build
 cmake ..
 make

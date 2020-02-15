@@ -1,2 +1,2 @@
-docker build -t openira .
-docker run -it -v $(pwd):/OpenIRA openira bash
+docker build -t pdnsim .
+docker run -it -v $(pwd):/PDNSim pdnsim bash
