@@ -36,7 +36,6 @@ if [ $comp_value -eq 1 ]
 then
     echo "FAIL!"
     echo "===== TEST 2: FAIL ======"
-    exit 1
 else
     echo "SUCCESS!"
     echo "===== TEST 2: PASS ======"
