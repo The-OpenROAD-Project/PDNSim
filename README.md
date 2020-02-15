@@ -62,7 +62,7 @@ $ make
   stable:
 
 ```
-$ ./irsolver
+$ ./pdnsim
 % source ../test/regression.sh
 ```
 
