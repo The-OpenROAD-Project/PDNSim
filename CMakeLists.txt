@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
 
-project(IRSolver VERSION 0.1.0)
+project(PDNSIM VERSION 0.1.0)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -28,7 +28,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-ltcl")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-set(IRSOLVER_HOME ${PROJECT_SOURCE_DIR} )
+set(PDNSIM_HOME ${PROJECT_SOURCE_DIR} )
 
 set(OPENDB_HOME
     ${PROJECT_SOURCE_DIR}/modules/OpenDB
@@ -72,73 +72,68 @@ set(Boost_USE_STATIC_LIBS ON)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 
-set (IRSOLVER_SRC 
-  src/openira_external.cpp
+set (PDNSIM_SRC 
+  src/pdnsim_external.cpp
   src/node.cpp
   src/gmat.cpp
   src/ir_solver.cpp
   src/get_power.cpp
   src/parameters.cpp
   src/main.cpp
-  src/irsolver_wrap.cpp
+  src/pdnsim_wrap.cpp
   )
 
 
-set (IRSOLVER_HEADER
+set (PDNSIM_HEADER
   src/ir_solver.h
   src/node.h
   src/gmat.h
-  src/openira_external.h
+  src/pdnsim_external.h
   src/parameters.h
   src/get_power.h
 )
 
-set (IRSOLVER_SWIG_FILES
-  ${IRSOLVER_HOME}/src/ir_solver.i
+set (PDNSIM_SWIG_FILES 
+  ${PDNSIM_HOME}/src/ir_solver.i
 )
 
   
 ############################################################
 # Create a library 
 ############################################################
-add_library( irsolverlib  SHARED
-  ${IRSOLVER_SRC}
+add_library( pdnsimlib  SHARED
+        ${PDNSIM_SRC}
 )
 
-set_target_properties( irsolverlib 
-  PROPERTIES OUTPUT_NAME "irsolver"
+set_target_properties( pdnsimlib 
+  PROPERTIES OUTPUT_NAME "pdnsim"
 )
 
 ############################################################
 # Create an executable
 ############################################################
-add_custom_command(OUTPUT ${IRSOLVER_HOME}/src/irsolver_wrap.cpp
-  COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o ${IRSOLVER_HOME}/src/irsolver_wrap.cpp ${IRSOLVER_HOME}/src/ir_solver.i 
-  WORKING_DIRECTORY ${IRSOLVER_HOME}
-  DEPENDS ${IRSOLVER_SWIG_FILES}
+add_custom_command(OUTPUT ${PDNSIM_HOME}/src/pdnsim_wrap.cpp
+        COMMAND ${SWIG_EXECUTABLE} -tcl8 -c++ -o
+        ${PDNSIM_HOME}/src/pdnsim_wrap.cpp  ${PDNSIM_HOME}/src/ir_solver.i 
+  WORKING_DIRECTORY ${PDNSIM_HOME}
+  DEPENDS ${PDNSIM_SWIG_FILES}
 )
 
 
 
-add_executable( irsolver
-  ${IRSOLVER_SRC}
+add_executable( pdnsim
+  ${PDNSIM_SRC}
 )  
 
-add_dependencies( irsolver opendb )
-add_dependencies( irsolver superlu )
-add_dependencies( irsolver opendb )
-#add_dependencies( irsolver irsolver_wrap )
+add_dependencies( pdnsim opendb )
+add_dependencies( pdnsim superlu )
+add_dependencies( pdnsim sta )
 
-
-#add_dependencies( irsolverlib opendb )
-#add_dependencies( irsolverlib superlu )
-#add_dependencies( irsolverlib opendb )
-#add_dependencies( irsolverlib irsolver_wrap )
 
 ############################################################
 # include directories 
 ############################################################
-target_include_directories( irsolver
+target_include_directories( pdnsim
   PUBLIC
   ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
@@ -159,7 +154,7 @@ target_include_directories( irsolver
   ${OPENSTA_HOME}/verilog
 )
 
-target_include_directories( irsolverlib 
+target_include_directories( pdnsimlib 
   PUBLIC
   ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
@@ -180,7 +175,7 @@ target_include_directories( irsolverlib
   ${OPENSTA_HOME}/verilog
 )
 
-target_link_libraries(irsolver
+target_link_libraries(pdnsim
   PUBLIC
   ${TCL_LIBRARY}
   ${Boost_LIBRARIES}
@@ -194,7 +189,7 @@ target_link_libraries(irsolver
 # Install  
 ############################################################
 
-install(FILES ${IRSOLVER_HEADER} DESTINATION include)
-install(TARGETS irsolver DESTINATION bin)
-install(TARGETS irsolverlib DESTINATION lib)
+install(FILES ${PDNSIM_HEADER} DESTINATION include)
+install(TARGETS pdnsim DESTINATION bin)
+install(TARGETS pdnsimlib DESTINATION lib)
 

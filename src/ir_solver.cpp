@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <time.h>
 #include <sstream>
 #include <iterator>
 #include <string>
@@ -48,6 +49,7 @@ vector<double> IRSolver::getJ()
 
 void IRSolver::solve_ir()
 {
+  clock_t t1, t2;
   SuperMatrix       A, L, U, B;
   SuperLUStat_t     stat;
   superlu_options_t options;
@@ -72,16 +74,21 @@ void IRSolver::solve_ir()
   if (!(perm_c = intMalloc(n)))
     ABORT("Malloc fails for perm_c[].");
   set_default_options(&options);
-  options.ColPerm = NATURAL;
+  //options.ColPerm = NATURAL;
+  options.ColPerm = COLAMD;
   /* Initialize the statistics variables. */
   StatInit(&stat);
   // dPrint_CompCol_Matrix("A", &A);
   // dPrint_Dense_Matrix("B", &B);
   cout << "\n" << endl;
+  t1 = clock();
   cout << "INFO: Solving GV=J" << endl;
   cout << "INFO: SuperLU begin solving" << endl;
   /* Solve the linear system. */
   dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
+  t2 = clock();
+  float time_to_solve;
+  time_to_solve = float(t2-t1)/CLOCKS_PER_SEC;
   cout << "INFO: SuperLU finished solving" << endl;
   // dPrint_Dense_Matrix("B", &B);
   DNformat*    Bstore = (DNformat*) B.Store;

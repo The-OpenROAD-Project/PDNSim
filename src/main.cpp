@@ -1,4 +1,4 @@
-#include "openira_external.h"
+#include "pdnsim_external.h"
 #include <tcl.h>
 #include <fstream>
 #include <iostream>
@@ -18,9 +18,9 @@ extern "C" {
 int Irsolver_Init(Tcl_Interp* interp);
 }
 
-int OpeniraTclAppInit(Tcl_Interp* interp)
+int PDNSimTclAppInit(Tcl_Interp* interp)
 {
-  std::cout << " > Running OpenIRA in interactive mode.\n";
+  std::cout << " > Running PDNSim in interactive mode.\n";
 
   Tcl_Init(interp);
   Irsolver_Init(interp);
@@ -28,20 +28,18 @@ int OpeniraTclAppInit(Tcl_Interp* interp)
   return TCL_OK;
 }
 
-int Openira(Parameters* parmsToOpenira)
+int pdn_sim(Parameters* parmsToPDNSim)
 {
   GMat*    gmat_obj;
-  OpenIRA* ir_obj = new OpenIRA();
-  ir_obj->import_lef(parmsToOpenira->getInputLefFile().c_str());
-  ir_obj->import_def(parmsToOpenira->getInputDefFile().c_str());
-  ;
-  ir_obj->import_verilog(parmsToOpenira->getInputVerilogFile().c_str());
-  ir_obj->set_top_module(parmsToOpenira->getTopModule().c_str());
-  ir_obj->import_lib(parmsToOpenira->getInputLibFile().c_str());
-  ir_obj->import_sdc(parmsToOpenira->getInputSDCFile().c_str());
-  ir_obj->read_voltage_src(parmsToOpenira->getInputVsrcFile().c_str());
-  cout << parmsToOpenira->getInputVsrcFile().c_str() << endl;
-  // ir_obj->import_db("/home/sachin00/chhab011/PDN.db");
+  PDNSim* ir_obj = new PDNSim();
+  ir_obj->import_lef(parmsToPDNSim->getInputLefFile().c_str());
+  ir_obj->import_def(parmsToPDNSim->getInputDefFile().c_str());
+  ir_obj->import_verilog(parmsToPDNSim->getInputVerilogFile().c_str());
+  ir_obj->set_top_module(parmsToPDNSim->getTopModule().c_str());
+  ir_obj->import_lib(parmsToPDNSim->getInputLibFile().c_str());
+  ir_obj->import_sdc(parmsToPDNSim->getInputSDCFile().c_str());
+  ir_obj->read_voltage_src(parmsToPDNSim->getInputVsrcFile().c_str());
+  cout << parmsToPDNSim->getInputVsrcFile().c_str() << endl;
   IRSolver* irsolve_h = new IRSolver(ir_obj->db,
                                      ir_obj->verilog_stor,
                                      ir_obj->top_cell_name,
@@ -90,7 +88,7 @@ int Openira(Parameters* parmsToOpenira)
 int main(int argc, char** argv)
 {
   std::cout << " ######################################\n";
-  std::cout << " # OpenIRA: OpenROAD IR analysis tool #\n";
+  std::cout << " # PDNSim: OpenROAD IR analysis tool #\n";
   std::cout << " #       University of Minnesota      #\n";
   std::cout << " # Author:                            #\n";
   std::cout << " #    Vidya Chhabria (UMN)            #\n";
@@ -100,12 +98,12 @@ int main(int argc, char** argv)
 
   Tcl_Interp* interp;
 
-  Parameters* parmsToOpenira = new Parameters(argc, argv);
+  Parameters* parmsToPDNSim = new Parameters(argc, argv);
 
-  if (parmsToOpenira->isInteractiveMode()) {
-    Tcl_Main(argc, argv, OpeniraTclAppInit);
+  if (parmsToPDNSim->isInteractiveMode()) {
+    Tcl_Main(argc, argv, PDNSimTclAppInit);
   } else {
-    Openira(parmsToOpenira);
+    pdn_sim(parmsToPDNSim);
   }
 
   return 0;

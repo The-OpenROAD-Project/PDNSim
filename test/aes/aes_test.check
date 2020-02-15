@@ -1,5 +1,5 @@
  ######################################
- # OpenIRA: OpenROAD IR analysis tool #
+ # PDNSim: OpenROAD IR analysis tool #
  #       University of Minnesota      #
  # Author:                            #
  #    Vidya Chhabria (UMN)            #
@@ -9,35 +9,36 @@
 
 Options: 
 Input LEF file:     ../test/nangate45/Nangate45.lef
-Input DEF file:     ../test/gcd/gcd.def
+Input DEF file:     ../test/aes/aes.def
 Input Liberty file: ../test/nangate45/NangateOpenCellLibrary_typical.lib
-Input Verilog file: ../test/gcd/gcd.v
-Input SDC file:     ../test/gcd/gcd.sdc
-Verilog top module: gcd
-Voltage source file: ../test/gcd/Vsrc.loc
+Input Verilog file: ../test/aes/aes.v
+Input SDC file:     ../test/aes/aes.sdc
+Verilog top module: aes_cipher_top
+Voltage source file: ../test/aes/Vsrc.loc
 Interactive mode:   0
 
-INFO: Reading Verilog file ../test/gcd/gcd.v
-INFO: Top module set gcd
-INFO: Reading SDC file ../test/gcd/gcd.sdc
-INFO: Reading Voltage source file ../test/gcd/Vsrc.loc
-../test/gcd/Vsrc.loc
-Voltage file../test/gcd/Vsrc.loc
+INFO: Reading Verilog file 
+INFO: Reading Verilog file ../test/aes/aes.v
+INFO: Top module set aes_cipher_top
+INFO: Reading SDC file ../test/aes/aes.sdc
+INFO: Reading Voltage source file ../test/aes/Vsrc.loc
+../test/aes/Vsrc.loc
+Voltage file../test/aes/Vsrc.loc
 
 
 INFO: Location of VDD and VSS sources 
-Location: 100000 106400 7 Voltage 1.1
+Location: 506400 506400 7 Voltage 1.1
 INFO: G matrix created 
-INFO: Number of nodes: 1877
+INFO: Number of nodes: 100010
 
 
 INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Files for STA
-Verilog      : ../test/gcd/gcd.v
-topCellName  : gcd
+Verilog      : ../test/aes/aes.v
+topCellName  : aes_cipher_top
 Liberty      : ../test/nangate45/NangateOpenCellLibrary_typical.lib
-SDCName      : ../test/gcd/gcd.sdc
+SDCName      : ../test/aes/aes.sdc
 
 OpenSTA 2.0.17 77f22e482e Copyright (c) 2019, Parallax Software, Inc.
 License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
@@ -55,7 +56,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.09797
-Average  IR drop : 0.00194254
-Worstcase IR drop: 0.00203349
+Worstcase Voltage: 1.07438
+Average  IR drop : 0.0247735
+Worstcase IR drop: 0.0256175
 ######################################

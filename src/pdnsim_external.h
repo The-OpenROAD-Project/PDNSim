@@ -2,11 +2,11 @@
 #define __IRSOLVER_EXTERNAL__
 
 #include "db.h"
-class OpenIRA
+class PDNSim
 {
  public:
-  OpenIRA();
-  ~OpenIRA();
+  PDNSim();
+  ~PDNSim();
   odb::dbDatabase*         db = NULL;
   std::string              verilog_stor;
   std::vector<std::string> lib_stor;
