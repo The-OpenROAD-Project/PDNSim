@@ -12,7 +12,7 @@ ENV CC=/opt/rh/devtoolset-6/root/usr/bin/gcc \
 # install dependencies
 
 RUN yum install -y wget libstdc++-devel libstdc++-static libX11-devel \
-    boost-devel zlib-devel tcl-devel tk-devel swig flex \
+    boost-devel boost zlib-devel tcl-devel tk-devel swig flex \
     gmp-devel mpfr-devel libmpc-devel bison \
     ImageMagick ImageMagick-devel git glibc-static zlib-static libjpeg-turbo-static
 
