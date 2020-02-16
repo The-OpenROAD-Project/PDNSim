@@ -22,16 +22,16 @@ RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh && \
     chmod +x cmake-3.9.0-Linux-x86_64.sh  && \
     ./cmake-3.9.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
 
-COPY . /OpenIRA
-RUN mkdir -p /OpenIRA/build
-WORKDIR /OpenIRA/build
+COPY . /PDNSim
+RUN mkdir -p /PDNSim/build
+WORKDIR /PDNSim/build
 RUN cmake -DCMAKE_INSTALL_PREFIX=/build ..
 RUN make
 
 FROM centos:centos6 AS runner
 RUN yum update -y && yum install -y tcl-devel libSM libX11-devel libXext libjpeg libgomp
-COPY --from=builder /OpenIRA/build/openira /build/openira
-COPY --from=builder /OpenIRA/modules/OpenSTA/app/sta /build/sta
+COPY --from=builder /PDNSim/build/pdnsim /build/pdnsim
+COPY --from=builder /PDNSim/modules/OpenSTA/app/sta /build/sta
 RUN useradd -ms /bin/bash openroad
 USER openroad
 WORKDIR /home/openroad
