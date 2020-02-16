@@ -24,10 +24,11 @@ ENV PATH=/opt/rh/rh-mongodb32/root/usr/bin:$PATH \
     C_INCLUDE_PATH=/opt/rh/rh-mongodb32/root/usr/include \
     CPLUS_INCLUDE_PATH=/opt/rh/rh-mongodb32/root/usr/include
 
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
-    yum update -y && \
-    yum install -y python36u python36u-libs python36u-devel python36u-pip
+#RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
+#    yum update -y && \
+#    yum install -y python36u python36u-libs python36u-devel python36u-pip
 
+RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
 RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh && \
     chmod +x cmake-3.9.0-Linux-x86_64.sh  && \
     ./cmake-3.9.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
