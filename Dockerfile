@@ -16,6 +16,8 @@ RUN yum install -y wget libstdc++-devel libstdc++-static libX11-devel \
     gmp-devel mpfr-devel libmpc-devel bison \
     ImageMagick ImageMagick-devel git glibc-static zlib-static libjpeg-turbo-static
 
+RUN yum install -y wget rh-mongodb32-boost-devel rh-mongodb32-boost-static
+
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
     yum update -y && \
     yum install -y python36u python36u-libs python36u-devel python36u-pip
