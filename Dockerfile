@@ -16,6 +16,10 @@ RUN yum install -y wget libstdc++-devel libstdc++-static libX11-devel \
     gmp-devel mpfr-devel libmpc-devel bison \
     ImageMagick ImageMagick-devel git glibc-static zlib-static libjpeg-turbo-static
 
+RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
+    yum update -y && \
+    yum install -y python36u python36u-libs python36u-devel python36u-pip
+
 
 # Installing cmake for build dependency
 RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh && \
