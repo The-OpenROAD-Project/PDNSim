@@ -7,9 +7,18 @@ pipeline {
       }
     }
     stage('Test') {
+      parallel {
+        stage('Python Tests') {
           steps {
-            sh './jenkins/test.sh'
+            sh './jenkins/test-py.sh'
           }
         }
+        stage('TCL Tests') {
+          steps {
+            sh './jenkins/test-tcl.sh'
+          }
+        }
+      }
     }
   }
+}
