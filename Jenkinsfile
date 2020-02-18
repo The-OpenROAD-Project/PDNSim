@@ -1,5 +1,12 @@
 pipeline {
   agent any
+   wrappers {
+        preBuildCleanup { // Clean before build
+            includePattern('/home/openroad/.jenkins/workspace/PDNSim_master/build')
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+   }
   stages {
     stage('Build') {
       steps {
