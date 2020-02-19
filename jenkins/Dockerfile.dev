@@ -1,4 +1,4 @@
-FROM openroad/centos6-tcl8.6 AS builder
+FROM openroad/centos7-tcl8.6 AS builder
 
 # install gcc 6
 RUN yum -y install centos-release-scl && \
@@ -24,7 +24,7 @@ ENV PATH=/opt/rh/rh-mongodb32/root/usr/bin:$PATH \
     C_INCLUDE_PATH=/opt/rh/rh-mongodb32/root/usr/include \
     CPLUS_INCLUDE_PATH=/opt/rh/rh-mongodb32/root/usr/include
 
-RUN yum install -y https://centos6.iuscommunity.org/ius-release.rpm && \
+RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm && \
     yum update -y && \
     yum install -y python36u python36u-libs python36u-devel python36u-pip
 
@@ -32,5 +32,14 @@ RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh && \
     chmod +x cmake-3.9.0-Linux-x86_64.sh  && \
     ./cmake-3.9.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
 
+
+RUN yum remove -y swig \
+    && wget https://github.com/swig/swig/archive/rel-4.0.1.tar.gz \
+    && tar xfz rel-4.0.1.tar.gz \
+    && rm -rf rel-4.0.1.tar.gz \
+    && cd swig-rel-4.0.1 \
+    && ./autogen.sh && ./configure --prefix=/usr && make -j $(nproc) && make install \
+    && cd .. \
+    && rm -rf swig-rel-4.0.1
 
 RUN yum install -y zlib-devel libpng-devel epel-release tcl tcl-devel

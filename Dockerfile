@@ -35,6 +35,18 @@ RUN wget https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.sh && \
     chmod +x cmake-3.9.0-Linux-x86_64.sh  && \
     ./cmake-3.9.0-Linux-x86_64.sh --skip-license --prefix=/usr/local
 
+
+# Install SWIG
+RUN yum remove -y swig \
+    && wget https://github.com/swig/swig/archive/rel-4.0.1.tar.gz \
+    && tar xfz rel-4.0.1.tar.gz \
+    && rm -rf rel-4.0.1.tar.gz \
+    && cd swig-rel-4.0.1 \
+    && ./autogen.sh && ./configure --prefix=/usr && make -j $(nproc) && make install \
+    && cd .. \
+    && rm -rf swig-rel-4.0.1
+
+
 COPY . /PDNSim
 RUN mkdir -p /PDNSim/build
 WORKDIR /PDNSim/build

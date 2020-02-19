@@ -8,14 +8,9 @@ pipeline {
     }
     stage('Test') {
       parallel {
-        stage('Python Tests') {
+        stage('Tests') {
           steps {
-            sh './jenkins/test-py.sh'
-          }
-        }
-        stage('TCL Tests') {
-          steps {
-            sh './jenkins/test-tcl.sh'
+            sh './jenkins/regression.sh'
           }
         }
       }
