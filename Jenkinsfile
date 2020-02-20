@@ -10,7 +10,7 @@ pipeline {
       parallel {
         stage('Tests') {
           steps {
-            sh './jenkins/regression.sh'
+            sh './jenkins/test.sh'
           }
         }
       }
