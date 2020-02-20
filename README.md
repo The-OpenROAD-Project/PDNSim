@@ -62,8 +62,8 @@ $ make
   stable:
 
 ```
-$ ./pdnsim
-% source ../test/regression.sh
+cd ../..
+% source /PDNSim/test/regression.sh
 ```
 
 
