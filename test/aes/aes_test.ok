@@ -8,22 +8,22 @@
 
 
 Options: 
-Input LEF file:     ../test/nangate45/Nangate45.lef
-Input DEF file:     ../test/aes/aes.def
-Input Liberty file: ../test/nangate45/NangateOpenCellLibrary_typical.lib
-Input Verilog file: ../test/aes/aes.v
-Input SDC file:     ../test/aes/aes.sdc
+Input LEF file:     ./PDNSim/test/nangate45/Nangate45.lef
+Input DEF file:     ./PDNSim/test/aes/aes.def
+Input Liberty file: ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
+Input Verilog file: ./PDNSim/test/aes/aes.v
+Input SDC file:     ./PDNSim/test/aes/aes.sdc
 Verilog top module: aes_cipher_top
-Voltage source file: ../test/aes/Vsrc.loc
+Voltage source file: ./PDNSim/test/aes/Vsrc.loc
 Interactive mode:   0
 
 INFO: Reading Verilog file 
-INFO: Reading Verilog file ../test/aes/aes.v
+INFO: Reading Verilog file ./PDNSim/test/aes/aes.v
 INFO: Top module set aes_cipher_top
-INFO: Reading SDC file ../test/aes/aes.sdc
-INFO: Reading Voltage source file ../test/aes/Vsrc.loc
-../test/aes/Vsrc.loc
-Voltage file../test/aes/Vsrc.loc
+INFO: Reading SDC file ./PDNSim/test/aes/aes.sdc
+INFO: Reading Voltage source file ./PDNSim/test/aes/Vsrc.loc
+./PDNSim/test/aes/Vsrc.loc
+Voltage file./PDNSim/test/aes/Vsrc.loc
 
 
 INFO: Location of VDD and VSS sources 
@@ -35,10 +35,10 @@ INFO: Number of nodes: 100010
 INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Files for STA
-Verilog      : ../test/aes/aes.v
+Verilog      : ./PDNSim/test/aes/aes.v
 topCellName  : aes_cipher_top
-Liberty      : ../test/nangate45/NangateOpenCellLibrary_typical.lib
-SDCName      : ../test/aes/aes.sdc
+Liberty      : ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
+SDCName      : ./PDNSim/test/aes/aes.sdc
 
 OpenSTA 2.0.17 77f22e482e Copyright (c) 2019, Parallax Software, Inc.
 License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>

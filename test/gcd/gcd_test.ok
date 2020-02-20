@@ -8,22 +8,22 @@
 
 
 Options: 
-Input LEF file:     ../test/nangate45/Nangate45.lef
-Input DEF file:     ../test/gcd/gcd.def
-Input Liberty file: ../test/nangate45/NangateOpenCellLibrary_typical.lib
-Input Verilog file: ../test/gcd/gcd.v
-Input SDC file:     ../test/gcd/gcd.sdc
+Input LEF file:     ./PDNSim/test/nangate45/Nangate45.lef
+Input DEF file:     ./PDNSim/test/gcd/gcd.def
+Input Liberty file: ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
+Input Verilog file: ./PDNSim/test/gcd/gcd.v
+Input SDC file:     ./PDNSim/test/gcd/gcd.sdc
 Verilog top module: gcd
-Voltage source file: ../test/gcd/Vsrc.loc
+Voltage source file: ./PDNSim/test/gcd/Vsrc.loc
 Interactive mode:   0
 
 INFO: Reading Verilog file 
-INFO: Reading Verilog file ../test/gcd/gcd.v
+INFO: Reading Verilog file ./PDNSim/test/gcd/gcd.v
 INFO: Top module set gcd
-INFO: Reading SDC file ../test/gcd/gcd.sdc
-INFO: Reading Voltage source file ../test/gcd/Vsrc.loc
-../test/gcd/Vsrc.loc
-Voltage file../test/gcd/Vsrc.loc
+INFO: Reading SDC file ./PDNSim/test/gcd/gcd.sdc
+INFO: Reading Voltage source file ./PDNSim/test/gcd/Vsrc.loc
+./PDNSim/test/gcd/Vsrc.loc
+Voltage file./PDNSim/test/gcd/Vsrc.loc
 
 
 INFO: Location of VDD and VSS sources 
@@ -35,10 +35,10 @@ INFO: Number of nodes: 1877
 INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Files for STA
-Verilog      : ../test/gcd/gcd.v
+Verilog      : ./PDNSim/test/gcd/gcd.v
 topCellName  : gcd
-Liberty      : ../test/nangate45/NangateOpenCellLibrary_typical.lib
-SDCName      : ../test/gcd/gcd.sdc
+Liberty      : ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
+SDCName      : ./PDNSim/test/gcd/gcd.sdc
 
 OpenSTA 2.0.17 77f22e482e Copyright (c) 2019, Parallax Software, Inc.
 License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
