@@ -6,23 +6,12 @@
  #    Sachin Sapatnekar (UMN)         #
  ######################################
 
-
-Options: 
-Input LEF file:     ./PDNSim/test/nangate45/Nangate45.lef
-Input DEF file:     ./PDNSim/test/gcd/gcd.def
-Input Liberty file: ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
-Input Verilog file: ./PDNSim/test/gcd/gcd.v
-Input SDC file:     ./PDNSim/test/gcd/gcd.sdc
-Verilog top module: gcd
-Voltage source file: ./PDNSim/test/gcd/Vsrc.loc
-Interactive mode:   0
-
+ > Running PDNSim in interactive mode.
 INFO: Reading Verilog file 
 INFO: Reading Verilog file ./PDNSim/test/gcd/gcd.v
 INFO: Top module set gcd
 INFO: Reading SDC file ./PDNSim/test/gcd/gcd.sdc
 INFO: Reading Voltage source file ./PDNSim/test/gcd/Vsrc.loc
-./PDNSim/test/gcd/Vsrc.loc
 Voltage file./PDNSim/test/gcd/Vsrc.loc
 
 
@@ -57,6 +46,6 @@ INFO: SuperLU finished solving
 
 ######################################
 Worstcase Voltage: 1.09797
-Average  IR drop : 0.00194254
+Average IR drop  : 0.00194254
 Worstcase IR drop: 0.00203349
 ######################################

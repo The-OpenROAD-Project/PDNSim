@@ -21,8 +21,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Dcimg_use_jpeg=1 -pthread -DUSE_FFT2D_PTHREADS=1 -DFFT_2D_MAX_THREADS=16 -O3 ${OpenMP_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -pthread -O3")
 
-#set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb -ld   -ltcl -lm  -ltk -lboost_program_options")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3  -ltcl -lm -ltk -lboost_program_options")
 set(CMAKE_EXE_LINKER_FLAGS "-ltcl")
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
 
@@ -68,9 +66,6 @@ find_package(SWIG REQUIRED)
 #  find_package(JPEG)
 #endif()
 
-set(Boost_USE_STATIC_LIBS ON)
-
-find_package(Boost COMPONENTS program_options REQUIRED)
 
 set (PDNSIM_SRC 
   src/pdnsim_external.cpp
@@ -78,7 +73,6 @@ set (PDNSIM_SRC
   src/gmat.cpp
   src/ir_solver.cpp
   src/get_power.cpp
-  src/parameters.cpp
   src/main.cpp
   src/pdnsim_wrap.cpp
   )
@@ -89,7 +83,6 @@ set (PDNSIM_HEADER
   src/node.h
   src/gmat.h
   src/pdnsim_external.h
-  src/parameters.h
   src/get_power.h
 )
 
@@ -135,7 +128,6 @@ add_dependencies( pdnsim sta )
 ############################################################
 target_include_directories( pdnsim
   PUBLIC
-  ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
@@ -156,7 +148,6 @@ target_include_directories( pdnsim
 
 target_include_directories( pdnsimlib 
   PUBLIC
-  ${Boost_INCLUDE_DIR}
   ${OPENDB_HOME}/include/opendb
   ${SUPERLU_HOME}/SRC
   ${SUPERLU_HOME}/CBLAS
@@ -178,7 +169,6 @@ target_include_directories( pdnsimlib
 target_link_libraries(pdnsim
   PUBLIC
   ${TCL_LIBRARY}
-  ${Boost_LIBRARIES}
   OpenSTA
   ${ZLIB_LIBRARIES}
   superlu

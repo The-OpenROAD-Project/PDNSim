@@ -6,23 +6,12 @@
  #    Sachin Sapatnekar (UMN)         #
  ######################################
 
-
-Options: 
-Input LEF file:     ./PDNSim/test/nangate45/Nangate45.lef
-Input DEF file:     ./PDNSim/test/aes/aes.def
-Input Liberty file: ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
-Input Verilog file: ./PDNSim/test/aes/aes.v
-Input SDC file:     ./PDNSim/test/aes/aes.sdc
-Verilog top module: aes_cipher_top
-Voltage source file: ./PDNSim/test/aes/Vsrc.loc
-Interactive mode:   0
-
+ > Running PDNSim in interactive mode.
 INFO: Reading Verilog file 
 INFO: Reading Verilog file ./PDNSim/test/aes/aes.v
 INFO: Top module set aes_cipher_top
 INFO: Reading SDC file ./PDNSim/test/aes/aes.sdc
 INFO: Reading Voltage source file ./PDNSim/test/aes/Vsrc.loc
-./PDNSim/test/aes/Vsrc.loc
 Voltage file./PDNSim/test/aes/Vsrc.loc
 
 
@@ -57,6 +46,6 @@ INFO: SuperLU finished solving
 
 ######################################
 Worstcase Voltage: 1.07438
-Average  IR drop : 0.0247735
+Average IR drop  : 0.0247735
 Worstcase IR drop: 0.0256175
 ######################################
