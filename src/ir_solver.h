@@ -35,10 +35,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "gmat.h"
 #include "db.h"
-
+//! Class for IR solver
+/* 
+ * Builds the equations GV=J and uses SuperLU 
+ * to solve the matrix equations
+ */
 class IRSolver
 {
  public:
+  //! Constructor for IRSolver class
+  /*
+   * This constructor creates an instance of the class using
+   * the given inputs.
+   */
   IRSolver(odb::dbDatabase*         t_db,
            std::string              verilog_stor,
            std::string              top_module,
@@ -52,37 +61,61 @@ class IRSolver
     m_lib_stor     = lib_stor;
     m_top_module   = top_module;
     m_vsrc_file    = vsrc_loc;
-    m_readC4Data();
-    m_createGmat();
-    m_createJ();
-    m_addC4Bump();
+    ReadC4Data();
+    CreateGmat();
+    CreateJ();
+    AddC4Bump();
     m_Gmat->GenerateCSCMatrix();
   }
+  //! IRSolver destructor
   ~IRSolver() { delete m_Gmat; }
+  //! Worst case voltage at the lowest layer nodes
   double                                      wc_voltage;
+  //! Voltage supply
   double                                      vdd;
+  //! Average voltage at lowest layer nodes  
   double                                      avg_voltage;
+  //! Vector of worstcase voltages in the lowest layers
   std::vector<double>                         wc_volt_layer;
+  //! Returns the created G matrix for the design
   GMat*                                       GetGMat();
-  std::vector<double>                         getJ();
-  void                                        solve_ir();
-  std::vector<std::pair<std::string, double>> m_getPower();
-
+  //! Returns current map represented as a 1D vector
+  std::vector<double>                         GetJ();
+  //! Function to solve for IR drop 
+  void                                        SolveIR();
+  //! Function to get the power value from OpenSTA
+  std::vector<std::pair<std::string, double>> GetPower();
+ 
  private:
+  //! Pointer to the Db
   odb::dbDatabase*         m_db;
+  //! Verilog file
   std::string              m_verilog_stor;
+  //! Liberty files
   std::vector<std::string> m_lib_stor;
+  //! SDC file
   std::string              m_sdc_file;
+  //! Top module name
   std::string              m_top_module;
+  //! Voltage source file
   std::string              m_vsrc_file;
+  //! G matrix for voltage 
   GMat*                    m_Gmat;
-  int m_node_density{2800};  // TODO get from somehwere
+  //! Node density in the lower most layer to append the current sources
+  int m_node_density{2800};  // TODO get from somewhere
+  //! Current vector 1D
   std::vector<double>                            m_J;
+  //! C4 bump locations and values
   std::vector<std::tuple<int, int, int, double>> m_C4Bumps;
+  //! Locations of the C4 bumps in the G matrix
   std::vector<NodeIdx>                           m_C4GLoc;
-  void                                           m_addC4Bump();
-  void                                           m_readC4Data();
-  void                                           m_createJ();
-  void                                           m_createGmat();
+  //! Function to add C4 bumps to the G matrix
+  void                                           AddC4Bump();
+  //! Function that parses the Vsrc file
+  void                                           ReadC4Data();
+  //! Function to create a J vector from the current map
+  void                                           CreateJ();
+  //! Function to create a G matrix using the nodes
+  void                                           CreateGmat();
 };
 #endif

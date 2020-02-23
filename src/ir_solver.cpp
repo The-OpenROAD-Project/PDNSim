@@ -69,17 +69,29 @@ using odb::dbVia;
 using namespace std;
 using std::vector;
 
+
+//! Returns the created G matrix for the design
+/*
+ * \return G Matrix
+ */
 GMat* IRSolver::GetGMat()
 {
   return m_Gmat;
 }
 
-vector<double> IRSolver::getJ()
+
+//! Returns current map represented as a 1D vector
+/* 
+ * \return J vector
+ */
+vector<double> IRSolver::GetJ()
 {
   return m_J;
 }
 
-void IRSolver::solve_ir()
+
+//! Function to solve for voltage using SuperLU 
+void IRSolver::SolveIR()
 {
   clock_t t1, t2;
   SuperMatrix       A, L, U, B;
@@ -92,7 +104,7 @@ void IRSolver::solve_ir()
   int               info;
   int*              perm_r; /* row permutations from partial pivoting */
   int*              perm_c; /* column permutation vector */
-  vector<double>    J   = getJ();
+  vector<double>    J   = GetJ();
   double*           rhs = &J[0];
   dCreate_Dense_Matrix(&B, m, nrhs, rhs, m, SLU_DN, SLU_D, SLU_GE);
   int     nnz     = Gmat->nnz;
@@ -106,7 +118,6 @@ void IRSolver::solve_ir()
   if (!(perm_c = intMalloc(n)))
     ABORT("Malloc fails for perm_c[].");
   set_default_options(&options);
-  //options.ColPerm = NATURAL;
   options.ColPerm = COLAMD;
   /* Initialize the statistics variables. */
   StatInit(&stat);
@@ -143,12 +154,12 @@ void IRSolver::solve_ir()
       if (volt < wc_voltage) {
         wc_voltage = volt;
       }
-      node->setVoltage(volt);
+      node->SetVoltage(volt);
       node_num++;
     }
   }
   avg_voltage = sum_volt / num_nodes;
-  // TODO keep copies fo LU for later?
+  // TODO keep copies for LU for later?
   /* De-allocate storage */
   // SUPERLU_FREE (rhs);
   SUPERLU_FREE(perm_r);
@@ -160,8 +171,13 @@ void IRSolver::solve_ir()
   StatFree(&stat);
 }
 
-void IRSolver::m_addC4Bump()
+
+//! Function to add C4 bumps to the G matrix
+void IRSolver::AddC4Bump()
 {
+  if (m_C4Bumps.size() == 0) {
+    cout << "ERROR: Invalid number of voltage sources" << endl;
+  }
   for (int it = 0; it < m_C4Bumps.size(); ++it) {
     double  voltage  = get<3>(m_C4Bumps[it]);
     NodeIdx node_loc = m_C4GLoc[it];
@@ -171,12 +187,15 @@ void IRSolver::m_addC4Bump()
   }
 }
 
-void IRSolver::m_readC4Data()
+
+
+//! Function that parses the Vsrc file
+void IRSolver::ReadC4Data()
 {
   cout << "Voltage file" << m_vsrc_file << endl;
-  std::ifstream file(m_vsrc_file);  // TODO read file as an input
+  std::ifstream file(m_vsrc_file);    
   std::string line = "";
-  // Iterate through each line and split the content using delimeter
+  // Iterate through each line and split the content using delimiter
   while (getline(file, line)) {
     tuple<int, int, int, double> c4_bump;
     int                          first, second, layer;
@@ -203,12 +222,15 @@ void IRSolver::m_readC4Data()
   }
   file.close();
 }
-void IRSolver::m_createJ()
+
+
+//! Function to create a J vector from the current map
+void IRSolver::CreateJ()
 {  // take current_map as an input?
   int num_nodes = m_Gmat->GetNumNodes();
   m_J.resize(num_nodes, 0);
 
-  vector<pair<string, double>> power_report = m_getPower();
+  vector<pair<string, double>> power_report = GetPower();
   dbChip*                      chip         = m_db->getChip();
   dbBlock*                     block        = chip->getBlock();
   for (vector<pair<string, double>>::iterator it = power_report.begin();
@@ -224,24 +246,21 @@ void IRSolver::m_createJ()
     inst->getLocation(x, y);
     int   l      = 1;  // atach to the bottom most routing layer
     Node* node_J = m_Gmat->GetNode(x, y, l);
-    node_J->addCurrentSrc(it->second);
+    node_J->AddCurrentSrc(it->second);
   }
   for (int i = 0; i < num_nodes; ++i) {
     Node* node_J = m_Gmat->GetNode(i);
-    m_J[i] = -1 * (node_J->getCurrent());  // as MNA needs negative
+    m_J[i] = -1 * (node_J->GetCurrent());  // as MNA needs negative
     // cout << m_J[i] <<endl;
   }
   cout << "INFO: Created J vector" << endl;
-  // TODO temp making for checking
-  // for(int i = 195; i<1875;i++)
-  //    m_J[i]=-1e-6;
 }
 
-void IRSolver::m_createGmat()
+
+//! Function to create a G matrix using the nodes
+void IRSolver::CreateGmat()
 {
   std::vector<Node*> node_vector;
-
-  // sanity check
   dbTech*                      tech   = m_db->getTech();
   dbSet<dbTechLayer>           layers = tech->getLayers();
   dbSet<dbTechLayer>::iterator litr;
@@ -339,22 +358,19 @@ void IRSolver::m_createGmat()
     Node* node = m_Gmat->SetNode(x, y, l, make_pair(0, 0));
     m_C4GLoc.push_back(node->GetGLoc());
   }
-
+  
   // All new nodes must be inserted by this point
   // initialize G Matrix
   cout << "INFO: G matrix created " << endl;
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
   m_Gmat->InitializeGmatDok();
-  // m_Gmat->print();
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
        ++vIter) {  // only 1 is expected?
-    // std::cout<<"Operating on VDD net"<<endl;
     dbNet*                   curDnet = *vIter;
     dbSet<dbSWire>           swires  = curDnet->getSWires();
     dbSet<dbSWire>::iterator sIter;
     for (sIter = swires.begin(); sIter != swires.end();
          ++sIter) {  // only 1 is expected?
-      // std::cout<<"Operating on VDD net Swire"<<endl;
       dbSWire*                curSWire = *sIter;
       dbSet<dbSBox>           wires    = curSWire->getWires();
       dbSet<dbSBox>::iterator wIter;
@@ -408,9 +424,14 @@ void IRSolver::m_createGmat()
   }
 }
 
-vector<pair<string, double>> IRSolver::m_getPower()
+
+//! Function to get the power value from OpenSTA
+/*
+ *\return vector of pairs of instance name 
+ and its corresponding power value
+*/
+vector<pair<string, double>> IRSolver::GetPower()
 {
-  // string topCellName = "gcd";
   PowerInst                    power_inst;
   vector<pair<string, double>> power_report = power_inst.executePowerPerInst(
       m_top_module, m_verilog_stor, m_lib_stor, m_sdc_file);

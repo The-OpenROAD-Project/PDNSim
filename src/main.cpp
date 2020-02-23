@@ -79,8 +79,8 @@ int pdn_sim(Parameters* parmsToPDNSim)
                                      ir_obj->lib_stor,
                                      ir_obj->vsrc_loc);
   gmat_obj            = irsolve_h->GetGMat();
-  irsolve_h->solve_ir();
-  std::vector<Node*> nodes = gmat_obj->getNodes();
+  irsolve_h->SolveIR();
+  std::vector<Node*> nodes = gmat_obj->GetAllNodes();
   int unit_micron          = ((ir_obj->db)->getTech())->getDbUnitsPerMicron();
 
   ofstream current_file;
@@ -97,10 +97,10 @@ int pdn_sim(Parameters* parmsToPDNSim)
     NodeLoc loc = node->GetLoc();
     current_file << double(loc.first) / unit_micron << ","
                  << double(loc.second) / unit_micron << ","
-                 << std::setprecision(10) << node->getCurrent() << "\n";
+                 << std::setprecision(10) << node->GetCurrent() << "\n";
     voltage_file << double(loc.first) / unit_micron << ","
                  << double(loc.second) / unit_micron << ","
-                 << std::setprecision(10) << node->getVoltage() << "\n";
+                 << std::setprecision(10) << node->GetVoltage() << "\n";
   }
   cout << "\n" << endl;
   cout << "######################################" << endl;
@@ -120,7 +120,7 @@ int pdn_sim(Parameters* parmsToPDNSim)
 int main(int argc, char** argv)
 {
   std::cout << " ######################################\n";
-  std::cout << " # PDNSim: OpenROAD IR analysis tool #\n";
+  std::cout << " # PDNSim: OpenROAD PDN analysis tool #\n";
   std::cout << " #       University of Minnesota      #\n";
   std::cout << " # Author:                            #\n";
   std::cout << " #    Vidya Chhabria (UMN)            #\n";

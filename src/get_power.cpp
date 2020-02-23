@@ -30,30 +30,39 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+
 #include "get_power.h"
 #include "util.h"
 #include <iostream>
 #include <tcl.h>
-namespace sta {
-class Sta;
-}
 
 using namespace sta;
 using namespace std;
-using std::vector;
 
-vector<pair<string, double>> PowerInst::executePowerPerInst(
+
+//! Function for power per instance calculation
+
+/*!
+     \param topCellName Verilog top module name for OpenSTA
+     \param verilogName Verilog name for OpenSTA
+     \param libName Timing libraries for OpenSTA
+     \param sdcName Constraints for OpenSTA
+     \return A vector of pairs which has instance name and its corresponding total power
+   */
+
+std::vector<pair<string, double>> PowerInst::executePowerPerInst(
     string         topCellName,
     string         verilogName,
-    vector<string> libStor,
+    std::vector<string> libStor,
     string         sdcName)
 {
-  std::cout << "\n" << endl;
-  std::cout << "INFO: Executing STA for Power" << endl;
-  std::cout << "INFO: Execute STA" << endl;
-  std::cout << "INFO: Files for STA" << endl;
-  std::cout << "Verilog      : " << verilogName << endl;
-  std::cout << "topCellName  : " << topCellName << endl;
+  cout << "\n" << endl;
+  cout << "INFO: Executing STA for Power" << endl;
+  cout << "INFO: Execute STA" << endl;
+  cout << "INFO: Files for STA" << endl;
+  cout << "Verilog      : " << verilogName << endl;
+  cout << "topCellName  : " << topCellName << endl;
   // cout << "spefFileName" << spefFile << endl;
   for (auto& libName : libStor) {
     cout << "Liberty      : " << libName << endl;
@@ -64,7 +73,6 @@ vector<pair<string, double>> PowerInst::executePowerPerInst(
   _sta = new Sta;
 
   // Tcl Interpreter settings
-  //    Tcl_FindExecutable(argv[0]);
   _interp = Tcl_CreateInterp();
 
   // Initialize the TCL interpreter
@@ -88,7 +96,6 @@ vector<pair<string, double>> PowerInst::executePowerPerInst(
   _sta->setTclInterp(_interp);
 
   // environment settings
-
   string cornerName = "wst";
   // string cornerNameFF="bst";
 
@@ -139,18 +146,12 @@ vector<pair<string, double>> PowerInst::executePowerPerInst(
   //            MinMaxAll::max(), false, true, 0.0,
   //            reduce_parasitics_to_pi_elmore, false, true, true);
 
-  // if(isClockGiven) {
-  //    GenerateClockSta();
-  //}
-  // else {
   Tcl_Eval(_interp, string("sta::read_sdc " + sdcName).c_str());
-  //}
 
-  PowerInst::UpdateTimingSta();
+  _sta->updateTiming(true);
+  //PowerInst::UpdateTimingSta();
 
-  // UpdateNetWeightSta();
-
-  vector<pair<string, double>> power_report;
+  std::vector<pair<string, double>> power_report;
 
   sta::Network* network = _sta->network();
   sta::Power*   power   = _sta->power();
@@ -183,7 +184,7 @@ vector<pair<string, double>> PowerInst::executePowerPerInst(
   return power_report;
 }
 
-void PowerInst::UpdateTimingSta()
-{
-  _sta->updateTiming(true);
-}
+//void PowerInst::UpdateTimingSta()
+//{
+ // _sta->updateTiming(true);
+//}

@@ -30,21 +30,27 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #ifndef __IRSOLVER_NODE__
 #define __IRSOLVER_NODE__
 
 #include <map>
 
+
 typedef std::pair<int, int>         NodeLoc;
 typedef std::pair<int, int>         BBox;
 typedef int                         NodeIdx;  // TODO temp as it interfaces with SUPERLU
 typedef std::pair<NodeIdx, NodeIdx> GMatLoc;
+
+//! Data structure for the Dictionary of Keys Matrix
 typedef struct
 {
   NodeIdx                   num_rows;
   NodeIdx                   num_cols;
   std::map<GMatLoc, double> values;  // pair < col_num, row_num >
 } DokMatrix;
+
+//! Data structure for the Compressed Sparse Column Matrix
 typedef struct
 {
   NodeIdx              num_rows;
@@ -55,28 +61,44 @@ typedef struct
   std::vector<double>  values;
 } CscMatrix;
 
+//! Node class which stores the properties of the node of the PDN
 class Node
 {
  public:
   Node() : m_loc(std::make_pair(0.0, 0.0)), m_bBox(std::make_pair(0.0, 0.0)) {}
   ~Node() {}
+  //! Get the layer number of the node
   int     GetLayerNum();
+  //! Set the layer number of the node
   void    SetLayerNum(int layer);
+  //! Get the location of the node
   NodeLoc GetLoc();
+  //! Set the location of the node using x and y coordinates
   void    SetLoc(int x, int y);
+  //! Set the location of the node using x,y and layer information
   void    SetLoc(int x, int y, int l);
+  //! Get location of the node in G matrix
   NodeIdx GetGLoc();
+  //! Get location of the node in G matrix
   void    SetGLoc(NodeIdx loc);
-  void    print();
+  //! Function to print node details
+  void    Print();
+  //! Function to set the bounding box of the stripe
   void    SetBbox(int dX, int dY);
+  //! Function to get the bounding box of the stripe
   BBox    GetBbox();
-  // bool withinBoundingBox(NodeLoc t_nodeLoc, BBox t_bBox, int &t_dist ) {
-  void   UpdateMaxBbox(int dX, int dY);
-  void   setCurrent(double t_current);
-  double getCurrent();
-  void   addCurrentSrc(double t_current);
-  void   setVoltage(double t_voltage);
-  double getVoltage();
+  //! Function to update the stripe
+  void    UpdateMaxBbox(int dX, int dY);
+  //! Function to set the current value at a particular node
+  void    SetCurrent(double t_current);
+  //! Function to get the value of current at a node
+  double  GetCurrent();
+  //! Function to add the current source 
+  void    AddCurrentSrc(double t_current);
+  //! Function to set the value of the voltage source
+  void    SetVoltage(double t_voltage);
+  //! Function to get the value of the voltage source
+  double  GetVoltage();
 
  private:
   int     m_layer;

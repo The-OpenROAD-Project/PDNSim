@@ -117,25 +117,27 @@ class Sta;
 extern const char* tcl_inits[];
 }  // namespace sta
 
+
+//!  Calculates the power per instance using OpenSTA 
+/*!
+  Uses OpenSTA to report total power per instance and 
+  use it for IR drop estimation.
+*/
 class PowerInst
 {
  private:
+  //! Instance to OpenSTA object.
   sta::Sta*   _sta;
+  //! Pointer to OpenSTA tcl interpreter
   Tcl_Interp* _interp;
 
-  float _targetTop;
-
-  // For OpenSTA
-
-  void UpdateTimingSta();
-
  public:
-  std::vector<std::pair<std::string, double>> executePowerPerInst(
+  //! Function for power per instance calculation
+    std::vector<std::pair<std::string, double>> executePowerPerInst(
       std::string              topCellName,
       std::string              verilogName,
       std::vector<std::string> libName,
       std::string              sdcName);
-  // void ExecuteStaLater();
 };
-
+ // epower namespace end
 #endif
