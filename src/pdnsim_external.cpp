@@ -82,8 +82,12 @@ void PDNSim::help()
   cout << "    *.v location (Required for OpenSTA)" << endl;
   cout << endl;
   cout << "==== Analysis command  ==== " << endl;
+  cout << "read_voltage_src" << endl;
+  cout << "   Voltage source location file" << endl;
+  cout << "read_default_resistance" << endl;
+  cout << "   Read the default resistance file if per-unit R not in DB" << endl;
   cout << "analyze_power_grid" << endl;
-  cout << "    Solver for IR drop on VSS net and layer 1" << endl;
+  cout << "   Solver for IR drop on VSS net and layer 1" << endl;
   cout << endl;
 }
 
@@ -148,6 +152,12 @@ void PDNSim::read_voltage_src(const char* vsrc)
   cout << "INFO: Reading Voltage source file " << vsrc_loc << endl;
 }
 
+void PDNSim::read_default_resistance(const char* def_res)
+{
+  def_res_val = def_res;
+  cout << "INFO: Reading default resistance values " << def_res << endl;
+}
+
 void PDNSim::import_db(const char* dbLoc)
 {
   if (db_id == INT_MAX) {
@@ -169,17 +179,16 @@ void PDNSim::analyze_power_grid()
 {
   GMat*     gmat_obj;
   IRSolver* irsolve_h = new IRSolver(
-      db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc);
+      db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);
   gmat_obj = irsolve_h->GetGMat();
   irsolve_h->SolveIR();
   std::vector<Node*> nodes       = gmat_obj->GetAllNodes();
   int                unit_micron = (db->getTech())->getDbUnitsPerMicron();
-
   ofstream current_file;
   ofstream voltage_file;
-  int      vsize;
   current_file.open("J.csv");
   voltage_file.open("V.csv");
+  int      vsize;
   vsize = nodes.size();
   for (int n = 0; n < vsize; n++) {
     Node* node = nodes[n];

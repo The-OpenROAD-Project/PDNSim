@@ -45,6 +45,7 @@ class PDNSim
   std::string              sdc_file;
   std::string              top_cell_name;
   std::string              vsrc_loc;
+  std::string              def_res_val;
   void                     help();
   void                     import_lef(const char* lef);
   void                     import_def(const char* def);
@@ -54,6 +55,7 @@ class PDNSim
   void                     import_lib(const char* lib);
   void                     import_db(const char* dbLoc);
   void                     read_voltage_src(const char* vsrc);
+  void                     read_default_resistance(const char* def_res);
   void                     analyze_power_grid();
 
  private:

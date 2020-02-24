@@ -53,7 +53,8 @@ class IRSolver
            std::string              top_module,
            std::string              sdc_file,
            std::vector<std::string> lib_stor,
-           std::string              vsrc_loc)
+           std::string              vsrc_loc,
+           std::string              def_res_val)
   {
     m_db           = t_db;
     m_verilog_stor = verilog_stor;
@@ -61,7 +62,9 @@ class IRSolver
     m_lib_stor     = lib_stor;
     m_top_module   = top_module;
     m_vsrc_file    = vsrc_loc;
+    m_def_res      = def_res_val;
     ReadC4Data();
+    ReadResData();
     CreateGmat();
     CreateJ();
     AddC4Bump();
@@ -99,6 +102,7 @@ class IRSolver
   std::string              m_top_module;
   //! Voltage source file
   std::string              m_vsrc_file;
+  std::string              m_def_res;
   //! G matrix for voltage 
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources
@@ -107,12 +111,15 @@ class IRSolver
   std::vector<double>                            m_J;
   //! C4 bump locations and values
   std::vector<std::tuple<int, int, int, double>> m_C4Bumps;
+  //! Per unit R and via R for each routing layer
+  std::vector<std::tuple<int, double, double>> m_layer_res;
   //! Locations of the C4 bumps in the G matrix
   std::vector<NodeIdx>                           m_C4GLoc;
   //! Function to add C4 bumps to the G matrix
   void                                           AddC4Bump();
   //! Function that parses the Vsrc file
   void                                           ReadC4Data();
+  void                                           ReadResData();
   //! Function to create a J vector from the current map
   void                                           CreateJ();
   //! Function to create a G matrix using the nodes

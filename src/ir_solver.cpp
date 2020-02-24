@@ -193,6 +193,7 @@ void IRSolver::AddC4Bump()
 void IRSolver::ReadC4Data()
 {
   cout << "Voltage file" << m_vsrc_file << endl;
+  cout << "INFO: Reading location of VDD and VSS sources " << endl;
   std::ifstream file(m_vsrc_file);    
   std::string line = "";
   // Iterate through each line and split the content using delimiter
@@ -214,11 +215,43 @@ void IRSolver::ReadC4Data()
         voltage = stod(val);
       }
     }
-    cout << "\n" << endl;
-    cout << "INFO: Location of VDD and VSS sources " << endl;
-    cout << "Location: " << first << " " << second << " " << layer
-         << " Voltage " << voltage << endl;
     m_C4Bumps.push_back(make_tuple(first, second, layer, voltage));
+  }
+  file.close();
+}
+
+
+//! Function that parses the Vsrc file
+void IRSolver::ReadResData()
+{
+  cout << "Default resistance file" << m_def_res << endl;
+  cout << "INFO: Reading resistance of layers and vias " << endl;
+  std::ifstream file(m_def_res);    
+  std::string line = "";
+  int line_num = 0;
+  // Iterate through each line and split the content using delimiter
+  while (getline(file, line)) {
+    line_num ++;
+    if (line_num == 1) {
+      continue;
+    }
+    //tuple<int, double, double> layer_res;
+    int                          routing_level;
+    double                       res_per_unit;
+    double                       res_via;
+    stringstream                 X(line);
+    string                       val;
+    for (int i = 0; i < 3; ++i) {
+      getline(X, val, ',');
+      if (i == 0) {
+        routing_level = stoi(val);
+      } else if (i == 1) {
+        res_per_unit = stod(val);
+      } else {
+        res_via = stod(val);
+      }
+    }
+    m_layer_res.push_back(make_tuple(routing_level, res_per_unit, res_via));
   }
   file.close();
 }
@@ -364,6 +397,7 @@ void IRSolver::CreateGmat()
   cout << "INFO: G matrix created " << endl;
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
   m_Gmat->InitializeGmatDok();
+  int warn_flag = 1;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
        ++vIter) {  // only 1 is expected?
     dbNet*                   curDnet = *vIter;
@@ -389,8 +423,9 @@ void IRSolver::CreateGmat()
 
           // //TODO assuming default if zero
           double R = via_layer->getUpperLayer()->getResistance();
-          if (R <= 0.01) {
-            R = 10.0;  /// Must figure out via resistance value
+          if (R == 0.0) {
+            warn_flag = 0;
+            R = get<2>(m_layer_res[l]);  /// Must figure out via resistance value
           }
           Node* node_bot = m_Gmat->GetNode(x, y, l);
 
@@ -421,6 +456,9 @@ void IRSolver::CreateGmat()
         }
       }
     }
+  }
+  if (warn_flag == 0) {
+  cout << "Warning: Atleast one via resistance not found in DB. Using default value from the file "<<endl;
   }
 }
 

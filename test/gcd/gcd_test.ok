@@ -12,13 +12,14 @@ INFO: Reading Verilog file ./PDNSim/test/gcd/gcd.v
 INFO: Top module set gcd
 INFO: Reading SDC file ./PDNSim/test/gcd/gcd.sdc
 INFO: Reading Voltage source file ./PDNSim/test/gcd/Vsrc.loc
+INFO: Reading default resistance values ./PDNSim/test/nangate45/default_resistance.cfg
 Voltage file./PDNSim/test/gcd/Vsrc.loc
-
-
-INFO: Location of VDD and VSS sources 
-Location: 100000 106400 7 Voltage 1.1
+INFO: Reading location of VDD and VSS sources 
+Default resistance file./PDNSim/test/nangate45/default_resistance.cfg
+INFO: Reading resistance of layers and vias 
 INFO: G matrix created 
 INFO: Number of nodes: 1877
+Warning: Atleast one via resistance not found in DB. Using default value from the file 
 
 
 INFO: Executing STA for Power
@@ -45,7 +46,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.09797
-Average IR drop  : 0.00194254
-Worstcase IR drop: 0.00203349
+Worstcase Voltage: 1.09945
+Average IR drop  : 0.000507883
+Worstcase IR drop: 0.000552865
 ######################################

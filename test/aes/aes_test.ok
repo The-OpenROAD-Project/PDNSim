@@ -12,13 +12,14 @@ INFO: Reading Verilog file ./PDNSim/test/aes/aes.v
 INFO: Top module set aes_cipher_top
 INFO: Reading SDC file ./PDNSim/test/aes/aes.sdc
 INFO: Reading Voltage source file ./PDNSim/test/aes/Vsrc.loc
+INFO: Reading default resistance values ./PDNSim/test/nangate45/default_resistance.cfg
 Voltage file./PDNSim/test/aes/Vsrc.loc
-
-
-INFO: Location of VDD and VSS sources 
-Location: 506400 506400 7 Voltage 1.1
+INFO: Reading location of VDD and VSS sources 
+Default resistance file./PDNSim/test/nangate45/default_resistance.cfg
+INFO: Reading resistance of layers and vias 
 INFO: G matrix created 
 INFO: Number of nodes: 100010
+Warning: Atleast one via resistance not found in DB. Using default value from the file 
 
 
 INFO: Executing STA for Power
@@ -45,7 +46,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.07438
-Average IR drop  : 0.0247735
-Worstcase IR drop: 0.0256175
+Worstcase Voltage: 1.08853
+Average IR drop  : 0.010672
+Worstcase IR drop: 0.0114686
 ######################################
