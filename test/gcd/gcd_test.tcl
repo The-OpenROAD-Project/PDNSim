@@ -6,4 +6,5 @@ pdnsim set_top_module gcd
 pdnsim import_lib ./PDNSim/test/nangate45/NangateOpenCellLibrary_typical.lib
 pdnsim import_sdc ./PDNSim/test/gcd/gcd.sdc
 pdnsim read_voltage_src ./PDNSim/test/gcd/Vsrc.loc
+pdnsim read_default_resistance ./PDNSim/test/nangate45/default_resistance.cfg
 pdnsim analyze_power_grid 
