@@ -397,7 +397,8 @@ void IRSolver::CreateGmat()
   cout << "INFO: G matrix created " << endl;
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
   m_Gmat->InitializeGmatDok();
-  int warn_flag = 1;
+  int warn_flag_via = 1;
+  int warn_flag_layer = 1;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
        ++vIter) {  // only 1 is expected?
     dbNet*                   curDnet = *vIter;
@@ -421,11 +422,11 @@ void IRSolver::CreateGmat()
           int          l         = via_layer->getRoutingLevel();
           int          l_bot     = l;
 
-          // //TODO assuming default if zero
           double R = via_layer->getUpperLayer()->getResistance();
           if (R == 0.0) {
-            warn_flag = 0;
-            R = get<2>(m_layer_res[l]);  /// Must figure out via resistance value
+            warn_flag_via = 0;
+            R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
+            //cout << "Via Resistance" << R << endl;
           }
           Node* node_bot = m_Gmat->GetNode(x, y, l);
 
@@ -442,9 +443,16 @@ void IRSolver::CreateGmat()
           }
         } else {
           dbTechLayer* wire_layer = curWire->getTechLayer();
+          int l  = wire_layer->getRoutingLevel();
           double       rho        = wire_layer->getResistance()
                        * double(wire_layer->getWidth())
                        / double((wire_layer->getTech())->getDbUnitsPerMicron());
+          if (rho == 0.0) {
+            warn_flag_layer = 0;
+            rho = get<1>(m_layer_res[l]) * double(wire_layer->getWidth())
+                    / double((wire_layer->getTech())->getDbUnitsPerMicron());
+            //cout << "rho value " <<rho << endl;
+          }
           dbTechLayerDir::Value layer_dir = wire_layer->getDirection();
           m_Gmat->GenerateStripeConductance(wire_layer->getRoutingLevel(),
                                             layer_dir,
@@ -457,8 +465,11 @@ void IRSolver::CreateGmat()
       }
     }
   }
-  if (warn_flag == 0) {
+  if (warn_flag_via == 0) {
   cout << "Warning: Atleast one via resistance not found in DB. Using default value from the file "<<endl;
+  }
+  if (warn_flag_layer == 0) {
+  cout << "Warning: Atleast one layer per unit resistance not found in DB. Using default value from the file "<<endl;
   }
 }
 
