@@ -483,7 +483,7 @@ vector<pair<string, double>> IRSolver::GetPower()
 {
   PowerInst                    power_inst;
   vector<pair<string, double>> power_report = power_inst.executePowerPerInst(
-      m_top_module, m_verilog_stor, m_lib_stor, m_sdc_file);
+      m_sta);
 
   return power_report;
 }

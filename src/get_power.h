@@ -106,15 +106,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ParasiticsClass.hh"
 #include "ParseBus.hh"
 
-// to import Swig
-extern "C" {
-extern int Sta_Init(Tcl_Interp* interp);
-}
-
 // to import TCL functions
 namespace sta {
-class Sta;
-extern const char* tcl_inits[];
+class dbSta;
 }  // namespace sta
 
 
@@ -127,17 +121,12 @@ class PowerInst
 {
  private:
   //! Instance to OpenSTA object.
-  sta::Sta*   _sta;
-  //! Pointer to OpenSTA tcl interpreter
-  Tcl_Interp* _interp;
+  sta::dbSta*   _sta;
 
  public:
   //! Function for power per instance calculation
     std::vector<std::pair<std::string, double>> executePowerPerInst(
-      std::string              topCellName,
-      std::string              verilogName,
-      std::vector<std::string> libName,
-      std::string              sdcName);
+      sta::dbSta* sta);
 };
  // epower namespace end
 #endif

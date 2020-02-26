@@ -1,10 +1,3 @@
 [submodule "modules/superlu"]
 	path = modules/superlu
 	url = https://github.com/xiaoyeli/superlu.git
-[submodule "modules/OpenSTA"]
-	path = modules/OpenSTA
-	url = https://github.com/The-OpenROAD-Project/OpenSTA.git
-[submodule "modules/OpenDB"]
-	path = modules/OpenDB
-	url = https://github.com/The-OpenROAD-Project/OpenDB.git
-	branch = alpha2.1

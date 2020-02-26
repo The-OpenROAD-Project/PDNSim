@@ -44,112 +44,19 @@ using namespace std;
 //! Function for power per instance calculation
 
 /*!
-     \param topCellName Verilog top module name for OpenSTA
-     \param verilogName Verilog name for OpenSTA
      \param libName Timing libraries for OpenSTA
-     \param sdcName Constraints for OpenSTA
      \return A vector of pairs which has instance name and its corresponding total power
    */
 
 std::vector<pair<string, double>> PowerInst::executePowerPerInst(
-    string         topCellName,
-    string         verilogName,
-    std::vector<string> libStor,
-    string         sdcName)
+    sta::dbSta* sta)
 {
   cout << "\n" << endl;
   cout << "INFO: Executing STA for Power" << endl;
   cout << "INFO: Execute STA" << endl;
   cout << "INFO: Files for STA" << endl;
-  cout << "Verilog      : " << verilogName << endl;
-  cout << "topCellName  : " << topCellName << endl;
-  // cout << "spefFileName" << spefFile << endl;
-  for (auto& libName : libStor) {
-    cout << "Liberty      : " << libName << endl;
-  }
-  cout << "SDCName      : " << sdcName << endl << endl;
-
   // STA object create
-  _sta = new Sta;
-
-  // Tcl Interpreter settings
-  _interp = Tcl_CreateInterp();
-
-  // Initialize the TCL interpreter
-  Tcl_Init(_interp);
-
-  // define swig commands
-  Sta_Init(_interp);
-
-  // load encoded TCL functions
-  evalTclInit(_interp, tcl_inits);
-  // initialize TCL commands
-  Tcl_Eval(_interp, "sta::show_splash");
-  Tcl_Eval(_interp, "namespace import sta::*");
-
-  Tcl_Eval(_interp, "define_sta_cmds");
-
-  // initialize STA objects
-  initSta();
-  Sta::setSta(_sta);
-  _sta->makeComponents();
-  _sta->setTclInterp(_interp);
-
-  // environment settings
-  string cornerName = "wst";
-  // string cornerNameFF="bst";
-
-  StringSet cornerNameSet;
-  cornerNameSet.insert(cornerName.c_str());
-
-  // define_corners
-  _sta->makeCorners(&cornerNameSet);
-  Corner* corner = _sta->findCorner(cornerName.c_str());
-
-  // read_liberty
-  for (auto& libName : libStor) {
-    _sta->readLiberty(libName.c_str(), corner, MinMaxAll::max(), false);
-  }
-
-  // read_netlist
-  NetworkReader* networkReader = _sta->networkReader();
-  if (!networkReader) {
-    cout << "ERROR: Internal OpenSTA has problem for generating networkReader"
-         << endl;
-    exit(1);
-  }
-
-  // Parsing the Verilog
-  _sta->readNetlistBefore();
-  if (!readVerilogFile(verilogName.c_str(), _sta->networkReader())) {
-    cout << "ERROR: OpenSTA failed to read Verilog file!" << endl;
-    exit(1);
-  }
-
-  // link_design
-  Tcl_Eval(_interp, string("set link_make_black_boxes 0").c_str());
-  Tcl_Eval(_interp, string("link_design " + topCellName).c_str());
-
-  bool is_linked = networkReader->isLinked();
-  if (is_linked) {
-    cout << "INFO: Design in linked" << endl;
-  } else {
-    cout << "ERROR:  Linking Fail. Please put liberty files ";
-    cout << "to instantiate OpenSTA correctly" << endl;
-    exit(1);
-  }
-
-  // read_parasitics
-  // bool parasitics =
-  //    _sta->readParasitics(spefFile.c_str(),
-  //            _sta->currentInstance(),
-  //            MinMaxAll::max(), false, true, 0.0,
-  //            reduce_parasitics_to_pi_elmore, false, true, true);
-
-  Tcl_Eval(_interp, string("sta::read_sdc " + sdcName).c_str());
-
-  _sta->updateTiming(true);
-  //PowerInst::UpdateTimingSta();
+  _sta = sta;
 
   std::vector<pair<string, double>> power_report;
 

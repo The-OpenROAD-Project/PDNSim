@@ -35,6 +35,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "gmat.h"
 #include "db.h"
+
+namespace sta {
+class dbSta;
+}  // namespace sta
+
 //! Class for IR solver
 /* 
  * Builds the equations GV=J and uses SuperLU 
@@ -49,18 +54,12 @@ class IRSolver
    * the given inputs.
    */
   IRSolver(odb::dbDatabase*         t_db,
-           std::string              verilog_stor,
-           std::string              top_module,
-           std::string              sdc_file,
-           std::vector<std::string> lib_stor,
+           sta::dbSta*              t_sta,
            std::string              vsrc_loc,
            std::string              def_res_val)
   {
     m_db           = t_db;
-    m_verilog_stor = verilog_stor;
-    m_sdc_file     = sdc_file;
-    m_lib_stor     = lib_stor;
-    m_top_module   = top_module;
+    m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
     m_def_res      = def_res_val;
     ReadC4Data();
@@ -71,7 +70,10 @@ class IRSolver
     m_Gmat->GenerateCSCMatrix();
   }
   //! IRSolver destructor
-  ~IRSolver() { delete m_Gmat; }
+  ~IRSolver() 
+  { 
+    delete m_Gmat; 
+  }
   //! Worst case voltage at the lowest layer nodes
   double                                      wc_voltage;
   //! Voltage supply
@@ -92,16 +94,11 @@ class IRSolver
  private:
   //! Pointer to the Db
   odb::dbDatabase*         m_db;
-  //! Verilog file
-  std::string              m_verilog_stor;
-  //! Liberty files
-  std::vector<std::string> m_lib_stor;
-  //! SDC file
-  std::string              m_sdc_file;
-  //! Top module name
-  std::string              m_top_module;
+  //! Pointer to STA
+  sta::dbSta*              m_sta;
   //! Voltage source file
   std::string              m_vsrc_file;
+  //! Resistance configuration file
   std::string              m_def_res;
   //! G matrix for voltage 
   GMat*                    m_Gmat;
