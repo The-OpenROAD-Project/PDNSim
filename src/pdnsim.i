@@ -16,14 +16,14 @@ using pdnsim::PDNSim;
 %inline %{
 
 void 
-pdnsim_import_vsrc_cfg_cmd(std::string vsrc)
+pdnsim_import_vsrc_cfg_cmd(const char* vsrc)
 {
   PDNSim* pdnsim = getPDNSim();
   pdnsim->import_vsrc_cfg(vsrc);
 }
 
 void 
-pdnsim_import_resistance_cfg_cmd(std::string res_cfg)
+pdnsim_import_resistance_cfg_cmd(const char* res_cfg)
 {
   PDNSim* pdnsim = getPDNSim();
   pdnsim->import_resistance_cfg(res_cfg);
