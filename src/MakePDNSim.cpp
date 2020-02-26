@@ -1,8 +1,8 @@
 #include <tcl.h>
 #include "StaMain.hh"
 #include "openroad/OpenRoad.hh"
-#include "pdnsim/MakePDNSim.hh"
 #include "pdnsim/pdnsim.h"
+#include "pdnsim/MakePDNSim.hh"
 
 namespace sta {
 extern const char *pdnsim_tcl_inits[];
@@ -14,8 +14,7 @@ extern int Pdnsim_Init(Tcl_Interp* interp);
 
 namespace ord {
 
-pdnsim::PDNSim*
-makePDNSim() {
+pdnsim::PDNSim* makePDNSim() {
   return new pdnsim::PDNSim();
 }
 

@@ -33,10 +33,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #include "get_power.h"
-#include "util.h"
 #include <iostream>
 #include <tcl.h>
-
+//#include "util.h"
 using namespace sta;
 using namespace std;
 
@@ -58,9 +57,21 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
   // STA object create
   _sta = sta;
 
+  // environment settings
+  string cornerName = "wst";
+  // string cornerNameFF="bst";
+
+//  StringSet cornerNameSet;
+//  cornerNameSet.insert(cornerName.c_str());
+//
+//  // define_corners
+//  _sta->makeCorners(&cornerNameSet);
+//  Corner* corner = _sta->findCorner(cornerName.c_str());
+  Corner* corner = _sta->cmdCorner();
+
   std::vector<pair<string, double>> power_report;
 
-  sta::Network* network = _sta->network();
+  sta::dbNetwork* network = _sta->getDbNetwork();
   sta::Power*   power   = _sta->power();
   PowerResult   total, sequential, combinational, macro, pad;
   power->power(corner,

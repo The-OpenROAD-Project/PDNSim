@@ -30,13 +30,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include "pdnsim.h"
+#include "pdnsim/pdnsim.h"
 #include <tcl.h>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include "db.h"
+#include "opendb/db.h"
 #include "ir_solver.h"
 #include <string>
 #include <vector>
@@ -48,28 +48,42 @@ using namespace std;
 
 namespace pdnsim {
 
-using namspace std;
+using namespace std;
 
-PDNSim::setDb(odb::dbDatabase* db){
+PDNSim::PDNSim()
+  : _db(nullptr),
+  _sta(nullptr),
+  _vsrc_loc(""),
+  _res_cfg("") {
+};
+
+PDNSim::~PDNSim() {
+  _db = nullptr;
+  _sta = nullptr;
+  _vsrc_loc = "";
+  _res_cfg = "";
+}
+
+void PDNSim::setDb(odb::dbDatabase* db){
   _db = db;
 }
-PDNSim::setSta(sta::dbSta* sta){
+void PDNSim::setSta(sta::dbSta* sta){
   _sta = sta;
 }
 
 void PDNSim::import_vsrc_cfg(std::string vsrc)
 {
   _vsrc_loc = vsrc;
-  cout << "INFO: Reading Voltage source file " << vsrc_loc << endl;
+  cout << "INFO: Reading Voltage source file " << _vsrc_loc << endl;
 }
 
 void PDNSim::import_resistance_cfg(std::string res_cfg)
 {
   _res_cfg = res_cfg;
-  cout << "INFO: Reading default resistance values " << res_cfg << endl;
+  cout << "INFO: Reading default resistance values " << _res_cfg << endl;
 }
 
-PDSim::analyze_power_grid(){
+void PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
   //IRSolver* irsolve_h = new IRSolver(
   //    db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);

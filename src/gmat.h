@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __IRSOLVER_GMAT_
 #define __IRSOLVER_GMAT_
 #include "node.h"
-#include "db.h"
+#include "opendb/db.h"
 
 
 //! Global variable which holds the G matrix. 

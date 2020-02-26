@@ -2,6 +2,8 @@
 #define __PDNSim_HEADER__
 
 
+#include <string>
+
 namespace odb {
   class dbDatabase;
 }
@@ -26,7 +28,7 @@ class PDNSim
     void import_vsrc_cfg(std::string vsrc);
     void import_resistance_cfg(std::string res_cfg);
 
-    void analyze_power_grid()
+    void analyze_power_grid();
 
   private:
     odb::dbDatabase* _db;

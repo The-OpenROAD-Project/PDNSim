@@ -2,7 +2,7 @@
 
 %{
 #include "openroad/OpenRoad.hh"
-#include "pdnsim/PDNSim.h"
+#include "pdnsim/pdnsim.h"
 
 namespace ord {
 pdnsim::PDNSim*
@@ -38,8 +38,3 @@ pdnsim_analyze_power_grid_cmd()
 
 %} // inline
 
-%include <stl.i>
-%include <typemaps.i>
-%include <std_string.i>
-%include <std_vector.i>
-%include <std_pair.i>

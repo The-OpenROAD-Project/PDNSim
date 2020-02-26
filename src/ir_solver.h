@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IRSOLVER_IRSOLVER_
 
 #include "gmat.h"
-#include "db.h"
+#include "opendb/db.h"
 
 namespace sta {
 class dbSta;
