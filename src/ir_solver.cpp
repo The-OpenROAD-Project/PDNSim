@@ -321,6 +321,9 @@ void IRSolver::CreateGmat()
       continue;
     }
   }
+  if(vdd_nets.size() == 0) {
+    cout<<"ERROR: No VDD stripes found"<<endl;
+  }
   std::vector<dbNet*>::iterator vIter;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
     dbNet*                   curDnet = *vIter;

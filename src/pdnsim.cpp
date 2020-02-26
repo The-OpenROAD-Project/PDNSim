@@ -57,13 +57,13 @@ PDNSim::setSta(sta::dbSta* sta){
   _sta = sta;
 }
 
-void PDNSim::import_vsrc_cfg(const char* vsrc)
+void PDNSim::import_vsrc_cfg(std::string vsrc)
 {
   _vsrc_loc = vsrc;
   cout << "INFO: Reading Voltage source file " << vsrc_loc << endl;
 }
 
-void PDNSim::import_resistance_cfg(const char* res_cfg)
+void PDNSim::import_resistance_cfg(std::string res_cfg)
 {
   _res_cfg = res_cfg;
   cout << "INFO: Reading default resistance values " << res_cfg << endl;
