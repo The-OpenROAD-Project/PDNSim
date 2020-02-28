@@ -47,7 +47,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 0.99608
-Average IR drop  : 0.0032442
-Worstcase IR drop: 0.0039168
+Worstcase Voltage: 0.99674
+Average IR drop  : 0.0024871
+Worstcase IR drop: 0.0032578
 ######################################
