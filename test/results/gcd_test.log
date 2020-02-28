@@ -1,0 +1,83 @@
+Notice 0: Reading LEF file:  Nangate45.lef
+Notice 0:     Created 22 technology layers
+Notice 0:     Created 27 technology vias
+Notice 0:     Created 134 library cells
+Notice 0: Finished LEF file:  Nangate45.lef
+Notice 0: 
+Reading DEF file: gcd.def
+Notice 0: Design: gcd
+Notice 0:     Created 54 pins.
+Notice 0:     Created 510 components and 2524 component-terminals.
+Notice 0:     Created 2 special nets and 1020 connections.
+Notice 0:     Created 581 nets and 1504 connections.
+Notice 0: Finished DEF file: gcd.def
+Startpoint: _884_ (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: _876_ (rising edge-triggered flip-flop clocked by core_clock)
+Path Group: core_clock
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clock (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ _884_/CK (DFF_X1)
+   0.08    0.08 ^ _884_/Q (DFF_X1)
+   0.04    0.12 ^ _752_/Z (CLKBUF_X1)
+   0.05    0.18 ^ _475_/ZN (XNOR2_X1)
+   0.05    0.23 ^ _477_/ZN (AND2_X1)
+   0.02    0.25 v _481_/ZN (NAND3_X1)
+   0.07    0.31 v _487_/ZN (OR3_X1)
+   0.02    0.33 ^ _502_/ZN (NAND3_X1)
+   0.01    0.34 v _518_/ZN (NAND2_X1)
+   0.04    0.38 v _532_/ZN (AND4_X1)
+   0.03    0.42 ^ _545_/ZN (AOI21_X2)
+   0.03    0.45 v _546_/ZN (NAND2_X1)
+   0.05    0.50 v _547_/ZN (OR2_X1)
+   0.03    0.53 v _548_/Z (BUF_X4)
+   0.03    0.56 v _549_/Z (BUF_X4)
+   0.03    0.59 ^ _641_/ZN (OAI21_X1)
+   0.02    0.61 v _649_/ZN (OAI21_X1)
+   0.02    0.63 ^ _650_/ZN (OAI21_X1)
+   0.03    0.66 ^ _802_/Z (CLKBUF_X1)
+   0.00    0.66 ^ _876_/D (DFF_X1)
+           0.66   data arrival time
+
+  10.00   10.00   clock core_clock (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+          10.00 ^ _876_/CK (DFF_X1)
+  -0.03    9.97   library setup time
+           9.97   data required time
+---------------------------------------------------------
+           9.97   data required time
+          -0.66   data arrival time
+---------------------------------------------------------
+           9.31   slack (MET)
+
+
+INFO: Reading Voltage source file Vsrc_gcd.loc
+INFO: Reading default resistance values default_resistance.cfg
+Voltage fileVsrc_gcd.loc
+INFO: Reading location of VDD and VSS sources 
+Default resistance filedefault_resistance.cfg
+INFO: Reading resistance of layers and vias 
+INFO: G matrix created 
+INFO: Number of nodes: 1877
+Warning: Atleast one via resistance not found in DB. Using default value from the file 
+
+
+INFO: Executing STA for Power
+INFO: Execute STA
+INFO: Created J vector
+
+
+INFO: Solving GV=J
+INFO: SuperLU begin solving
+INFO: SuperLU finished solving
+
+
+######################################
+Worstcase Voltage: 1.0999
+Average IR drop  : 0.00010407
+Worstcase IR drop: 0.00011475
+######################################

@@ -69,7 +69,6 @@ add_library( pdnsim
 )
 
 add_dependencies(pdnsim superlu )
-add_dependencies(pdnsim pdnsim_wrap)
 
 ############################################################
 # include directories 

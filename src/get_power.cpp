@@ -53,7 +53,6 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
   cout << "\n" << endl;
   cout << "INFO: Executing STA for Power" << endl;
   cout << "INFO: Execute STA" << endl;
-  cout << "INFO: Files for STA" << endl;
   // STA object create
   _sta = sta;
 
