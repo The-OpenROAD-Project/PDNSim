@@ -103,7 +103,6 @@ class GMat
               int                        t_x_max,
               int                        t_y_min,
               int                        t_y_max);
-    
   //! Function to add the voltage source based on C4 bump location
   void       AddC4Bump(int t_loc, int t_C4Num);
   //! Function which generates the compressed sparse column matrix

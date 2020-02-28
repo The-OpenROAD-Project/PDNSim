@@ -216,8 +216,6 @@ void IRSolver::ReadC4Data()
         voltage = stod(val);
       }
     }
-    //cout<<"c4 loc"<<first<<" "<<second<<" "<<size<<" "<<voltage<<endl;
-
     m_C4Bumps.push_back(make_tuple(first, second, size, voltage));
   }
   file.close();
@@ -350,6 +348,9 @@ void IRSolver::CreateGmat()
       continue;
     }
   }
+  if(vdd_nets.size() == 0) {
+    cout<<"ERROR: No VDD stripes found"<<endl;
+  }
   std::vector<dbNet*>::iterator vIter;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
     dbNet*                   curDnet = *vIter;
@@ -413,7 +414,6 @@ void IRSolver::CreateGmat()
     }
   }
   // insert c4 bumps as nodes
-  //cout<<"Inserting VDD nodes into G Matrix"<<endl;
   int num_C4 =0;
   for (int it = 0; it < m_C4Bumps.size(); ++it) {
     int x = get<0>(m_C4Bumps[it]);

@@ -71,7 +71,9 @@ class IRSolver
     m_Gmat->GenerateCSCMatrix();
   }
   //! IRSolver destructor
-  ~IRSolver() { delete m_Gmat; }
+  ~IRSolver() {
+    delete m_Gmat;
+  }
   //! Worst case voltage at the lowest layer nodes
   double                                      wc_voltage;
   //! Voltage supply
