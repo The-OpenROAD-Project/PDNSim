@@ -17,8 +17,9 @@ Voltage file./PDNSim/test/aes/Vsrc.loc
 INFO: Reading location of VDD and VSS sources 
 Default resistance file./PDNSim/test/nangate45/default_resistance.cfg
 INFO: Reading resistance of layers and vias 
+Creating G Matrix
 INFO: G matrix created 
-INFO: Number of nodes: 100010
+INFO: Number of nodes: 106414
 Warning: Atleast one via resistance not found in DB. Using default value from the file 
 
 
@@ -46,7 +47,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.08853
-Average IR drop  : 0.010672
-Worstcase IR drop: 0.0114686
+Worstcase Voltage: 0.99608
+Average IR drop  : 0.0032442
+Worstcase IR drop: 0.0039168
 ######################################

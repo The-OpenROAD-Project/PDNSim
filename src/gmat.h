@@ -55,10 +55,9 @@ class GMat
 {
  public:
   //! Constructor for creating the G matrix
-  GMat(int t_num_layers, int t_numC4)
+  GMat(int t_num_layers)
       : m_num_layers(t_num_layers),
-        m_layer_maps(t_num_layers + 1, NodeMap()),
-        m_numC4(t_numC4)
+        m_layer_maps(t_num_layers + 1, NodeMap())
   {  // as it start from 0 and everywhere we use layer
   }
   //! Destructor of the G matrix
@@ -72,7 +71,7 @@ class GMat
   //! Function to return a pointer to the node with a index
   Node*      GetNode(NodeIdx t_node);
   //! Function to return a pointer to the node with the x, y, and layer number
-  Node*      GetNode(int t_x, int t_y, int t_l);
+  Node*      GetNode(int t_x, int t_y, int t_l, bool t_nearest=false);
   //! Function to set attributes of the node with index and node pointer
   void       SetNode(NodeIdx t_node_loc, Node* t_node);
   //! Function to create a node
@@ -84,7 +83,7 @@ class GMat
   //! Function to add the conductance value between two nodes
   void       SetConductance(Node* t_node1, Node* t_node2, double t_cond);
   //! Function to initialize the sparse dok matrix
-  void       InitializeGmatDok();
+  void       InitializeGmatDok(int t_numC4);
   //! Function that returns the number of nodes in the G matrix
   NodeIdx    GetNumNodes();
   //! Function to return a pointer to the G matrix 
@@ -97,6 +96,14 @@ class GMat
                                        int                        t_y_min,
                                        int                        t_y_max,
                                        double                     t_rho);
+  //! Function to get location of vias to the redistribution layer
+  std::vector<Node*> GetRDLNodes(int t_l,
+              odb::dbTechLayerDir::Value layer_dir,
+              int                        t_x_min,
+              int                        t_x_max,
+              int                        t_y_min,
+              int                        t_y_max);
+    
   //! Function to add the voltage source based on C4 bump location
   void       AddC4Bump(int t_loc, int t_C4Num);
   //! Function which generates the compressed sparse column matrix
@@ -117,8 +124,6 @@ class GMat
   std::vector<Node*>   m_G_mat_nodes;
   //! Vector of maps to all nodes
   std::vector<NodeMap> m_layer_maps;
-  //! Number of C4 bumps or voltage source locations initialized to zero
-  int                  m_numC4{0};
   //! Function to get the conductance value at a row and column of the matrix
   double GetConductance(NodeIdx t_row, NodeIdx t_col);
   //! Function to add a conductance value at the specified location of the matrix

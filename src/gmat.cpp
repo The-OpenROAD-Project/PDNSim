@@ -60,21 +60,21 @@ Node* GMat::GetNode(NodeIdx t_node)
      \param t_l layer number
      \return Pointer to the node in the matrix
 */
-Node* GMat::GetNode(int t_x, int t_y, int t_l)
+Node* GMat::GetNode(int t_x, int t_y, int t_l, bool t_nearest /*=false*/)
 {
   NodeMap& layer_map = m_layer_maps[t_l];
-  if (t_l != 1) {
+  if (t_l != 1 && t_nearest == false ) {
     NodeMap::iterator x_itr = layer_map.find(t_x);
     if (x_itr != layer_map.end()) {
       map<int, Node*>::iterator y_itr = x_itr->second.find(t_y);
       if (y_itr != x_itr->second.end()) {
         return y_itr->second;
       } else {
-        cout << "not found y \n";
+        cout << "ERROR: Node location lookup error for y"<<endl;
         return nullptr;
       }
     } else {
-      cout << "not found x\n";
+      cout << "ERROR: Node location lookup error for x"<<endl;
       return nullptr;
     }
   } else {
@@ -230,14 +230,14 @@ void GMat::SetConductance(Node* t_node1, Node* t_node2, double t_cond)
 /*! Based on the size of the G matrix 
  * initialize the number of rows and columns
 */
-void GMat::InitializeGmatDok()
+void GMat::InitializeGmatDok(int t_numC4)
 {
   if (m_n_nodes <= 0) {
     cout << "ERROR: no nodes in object initialization stopped.\n";
     exit(1);
   } else {
-    m_G_mat_dok.num_cols = m_n_nodes + m_numC4;
-    m_G_mat_dok.num_rows = m_n_nodes + m_numC4;
+    m_G_mat_dok.num_cols = m_n_nodes + t_numC4;
+    m_G_mat_dok.num_rows = m_n_nodes + t_numC4;
   }
 }
 
@@ -324,7 +324,74 @@ void GMat::GenerateStripeConductance(int                        t_l,
     }
   }
 }
-
+//! Function that gets the locations of nodes to connect RDL vias
+/*!
+ * Directly updates the G matrix 
+     \param t_l Layer number
+     \param layer_dir  Direction of the layer
+     \param t_x_min Lower left x location
+     \param t_x_max Upper right x location
+     \param t_y_min Lower left y location
+     \param t_y_max Upper right y location
+     \return std::vector<Node*> 
+*/
+std::vector<Node*> GMat::GetRDLNodes(int t_l,
+              odb::dbTechLayerDir::Value layer_dir,
+              int                        t_x_min,
+              int                        t_x_max,
+              int                        t_y_min,
+              int                        t_y_max)
+{
+  std::vector<Node*> RDLNodes;
+  NodeMap& layer_map = m_layer_maps[t_l];
+  NodeLoc node_loc;
+  Node* node1;
+  Node* node2;
+  if (layer_dir == odb::dbTechLayerDir::Value::HORIZONTAL) {
+    int y_loc = (t_y_min + t_y_max) / 2;
+    node1 = GetNode(t_x_min,y_loc,t_l,true);
+    node_loc = node1->GetLoc();
+    int x1 = node_loc.first;
+    node2 = GetNode(t_x_max,y_loc,t_l,true);
+    node_loc = node2->GetLoc();
+    int x2 = node_loc.first;
+    map<int, Node*>           y_map = layer_map.at(x1);
+    map<int, Node*>::iterator y_itr;
+    for (y_itr = y_map.lower_bound(t_y_min);
+         y_itr->first <= t_y_max && y_itr != y_map.end();
+         ++y_itr) {
+      node1  = y_itr->second;
+      //node1->Print();
+      RDLNodes.push_back(node1);
+    }
+    y_map = layer_map.at(x2);
+    for (y_itr = y_map.lower_bound(t_y_min);
+         y_itr->first <= t_y_max && y_itr != y_map.end();
+         ++y_itr) {
+      node2  = y_itr->second;
+      //node2->Print();
+      RDLNodes.push_back(node2);
+    }
+  } else {
+    int x_loc = (t_x_min + t_x_max) / 2;
+    node1 = GetNode(x_loc,t_y_min,t_l,true);
+    node_loc = node1->GetLoc();
+    int y1 = node_loc.second;
+    node2 = GetNode(x_loc,t_y_max,t_l,true);
+    node_loc = node2->GetLoc();
+    int y2 = node_loc.second;
+    NodeMap::iterator x_itr;
+    for (x_itr = layer_map.lower_bound(t_x_min);
+         x_itr->first <= t_x_max && x_itr != layer_map.end();
+         ++x_itr) {
+      node1 = (x_itr->second).at(y1);
+      node2  = (x_itr->second).at(y2);
+      RDLNodes.push_back(node1);
+      RDLNodes.push_back(node2);
+    }
+  }
+  return RDLNodes;
+}
 
 //! Function which add the values in the G matrix for the 
 // voltage sources in MNA

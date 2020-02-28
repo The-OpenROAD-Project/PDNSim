@@ -204,10 +204,10 @@ void PDNSim::analyze_power_grid()
   }
   cout << "\n" << endl;
   cout << "######################################" << endl;
-  cout << "Worstcase Voltage: " << irsolve_h->wc_voltage << endl;
-  cout << "Average IR drop  : " << irsolve_h->vdd - irsolve_h->avg_voltage
+  cout << "Worstcase Voltage: " << std::setprecision(5) << irsolve_h->wc_voltage << endl;
+  cout << "Average IR drop  : " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->avg_voltage
        << endl;
-  cout << "Worstcase IR drop: " << irsolve_h->vdd - irsolve_h->wc_voltage
+  cout << "Worstcase IR drop: " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->wc_voltage
        << endl;
   cout << "######################################" << endl;
   current_file.close();

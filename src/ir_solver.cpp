@@ -178,9 +178,9 @@ void IRSolver::AddC4Bump()
   if (m_C4Bumps.size() == 0) {
     cout << "ERROR: Invalid number of voltage sources" << endl;
   }
-  for (int it = 0; it < m_C4Bumps.size(); ++it) {
-    double  voltage  = get<3>(m_C4Bumps[it]);
-    NodeIdx node_loc = m_C4GLoc[it];
+  for (int it = 0; it < m_C4Nodes.size(); ++it) {
+    NodeIdx node_loc = m_C4Nodes[it].first;
+    double  voltage  = m_C4Nodes[it].second;
     m_Gmat->AddC4Bump(node_loc, it);  // add the 0th bump
     m_J.push_back(voltage);           // push back first vdd
     vdd = voltage;
@@ -192,6 +192,7 @@ void IRSolver::AddC4Bump()
 //! Function that parses the Vsrc file
 void IRSolver::ReadC4Data()
 {
+  int unit_micron = (m_db->getTech())->getDbUnitsPerMicron();
   cout << "Voltage file" << m_vsrc_file << endl;
   cout << "INFO: Reading location of VDD and VSS sources " << endl;
   std::ifstream file(m_vsrc_file);    
@@ -199,23 +200,25 @@ void IRSolver::ReadC4Data()
   // Iterate through each line and split the content using delimiter
   while (getline(file, line)) {
     tuple<int, int, int, double> c4_bump;
-    int                          first, second, layer;
+    int                          first, second, size;
     double                       voltage;
     stringstream                 X(line);
     string                       val;
     for (int i = 0; i < 4; ++i) {
       getline(X, val, ',');
       if (i == 0) {
-        first = stoi(val);
+        first = (int) (unit_micron * stod(val));
       } else if (i == 1) {
-        second = stoi(val);
+        second = (int) (unit_micron * stod(val));
       } else if (i == 2) {
-        layer = stoi(val);
+        size = (int) (unit_micron * stod(val));
       } else {
         voltage = stod(val);
       }
     }
-    m_C4Bumps.push_back(make_tuple(first, second, layer, voltage));
+    //cout<<"c4 loc"<<first<<" "<<second<<" "<<size<<" "<<voltage<<endl;
+
+    m_C4Bumps.push_back(make_tuple(first, second, size, voltage));
   }
   file.close();
 }
@@ -293,14 +296,15 @@ void IRSolver::CreateJ()
 //! Function to create a G matrix using the nodes
 void IRSolver::CreateGmat()
 {
+  cout<<"Creating G Matrix"<<endl;
   std::vector<Node*> node_vector;
   dbTech*                      tech   = m_db->getTech();
   dbSet<dbTechLayer>           layers = tech->getLayers();
   dbSet<dbTechLayer>::iterator litr;
+  int unit_micron = tech->getDbUnitsPerMicron();
   int num_routing_layers = tech->getRoutingLayerCount();
 
-  int num_c4                = m_C4Bumps.size();
-  m_Gmat                    = new GMat(num_routing_layers, num_c4);
+  m_Gmat                    = new GMat(num_routing_layers);
   dbChip*             chip  = m_db->getChip();
   dbBlock*            block = chip->getBlock();
   dbSet<dbNet>        nets  = block->getNets();
@@ -311,12 +315,37 @@ void IRSolver::CreateGmat()
   dbSet<dbNet>::iterator nIter;
   for (nIter = nets.begin(); nIter != nets.end(); ++nIter) {
     dbNet* curDnet = *nIter;
-
     dbSigType nType = curDnet->getSigType();
     if (nType == dbSigType::GROUND) {
       gnd_nets.push_back(curDnet);
     } else if (nType == dbSigType::POWER) {
       vdd_nets.push_back(curDnet);
+      dbSet<dbSWire>           swires  = curDnet->getSWires();
+      dbSet<dbSWire>::iterator sIter;
+      for (sIter = swires.begin(); sIter != swires.end(); ++sIter) {
+        dbSWire*                curSWire = *sIter;
+        dbSet<dbSBox>           wires    = curSWire->getWires();
+        dbSet<dbSBox>::iterator wIter;
+        for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
+          dbSBox* curWire = *wIter;
+          int l;
+          dbTechLayerDir::Value layer_dir; 
+          if (curWire->isVia()) {
+            dbVia* via      = curWire->getBlockVia();
+            dbTechLayer* via_layer = via->getTopLayer();
+            l = via_layer->getRoutingLevel();
+            layer_dir = via_layer->getDirection();
+          } else {
+            dbTechLayer* wire_layer = curWire->getTechLayer();
+            l = wire_layer->getRoutingLevel();
+            layer_dir = wire_layer->getDirection();
+          }
+          if (l > m_top_layer) {
+            m_top_layer = l ; 
+            m_top_layer_dir = layer_dir;
+          }
+        }
+      }
     } else {
       continue;
     }
@@ -341,7 +370,7 @@ void IRSolver::CreateGmat()
           curWire->getViaXY(x, y);
           dbTechLayer* via_layer = via->getBottomLayer();
           int          l         = via_layer->getRoutingLevel();
-          if (1 != l) {
+          if (1 != l && l != m_top_layer) { //do not set for top and bottom layers
             m_Gmat->SetNode(x, y, l, bBox);
           }
           via_layer = via->getTopLayer();
@@ -363,7 +392,7 @@ void IRSolver::CreateGmat()
             y_loc1 = curWire->yMin();
             y_loc2 = curWire->yMax();
           }
-          if (l == 1) {  // special case for layer 1 we design a dense grid
+          if (l == 1 || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
             if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
               int x_i;
               for (x_i = x_loc1; x_i <= x_loc2; x_i = x_i + m_node_density) {
@@ -384,19 +413,52 @@ void IRSolver::CreateGmat()
     }
   }
   // insert c4 bumps as nodes
+  //cout<<"Inserting VDD nodes into G Matrix"<<endl;
+  int num_C4 =0;
   for (int it = 0; it < m_C4Bumps.size(); ++it) {
-    int   x    = get<0>(m_C4Bumps[it]);
-    int   y    = get<1>(m_C4Bumps[it]);
-    int   l    = get<2>(m_C4Bumps[it]);
-    Node* node = m_Gmat->SetNode(x, y, l, make_pair(0, 0));
-    m_C4GLoc.push_back(node->GetGLoc());
+    int x = get<0>(m_C4Bumps[it]);
+    int y = get<1>(m_C4Bumps[it]);
+    int size = get<2>(m_C4Bumps[it]);
+    int v  = get<3>(m_C4Bumps[it]);
+    std::vector<Node*> RDL_nodes;
+    RDL_nodes = m_Gmat->GetRDLNodes(m_top_layer, 
+                                    m_top_layer_dir,
+                                    x-size/2, 
+                                    x+size/2,
+                                    y-size/2,
+                                    y+size/2);
+    if (RDL_nodes.empty() == true) {
+      Node* node = m_Gmat->GetNode(x,y,m_top_layer,true);
+      NodeLoc node_loc = node->GetLoc();
+      double new_loc1 = ((double)node_loc.first) /((double) unit_micron);
+      double new_loc2 = ((double)node_loc.second) /((double) unit_micron);
+      double old_loc1 = ((double)x) /((double) unit_micron);
+      double old_loc2 = ((double)y) /((double) unit_micron);
+      double old_size = ((double)size) /((double) unit_micron);
+      cout<<"WARNING: Vsrc location at x="<<std::setprecision(3)<<old_loc1<<"um , y="<<old_loc2
+          <<"um and size ="<<old_size<<"um,  is not located on a power stripe."<<endl;
+      cout<<"         Moving to closest stripe at x="<<std::setprecision(3)<<new_loc1<<"um , y="<<new_loc2<<"um"<<endl;
+      RDL_nodes = m_Gmat->GetRDLNodes(m_top_layer, 
+                                      m_top_layer_dir,
+                                      node_loc.first-size/2, 
+                                      node_loc.first+size/2,
+                                      node_loc.second-size/2,
+                                      node_loc.second+size/2);
+
+    }
+    vector<Node*>::iterator node_it;
+    for(node_it = RDL_nodes.begin(); node_it != RDL_nodes.end(); ++node_it) {
+      Node* node = *node_it;
+      m_C4Nodes.push_back(make_pair(node->GetGLoc(),v));
+      num_C4++;
+    }
   }
   
   // All new nodes must be inserted by this point
   // initialize G Matrix
   cout << "INFO: G matrix created " << endl;
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
-  m_Gmat->InitializeGmatDok();
+  m_Gmat->InitializeGmatDok(num_C4);
   int warn_flag_via = 1;
   int warn_flag_layer = 1;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
@@ -436,7 +498,7 @@ void IRSolver::CreateGmat()
           Node* node_top = m_Gmat->GetNode(x, y, l);
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
-                    "fail ahead.\n";
+                    "fail ahead."<<endl;
             exit(1);
           } else {
             m_Gmat->SetConductance(node_bot, node_top, 1 / R);
@@ -446,11 +508,11 @@ void IRSolver::CreateGmat()
           int l  = wire_layer->getRoutingLevel();
           double       rho        = wire_layer->getResistance()
                        * double(wire_layer->getWidth())
-                       / double((wire_layer->getTech())->getDbUnitsPerMicron());
+                       / double(unit_micron);
           if (rho == 0.0) {
             warn_flag_layer = 0;
             rho = get<1>(m_layer_res[l]) * double(wire_layer->getWidth())
-                    / double((wire_layer->getTech())->getDbUnitsPerMicron());
+                    / double(unit_micron);
             //cout << "rho value " <<rho << endl;
           }
           dbTechLayerDir::Value layer_dir = wire_layer->getDirection();
