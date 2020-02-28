@@ -70,9 +70,8 @@ class IRSolver
     m_Gmat->GenerateCSCMatrix();
   }
   //! IRSolver destructor
-  ~IRSolver() 
-  { 
-    delete m_Gmat; 
+  ~IRSolver() {
+    delete m_Gmat;
   }
   //! Worst case voltage at the lowest layer nodes
   double                                      wc_voltage;
@@ -104,6 +103,10 @@ class IRSolver
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources
   int m_node_density{2800};  // TODO get from somewhere
+  //! Routing Level of the top layer
+  int m_top_layer{0};
+  //! Direction of the top layer
+  odb::dbTechLayerDir::Value m_top_layer_dir;
   //! Current vector 1D
   std::vector<double>                            m_J;
   //! C4 bump locations and values
@@ -111,7 +114,7 @@ class IRSolver
   //! Per unit R and via R for each routing layer
   std::vector<std::tuple<int, double, double>> m_layer_res;
   //! Locations of the C4 bumps in the G matrix
-  std::vector<NodeIdx>                           m_C4GLoc;
+  std::vector<std::pair<NodeIdx,double>>         m_C4Nodes;
   //! Function to add C4 bumps to the G matrix
   void                                           AddC4Bump();
   //! Function that parses the Vsrc file
