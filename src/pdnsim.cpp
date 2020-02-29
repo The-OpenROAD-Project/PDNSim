@@ -92,10 +92,6 @@ void PDNSim::analyze_power_grid(){
   irsolve_h->SolveIR();
   std::vector<Node*> nodes       = gmat_obj->GetAllNodes();
   int                unit_micron = (_db->getTech())->getDbUnitsPerMicron();
-  ofstream current_file;
-  ofstream voltage_file;
-  current_file.open("J.csv");
-  voltage_file.open("V.csv");
   int      vsize;
   vsize = nodes.size();
   for (int n = 0; n < vsize; n++) {
@@ -103,12 +99,6 @@ void PDNSim::analyze_power_grid(){
     if (node->GetLayerNum() != 1)
       continue;
     NodeLoc loc = node->GetLoc();
-    current_file << double(loc.first) / unit_micron << ","
-                 << double(loc.second) / unit_micron << ","
-                 << std::setprecision(10) << node->GetCurrent() << "\n";
-    voltage_file << double(loc.first) / unit_micron << ","
-                 << double(loc.second) / unit_micron << ","
-                 << std::setprecision(10) << node->GetVoltage() << "\n";
   }
   cout << "\n" << endl;
   cout << "######################################" << endl;
@@ -118,8 +108,6 @@ void PDNSim::analyze_power_grid(){
   cout << "Worstcase IR drop: " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->wc_voltage
        << endl;
   cout << "######################################" << endl;
-  current_file.close();
-  voltage_file.close();
 }
 
 }
