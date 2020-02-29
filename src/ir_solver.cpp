@@ -124,14 +124,10 @@ void IRSolver::SolveIR()
   // dPrint_CompCol_Matrix("A", &A);
   // dPrint_Dense_Matrix("B", &B);
   cout << "\n" << endl;
-  t1 = clock();
   cout << "INFO: Solving GV=J" << endl;
   cout << "INFO: SuperLU begin solving" << endl;
   /* Solve the linear system. */
   dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-  t2 = clock();
-  float time_to_solve;
-  time_to_solve = float(t2-t1)/CLOCKS_PER_SEC;
   cout << "INFO: SuperLU finished solving" << endl;
   // dPrint_Dense_Matrix("B", &B);
   DNformat*    Bstore = (DNformat*) B.Store;
@@ -178,7 +174,7 @@ void IRSolver::AddC4Bump()
   if (m_C4Bumps.size() == 0) {
     cout << "ERROR: Invalid number of voltage sources" << endl;
   }
-  for (int it = 0; it < m_C4Nodes.size(); ++it) {
+  for (unsigned int it = 0; it < m_C4Nodes.size(); ++it) {
     NodeIdx node_loc = m_C4Nodes[it].first;
     double  voltage  = m_C4Nodes[it].second;
     m_Gmat->AddC4Bump(node_loc, it);  // add the 0th bump
@@ -297,7 +293,7 @@ void IRSolver::CreateGmat()
   cout<<"Creating G Matrix"<<endl;
   std::vector<Node*> node_vector;
   dbTech*                      tech   = m_db->getTech();
-  dbSet<dbTechLayer>           layers = tech->getLayers();
+  //dbSet<dbTechLayer>           layers = tech->getLayers();
   dbSet<dbTechLayer>::iterator litr;
   int unit_micron = tech->getDbUnitsPerMicron();
   int num_routing_layers = tech->getRoutingLayerCount();
@@ -308,7 +304,6 @@ void IRSolver::CreateGmat()
   dbSet<dbNet>        nets  = block->getNets();
   std::vector<dbNet*> vdd_nets;
   std::vector<dbNet*> gnd_nets;
-  int                 netCNT = nets.size();
 
   dbSet<dbNet>::iterator nIter;
   for (nIter = nets.begin(); nIter != nets.end(); ++nIter) {
@@ -415,7 +410,7 @@ void IRSolver::CreateGmat()
   }
   // insert c4 bumps as nodes
   int num_C4 =0;
-  for (int it = 0; it < m_C4Bumps.size(); ++it) {
+  for (unsigned int it = 0; it < m_C4Bumps.size(); ++it) {
     int x = get<0>(m_C4Bumps[it]);
     int y = get<1>(m_C4Bumps[it]);
     int size = get<2>(m_C4Bumps[it]);
@@ -482,7 +477,6 @@ void IRSolver::CreateGmat()
           curWire->getViaXY(x, y);
           dbTechLayer* via_layer = via->getBottomLayer();
           int          l         = via_layer->getRoutingLevel();
-          int          l_bot     = l;
 
           double R = via_layer->getUpperLayer()->getResistance();
           if (R == 0.0) {
@@ -494,7 +488,6 @@ void IRSolver::CreateGmat()
 
           via_layer      = via->getTopLayer();
           l              = via_layer->getRoutingLevel();
-          int   l_top    = l;
           Node* node_top = m_Gmat->GetNode(x, y, l);
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
