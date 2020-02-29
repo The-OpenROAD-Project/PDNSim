@@ -61,8 +61,9 @@ Voltage fileVsrc_gcd.loc
 INFO: Reading location of VDD and VSS sources 
 Default resistance filedefault_resistance.cfg
 INFO: Reading resistance of layers and vias 
+Creating G Matrix
 INFO: G matrix created 
-INFO: Number of nodes: 1877
+INFO: Number of nodes: 1988
 Warning: Atleast one via resistance not found in DB. Using default value from the file 
 
 
@@ -77,7 +78,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.0999
-Average IR drop  : 0.00010407
-Worstcase IR drop: 0.00011475
+Worstcase Voltage: 0.99989
+Average IR drop  : 9.8408e-05
+Worstcase IR drop: 0.00011195
 ######################################
