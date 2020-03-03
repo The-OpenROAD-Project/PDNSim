@@ -5,105 +5,16 @@
 [![AskMe](https://img.shields.io/badge/ask-me-yellow)](https://github.com/VidyaChhabria/PDNA/issues)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
+PDNSim is an open-source static IR analyzer. This branch of the PDNSim
+repository must be used internal to the OpenROAD integrated app.
 
 <img align = "right" width="50%" src="doc/current_map.jpg">
 <img align = "right" width="50%" src="doc/IR_map.jpg">
 
 ## Getting Started
 
-### Clone Repository and Submodules
-`git clone --recursive https://github.com/The-OpenROAD-Project/PDNSim.git`
-
-### Inputs
-* DEF : Placed and PDN synthesized
-* LEF : Tech and Cell LEF
-* LIB : Liberty files for OpenSTA power report
-* Verilog : Gate-level netlist for OpenSTA power report
-* SDC : Constraints for OpenSTA power report
-* VSRC.loc: Voltage source location [file](test/gcd/Vsrc.loc)
-
-###  Outputs
-* Static IR drop report, worst case IR drop
-* Static IR drop plots
-
-
-### Dependencies:
-- [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB/tree/develop)
-- [OpenSTA](https://github.com/The-OpenROAD-Project/OpenSTA)
-- [SuperLU](https://github.com/xiaoyeli/superlu)
-   
-
-### Install and Run on Bare Metal Machine
-
-#### Pre-requisutes
-- GCC compiler and libstdc++ static library >= 4.8.5
-- TCL > = 8.4
-- BLAS library >= 3.8 for SuperLU
-- FORTRAN compiler
-- Boost Libraries >= 1.53
-
-#### Build and Install
-
-After  cloning the repository and its submodules, build and install using the
-following commands:
-
-```
-$ cd PDNSim
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-```
-
-
-
-#### Check the Installation
-- To make sure your installation is correct and the current tool version is
-  stable:
-
-```
-cd ../..
-% source /PDNSim/test/regression.sh
-```
-
-
-### Usage
-| <img src="/doc/OpenIRA.gif" width=900px> |
-|:--:|
-| *Example usages with TCL interpreter* |
-
-Open the TCL interpreter for PDNSim.
-
-
-`$ pdnsim`
-
-Run the following TCL commands:
-
-```
-PDNSim pdn
-pdn import_lef /path/to/lef/file.lef
-pdn import_def /path/to/def/file.def
-pdn import_verilog /path/to/gate-level/netlist/file.v
-pdn set_top_module moduleName
-pdn import_sdc /path/to/constraints/file.sdc 
-pdn import_lib /path/to/liberty/file.lib
-pdn read_voltage_src /path/to/Vsrc.loc
-pdn analyze_power_grid
-```
-
-The analyze_power_grid command supports the following optional arguments:
-analyzer_power_grid -layer <str> -net VDD/VSS
-
-
-analyze_power_grid -layer M1 -net VSS
-
-| Argument          | Comments                                                                             	|
-|-------------------|--------------------------------------------------------------------------------------	|
-| layer <str>       | Reports the worst case IR on the specifed layer and plots the IR map (optional, str)  |
-| net <str>         | Specifies which net to analyze: VDD/VSS (optional, str)   	                        |
-
-
-If the above two arguments are not specified, the default arguments are net VSS and layer 1.
+You can find usage information inside the OpenROAD app repository in the PDN
+analysis section of the [README file](https://github.com/The-OpenROAD-Project/OpenROAD/blob/openroad/README.md).
 
 ## License
 The rest of this repository is licensed under BSD 3-Clause License.
