@@ -77,11 +77,11 @@ void PDNSim::import_vsrc_cfg(std::string vsrc)
   cout << "INFO: Reading Voltage source file " << _vsrc_loc << endl;
 }
 
-void PDNSim::import_resistance_cfg(std::string res_cfg)
-{
-  _res_cfg = res_cfg;
-  cout << "INFO: Reading default resistance values " << _res_cfg << endl;
-}
+//void PDNSim::import_resistance_cfg(std::string res_cfg)
+//{
+//  _res_cfg = res_cfg;
+//  cout << "INFO: Reading default resistance values " << _res_cfg << endl;
+//}
 
 void PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;

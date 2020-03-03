@@ -219,7 +219,7 @@ void IRSolver::ReadC4Data()
 
 
 //! Function that parses the Vsrc file
-void IRSolver::ReadResData()
+/*void IRSolver::ReadResData()
 {
   cout << "Default resistance file" << m_def_res << endl;
   cout << "INFO: Reading resistance of layers and vias " << endl;
@@ -252,7 +252,7 @@ void IRSolver::ReadResData()
   }
   file.close();
 }
-
+*/
 
 //! Function to create a J vector from the current map
 void IRSolver::CreateJ()
@@ -454,8 +454,8 @@ void IRSolver::CreateGmat()
   cout << "INFO: G matrix created " << endl;
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
   m_Gmat->InitializeGmatDok(num_C4);
-  int warn_flag_via = 1;
-  int warn_flag_layer = 1;
+  int err_flag_via = 1;
+  int err_flag_layer = 1;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
        ++vIter) {  // only 1 is expected?
     dbNet*                   curDnet = *vIter;
@@ -480,8 +480,8 @@ void IRSolver::CreateGmat()
 
           double R = via_layer->getUpperLayer()->getResistance();
           if (R == 0.0) {
-            warn_flag_via = 0;
-            R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
+            err_flag_via = 0;
+            //R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
             //cout << "Via Resistance" << R << endl;
           }
           Node* node_bot = m_Gmat->GetNode(x, y, l);
@@ -503,9 +503,9 @@ void IRSolver::CreateGmat()
                        * double(wire_layer->getWidth())
                        / double(unit_micron);
           if (rho == 0.0) {
-            warn_flag_layer = 0;
-            rho = get<1>(m_layer_res[l]) * double(wire_layer->getWidth())
-                    / double(unit_micron);
+            err_flag_layer = 0;
+            //rho = get<1>(m_layer_res[l]) * double(wire_layer->getWidth())
+            //        / double(unit_micron);
             //cout << "rho value " <<rho << endl;
           }
           dbTechLayerDir::Value layer_dir = wire_layer->getDirection();
@@ -520,11 +520,13 @@ void IRSolver::CreateGmat()
       }
     }
   }
-  if (warn_flag_via == 0) {
-  cout << "Warning: Atleast one via resistance not found in DB. Using default value from the file "<<endl;
+  if (err_flag_via == 0) {
+    cout << "Error: Atleast one via resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
+    exit(1);
   }
-  if (warn_flag_layer == 0) {
-  cout << "Warning: Atleast one layer per unit resistance not found in DB. Using default value from the file "<<endl;
+  if (err_flag_layer == 0) {
+    cout << "Error: Atleast one layer per unit resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
+    exit(1);
   }
 }
 

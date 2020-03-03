@@ -58,15 +58,11 @@ Path Type: max
 
 
 INFO: Reading Voltage source file Vsrc_aes.loc
-INFO: Reading default resistance values default_resistance.cfg
 Voltage fileVsrc_aes.loc
 INFO: Reading location of VDD and VSS sources 
-Default resistance filedefault_resistance.cfg
-INFO: Reading resistance of layers and vias 
 Creating G Matrix
 INFO: G matrix created 
 INFO: Number of nodes: 106414
-Warning: Atleast one via resistance not found in DB. Using default value from the file 
 
 
 INFO: Executing STA for Power
@@ -80,7 +76,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 0.9996
-Average IR drop  : 0.00031327
-Worstcase IR drop: 0.00039754
+Worstcase Voltage: 0.99955
+Average IR drop  : 0.00035876
+Worstcase IR drop: 0.00044637
 ######################################

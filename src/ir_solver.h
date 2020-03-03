@@ -63,7 +63,7 @@ class IRSolver
     m_vsrc_file    = vsrc_loc;
     m_def_res      = def_res_val;
     ReadC4Data();
-    ReadResData();
+    //ReadResData();
     CreateGmat();
     CreateJ();
     AddC4Bump();
@@ -119,7 +119,7 @@ class IRSolver
   void                                           AddC4Bump();
   //! Function that parses the Vsrc file
   void                                           ReadC4Data();
-  void                                           ReadResData();
+//  void                                           ReadResData();
   //! Function to create a J vector from the current map
   void                                           CreateJ();
   //! Function to create a G matrix using the nodes
