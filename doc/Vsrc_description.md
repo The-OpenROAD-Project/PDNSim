@@ -14,7 +14,9 @@ Voltage_value specifies the value of voltage source at the C4 bump. In case
 there is a need to specify voltage drop in micrometer
 
 ## Example file
-250,250,20,1.1
-130,170,20,1.1
-370,410,10,1.1
-410,450,10,1.1
+```
+250, 250, 20, 1.1
+130, 170, 20, 1.1
+370, 410, 10, 1.1
+410, 450, 10, 1.1
+```
