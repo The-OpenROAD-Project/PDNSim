@@ -68,7 +68,6 @@ add_library( pdnsim
     ${PDNSIM_SRC}
 )
 
-set(XSDK_ENABLE_Fortran OFF)
 add_dependencies(pdnsim superlu )
 
 ############################################################

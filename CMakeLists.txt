@@ -34,5 +34,6 @@ set(SUPERLU_HOME ${PDNSIM_HOME}/modules/superlu)
 
 
 
+set(XSDK_ENABLE_Fortran OFF)
 add_subdirectory(src)
 add_subdirectory(${SUPERLU_HOME})
