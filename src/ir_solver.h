@@ -68,6 +68,8 @@ class IRSolver
     CreateJ();
     AddC4Bump();
     m_Gmat->GenerateCSCMatrix();
+    m_connection = CheckConnectivity();
+
   }
   //! IRSolver destructor
   ~IRSolver() {
@@ -89,6 +91,10 @@ class IRSolver
   void                                        SolveIR();
   //! Function to get the power value from OpenSTA
   std::vector<std::pair<std::string, double>> GetPower();
+
+  bool                                        CheckConnectivity();
+  
+  int                                         GetConnectionTest();
  
  private:
   //! Pointer to the Db
@@ -105,6 +111,8 @@ class IRSolver
   int m_node_density{2800};  // TODO get from somewhere
   //! Routing Level of the top layer
   int m_top_layer{0};
+
+  bool m_connection{false};
   //! Direction of the top layer
   odb::dbTechLayerDir::Value m_top_layer_dir;
   //! Current vector 1D

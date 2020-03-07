@@ -68,6 +68,7 @@ INFO: Number of nodes: 106414
 INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Created J vector
+INFO: Connection from Vpad to all nodes established
 
 
 INFO: Solving GV=J

@@ -31,3 +31,25 @@ proc analyze_power_grid { args } {
 
 }
 
+sta::define_cmd_args "analyze_power_grid" { 
+  [-vsrc vsrc_file ]}
+
+proc check_power_grid { args } {
+  sta::parse_key_args "analyze_power_grid" args \
+    keys {-vsrc -res_cfg} flags {}
+
+  if { [info exists keys(-vsrc)] } {
+    set vsrc_file $keys(-vsrc)
+    if { [file readable $vsrc_file] } {
+      pdnsim_import_vsrc_cfg_cmd $vsrc_file
+    } else {
+      puts "Warning: cannot read $vsrc_file"
+    }
+  } else {
+    puts "Error: key vsrc not defined."
+  }
+  set res [pdnsim_check_connectivity_cmd]
+  return $res
+}
+
+

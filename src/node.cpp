@@ -188,3 +188,29 @@ double Node::GetVoltage()
 {
   return m_voltage;
 }
+
+bool Node::GetConnected()
+{
+  return m_connected;
+}
+
+void Node::SetConnected()
+{
+  m_connected =true;
+}
+
+bool Node::HasInstances()
+{
+  return m_has_instances;
+}
+
+std::vector<dbInst*> Node::GetInstances()
+{
+  return m_connected_instances;
+}
+
+void Node::AddInstance(dbInst* inst) 
+{
+  m_has_instances =true;
+  m_connected_instances.push_back(inst);
+}

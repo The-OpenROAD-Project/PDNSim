@@ -35,6 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IRSOLVER_NODE__
 
 #include <map>
+#include "opendb/db.h"
+using odb::dbInst;
 
 
 typedef std::pair<int, int>         NodeLoc;
@@ -100,6 +102,16 @@ class Node
   //! Function to get the value of the voltage source
   double  GetVoltage();
 
+  bool    GetConnected();
+
+  void    SetConnected();
+
+  bool    HasInstances();
+
+  std::vector<dbInst*> GetInstances();
+
+  void    AddInstance(dbInst* inst);
+
  private:
   int     m_layer;
   NodeLoc m_loc;  // layer,x,y
@@ -107,5 +119,8 @@ class Node
   BBox    m_bBox;
   double  m_current_src{0.0};
   double  m_voltage{0.0};
+  bool    m_connected{false};
+  bool    m_has_instances{false};
+  std::vector<dbInst*> m_connected_instances;
 };
 #endif

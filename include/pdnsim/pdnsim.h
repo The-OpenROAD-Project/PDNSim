@@ -26,9 +26,11 @@ class PDNSim
     void setSta(sta::dbSta* dbSta);
     
     void import_vsrc_cfg(std::string vsrc);
-    void import_resistance_cfg(std::string res_cfg);
+    //void import_resistance_cfg(std::string res_cfg);
 
     void analyze_power_grid();
+
+    int check_connectivity();
 
   private:
     odb::dbDatabase* _db;

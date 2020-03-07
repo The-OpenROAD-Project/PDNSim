@@ -31,6 +31,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <vector>
+#include <queue>
 #include <math.h>
 #include <cmath>
 #include <iostream>
@@ -93,6 +94,11 @@ vector<double> IRSolver::GetJ()
 //! Function to solve for voltage using SuperLU 
 void IRSolver::SolveIR()
 {
+  if(!m_connection) {
+    cout<<"WARNING: Powergrid is not connected to all instances,"<<
+          "IR Solver may not be accurate, LVS may also fail."<<endl;
+  }
+  int unit_micron = (m_db->getTech())->getDbUnitsPerMicron();
   clock_t t1, t2;
   SuperMatrix       A, L, U, B;
   SuperLUStat_t     stat;
@@ -139,6 +145,9 @@ void IRSolver::SolveIR()
   wc_voltage            = vdd;
   dp                    = (double*) Bstore->nzval;
   int num_nodes         = m_Gmat->GetNumNodes();
+  ofstream ir_report;
+  ir_report.open ("V_mat.csv");
+  ir_report<<"Instance:   Location(x,y)(um) Voltage(V)"<<endl;
   for (j = 0; j < B.ncol; ++j) {
     for (i = 0; i < B.nrow; ++i) {
       if (node_num >= num_nodes) {
@@ -152,8 +161,20 @@ void IRSolver::SolveIR()
       }
       node->SetVoltage(volt);
       node_num++;
+      if(node->HasInstances()) {
+        NodeLoc node_loc = node->GetLoc();
+        float loc_x = ((float)node_loc.first)/((float)unit_micron);
+        float loc_y = ((float)node_loc.second)/((float)unit_micron);
+        std::vector<dbInst*> insts = node->GetInstances();
+        std::vector<dbInst*>::iterator inst_it;
+        for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
+          ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
+        }
+      }
     }
   }
+  ir_report<<endl;
+  ir_report.close();
   avg_voltage = sum_volt / num_nodes;
   // TODO keep copies for LU for later?
   /* De-allocate storage */
@@ -277,6 +298,7 @@ void IRSolver::CreateJ()
     int   l      = 1;  // atach to the bottom most routing layer
     Node* node_J = m_Gmat->GetNode(x, y, l);
     node_J->AddCurrentSrc(it->second);
+    node_J->AddInstance(inst);
   }
   for (int i = 0; i < num_nodes; ++i) {
     Node* node_J = m_Gmat->GetNode(i);
@@ -530,6 +552,125 @@ void IRSolver::CreateGmat()
   }
 }
 
+bool IRSolver::CheckConnectivity()
+{
+  std::vector<std::pair<NodeIdx,double>>::iterator c4_node_it;
+  int x,y;
+  CscMatrix*        Gmat = m_Gmat->GetGMat();
+  int num_nodes = m_Gmat->GetNumNodes();
+  //SuperMatrix       A;
+  //  int               m    = Gmat->num_rows;
+  //int               n    = Gmat->num_cols;
+  //int               info;
+  //int     nnz     = Gmat->nnz;
+  //double* values  = &(Gmat->values[0]);
+  //int*    row_idx = &(Gmat->row_idx[0]);
+  //int*    col_ptr = &(Gmat->col_ptr[0]);
+  //dCreate_CompCol_Matrix(
+  //    &A, m, n, nnz, values, row_idx, col_ptr, SLU_NC, SLU_D, SLU_GE);
+  //dPrint_CompCol_Matrix("A", &A);
+
+
+  dbTech* tech   = m_db->getTech();
+  int unit_micron = tech->getDbUnitsPerMicron();
+
+  for(c4_node_it = m_C4Nodes.begin(); c4_node_it != m_C4Nodes.end() ; c4_node_it++){
+    Node* c4_node = m_Gmat->GetNode((*c4_node_it).first);
+    std::queue<Node*> node_q;
+    node_q.push(c4_node);
+    //cout<<"adding_node"<<endl;
+    while(!node_q.empty()) {
+      NodeIdx col_loc, n_col_loc;
+      Node* node = node_q.front();
+      node_q.pop();
+      node->SetConnected();
+      NodeIdx col_num = node->GetGLoc();
+      //cout<<"working on node "<<col_num<<endl;
+      col_loc  = Gmat->col_ptr[col_num];
+      if(col_num < Gmat->col_ptr.size()-1) {
+        n_col_loc  = Gmat->col_ptr[col_num+1];
+      } else {
+        n_col_loc  = Gmat->row_idx.size() ;
+      }
+      //cout<<"getting values form col_vec"<<endl;
+      std::vector<NodeIdx> col_vec(Gmat->row_idx.begin()+col_loc,
+                                   Gmat->row_idx.begin()+n_col_loc);
+      //cout<<col_loc<<"  "<<n_col_loc<<endl; 
+      //cout<<Gmat->row_idx.size()<<endl;
+
+      //cout<<"got col_vec"<<endl;
+
+      std::vector<NodeIdx>::iterator col_vec_it;
+      for(col_vec_it = col_vec.begin(); col_vec_it != col_vec.end(); col_vec_it++){
+        //cout<<"child node"<<endl;
+        //cout<<*col_vec_it<<endl;
+        if(*col_vec_it<num_nodes) {
+          Node* node_next = m_Gmat->GetNode(*col_vec_it);
+          //cout<<"valid child"<<endl;
+          if(!(node_next->GetConnected())) {
+            //cout<<"got child that is unconnected"<<endl;
+            //cout<<node_next->GetGLoc()<<endl;
+            node_q.push(node_next);
+            //cout<<"pushing child node"<<endl;
+          }
+        }
+      }
+    }
+  }
+  //cout<<"created connection matrix"<<endl;
+  int uncon_err_cnt = 0;
+  int uncon_err_flag = 0;
+  int uncon_inst_cnt = 0;
+  int uncon_inst_flag = 0;
+  std::vector<Node*> node_list = m_Gmat->GetAllNodes();
+  std::vector<Node*>::iterator node_list_it;
+  bool unconnected_node =false;
+  for(node_list_it = node_list.begin(); node_list_it != node_list.end(); node_list_it++){
+    //cout<<"iteration nodes"<<endl;
+    if(!(*node_list_it)->GetConnected()){
+      uncon_err_cnt++;
+      NodeLoc node_loc = (*node_list_it)->GetLoc();
+      float loc_x = ((float)node_loc.first)/((float)unit_micron);
+      float loc_y = ((float)node_loc.second)/((float)unit_micron);
+
+      if(uncon_err_cnt>25 && uncon_err_flag ==0 ) {
+        uncon_err_flag =1;
+        cout<<"Error display limit reached, suppressing further unconnected node error messages"<<endl;
+      } else if( uncon_err_flag ==0) {
+        //cout<<"node_not_connected ================================="<<endl;
+        unconnected_node =true;
+        cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
+            <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
+      }
+      if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
+        uncon_inst_flag =1;
+        cout<<"Error display limit reached, suppressing further unconnected instance error messages"<<endl;
+      } else if( uncon_inst_flag ==0) {
+        if((*node_list_it)->HasInstances()){
+          std::vector<dbInst*> insts = (*node_list_it)->GetInstances();
+          std::vector<dbInst*>::iterator inst_it;
+          for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
+            uncon_inst_cnt++;
+            cout<<"ERROR: Instance: "<< (*inst_it)->getName() <<"at location x:"<<loc_x<<"um, y:"
+              <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
+          }
+        }
+      }
+    }
+  }
+  if(unconnected_node == false){
+    cout<<"INFO: Connection from Vpad to all nodes established"<<endl;
+  }
+  return !unconnected_node;
+}
+
+int IRSolver::GetConnectionTest(){
+  if(m_connection){
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 //! Function to get the power value from OpenSTA
 /*

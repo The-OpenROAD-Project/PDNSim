@@ -68,11 +68,13 @@ add_library( pdnsim
     ${PDNSIM_SRC}
 )
 
+set(XSDK_ENABLE_Fortran OFF)
 add_dependencies(pdnsim superlu )
 
 ############################################################
 # include directories 
 ############################################################
+
 target_include_directories( pdnsim
 PUBLIC
   ${PDNSIM_HOME}/include

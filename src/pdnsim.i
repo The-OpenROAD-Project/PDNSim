@@ -36,5 +36,12 @@ pdnsim_analyze_power_grid_cmd()
   pdnsim->analyze_power_grid();
 }
 
+int
+pdnsim_check_connectivity_cmd()
+{
+  PDNSim* pdnsim = getPDNSim();
+  return pdnsim->check_connectivity();
+}
+
 %} // inline
 

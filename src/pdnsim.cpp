@@ -54,12 +54,12 @@ PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
   _vsrc_loc(""),
-  _res_cfg("") {
+  _res_cfg(""){
 };
 
 PDNSim::~PDNSim() {
   _db = nullptr;
-  _sta = nullptr;
+  _sta = nullptr; 
   _vsrc_loc = "";
   _res_cfg = "";
 }
@@ -108,6 +108,14 @@ void PDNSim::analyze_power_grid(){
   cout << "Worstcase IR drop: " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->wc_voltage
        << endl;
   cout << "######################################" << endl;
+  delete irsolve_h;
+}
+
+int PDNSim::check_connectivity() {
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _res_cfg);
+  int val = irsolve_h->GetConnectionTest();
+  delete irsolve_h;
+  return val;
 }
 
 }
