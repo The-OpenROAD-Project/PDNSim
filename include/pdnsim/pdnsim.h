@@ -26,7 +26,7 @@ class PDNSim
     void setSta(sta::dbSta* dbSta);
     
     void import_vsrc_cfg(std::string vsrc);
-    //void import_resistance_cfg(std::string res_cfg);
+    void import_out_file(std::string out_file);
 
     void analyze_power_grid();
 
@@ -36,7 +36,7 @@ class PDNSim
     odb::dbDatabase* _db;
     sta::dbSta* _sta;
     std::string _vsrc_loc;
-    std::string _res_cfg;
+    std::string _out_file;
 
 
 };

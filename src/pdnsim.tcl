@@ -4,7 +4,7 @@ sta::define_cmd_args "analyze_power_grid" {
 
 proc analyze_power_grid { args } {
   sta::parse_key_args "analyze_power_grid" args \
-    keys {-vsrc -out_file} flags {}
+    keys {-vsrc -outfile} flags {}
 
   if { [info exists keys(-vsrc)] } {
     set vsrc_file $keys(-vsrc)
@@ -19,18 +19,12 @@ proc analyze_power_grid { args } {
 
   if { [info exists keys(-outfile)] } {
     set out_file $keys(-outfile)
-    if { [file writeable $out_file] } {
-      pdnsim_import_out_file_cmd $out_file
-    } else {
-      puts "Error: cannot write $out_file"
-    }
+     pdnsim_import_out_file_cmd $out_file
   }
-
-
   pdnsim_analyze_power_grid_cmd 
 }
 
-sta::define_cmd_args "analyze_power_grid" { 
+sta::define_cmd_args "check_power_grid" { 
   [-vsrc vsrc_file ]}
 
 proc check_power_grid { args } {

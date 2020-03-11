@@ -4,11 +4,7 @@ read_liberty NangateOpenCellLibrary_typical.lib
 read_sdc gcd.sdc
 report_checks
 
-
-#set res [check_power_grid -vsrc Vsrc_gcd.loc ]
-#if { $res == 1} {
-# puts "Connectivity check passed"
-#} else {
-# puts "ERROR: Connectivity check failed"
-#}
-analyze_power_grid -vsrc Vsrc_gcd.loc 
+# The command below runs a check for connectivity of the power grid
+# The analyze_power_grid command calls it by default
+# check_power_grid -vsrc Vsrc_gcd.loc 
+analyze_power_grid -vsrc Vsrc_gcd.loc -outfile gcd_voltage.rpt

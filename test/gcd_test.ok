@@ -56,6 +56,7 @@ Path Type: max
 
 
 INFO: Reading Voltage source file Vsrc_gcd.loc
+INFO: Output voltage file specified gcd_voltage.rpt
 Voltage fileVsrc_gcd.loc
 INFO: Reading location of VDD and VSS sources 
 Creating G Matrix

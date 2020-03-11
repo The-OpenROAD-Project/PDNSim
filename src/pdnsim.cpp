@@ -79,7 +79,7 @@ void PDNSim::import_vsrc_cfg(std::string vsrc)
 
 void PDNSim::import_out_file(std::string out_file)
 {
-  _out_file = outfile;
+  _out_file = out_file;
   cout << "INFO: Output voltage file specified " << _out_file << endl;
 }
 
