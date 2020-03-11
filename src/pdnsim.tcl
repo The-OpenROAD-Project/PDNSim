@@ -20,7 +20,7 @@ proc analyze_power_grid { args } {
   if { [info exists keys(-outfile)] } {
     set out_file $keys(-outfile)
     if { [file writeable $out_file] } {
-      pdnsim_import_vsrc_cfg_cmd $outfile_file
+      pdnsim_import_out_file_cmd $out_file
     } else {
       puts "Error: cannot write $out_file"
     }
