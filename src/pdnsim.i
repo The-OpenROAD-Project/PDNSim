@@ -22,12 +22,12 @@ pdnsim_import_vsrc_cfg_cmd(const char* vsrc)
   pdnsim->import_vsrc_cfg(vsrc);
 }
 
-//void 
-//pdnsim_import_resistance_cfg_cmd(const char* res_cfg)
-//{
-//  PDNSim* pdnsim = getPDNSim();
-//  pdnsim->import_resistance_cfg(res_cfg);
-//}
+void 
+pdnsim_import_out_file_cmd(const char* out_file)
+{
+  PDNSim* pdnsim = getPDNSim();
+  pdnsim->import_out_file(out_file);
+}
 
 void 
 pdnsim_analyze_power_grid_cmd()

@@ -56,12 +56,12 @@ class IRSolver
   IRSolver(odb::dbDatabase*         t_db,
            sta::dbSta*              t_sta,
            std::string              vsrc_loc,
-           std::string              def_res_val)
+           std::string              out_file)
   {
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
-    m_def_res      = def_res_val;
+    m_out_file      = out_file;
     ReadC4Data();
     //ReadResData();
     CreateGmat();
@@ -104,7 +104,7 @@ class IRSolver
   //! Voltage source file
   std::string              m_vsrc_file;
   //! Resistance configuration file
-  std::string              m_def_res;
+  std::string              m_out_file;
   //! G matrix for voltage 
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources

@@ -1,9 +1,10 @@
 sta::define_cmd_args "analyze_power_grid" { 
-  [-vsrc vsrc_file ]}
+  [-vsrc vsrc_file ]
+  [-outfile out_file]}
 
 proc analyze_power_grid { args } {
   sta::parse_key_args "analyze_power_grid" args \
-    keys {-vsrc -res_cfg} flags {}
+    keys {-vsrc -out_file} flags {}
 
   if { [info exists keys(-vsrc)] } {
     set vsrc_file $keys(-vsrc)
@@ -16,27 +17,25 @@ proc analyze_power_grid { args } {
     puts "Error: key vsrc not defined."
   }
 
-  #if { [info exists keys(-res_cfg)] } {
-  #  set resistance_cfg_file $keys(-res_cfg)
-  #  if { [file readable $resistance_cfg_file] } {
-  #    pdnsim_import_resistance_cfg_cmd $resistance_cfg_file
-  #  } else {
-  #    puts "Warning: cannot read $resistance_cfg_file"
-  #  }
-  #} else {
-  #  puts "Error: key res_cfg not defined."
-  #}
+  if { [info exists keys(-outfile)] } {
+    set out_file $keys(-outfile)
+    if { [file writeable $out_file] } {
+      pdnsim_import_vsrc_cfg_cmd $outfile_file
+    } else {
+      puts "Error: cannot write $out_file"
+    }
+  }
+
 
   pdnsim_analyze_power_grid_cmd 
-
 }
 
 sta::define_cmd_args "analyze_power_grid" { 
   [-vsrc vsrc_file ]}
 
 proc check_power_grid { args } {
-  sta::parse_key_args "analyze_power_grid" args \
-    keys {-vsrc -res_cfg} flags {}
+  sta::parse_key_args "check_power_grid" args \
+    keys {-vsrc} flags {}
 
   if { [info exists keys(-vsrc)] } {
     set vsrc_file $keys(-vsrc)
@@ -48,6 +47,7 @@ proc check_power_grid { args } {
   } else {
     puts "Error: key vsrc not defined."
   }
+
   set res [pdnsim_check_connectivity_cmd]
   return $res
 }

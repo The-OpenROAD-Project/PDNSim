@@ -54,14 +54,14 @@ PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
   _vsrc_loc(""),
-  _res_cfg(""){
+  _out_file(""){
 };
 
 PDNSim::~PDNSim() {
   _db = nullptr;
   _sta = nullptr; 
   _vsrc_loc = "";
-  _res_cfg = "";
+  _out_file = "";
 }
 
 void PDNSim::setDb(odb::dbDatabase* db){
@@ -77,17 +77,18 @@ void PDNSim::import_vsrc_cfg(std::string vsrc)
   cout << "INFO: Reading Voltage source file " << _vsrc_loc << endl;
 }
 
-//void PDNSim::import_resistance_cfg(std::string res_cfg)
-//{
-//  _res_cfg = res_cfg;
-//  cout << "INFO: Reading default resistance values " << _res_cfg << endl;
-//}
+void PDNSim::import_out_file(std::string out_file)
+{
+  _out_file = outfile;
+  cout << "INFO: Output voltage file specified " << _out_file << endl;
+}
+
 
 void PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
   //IRSolver* irsolve_h = new IRSolver(
   //    db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _res_cfg);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
   gmat_obj = irsolve_h->GetGMat();
   irsolve_h->SolveIR();
   std::vector<Node*> nodes       = gmat_obj->GetAllNodes();
@@ -112,7 +113,7 @@ void PDNSim::analyze_power_grid(){
 }
 
 int PDNSim::check_connectivity() {
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _res_cfg);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
   int val = irsolve_h->GetConnectionTest();
   delete irsolve_h;
   return val;

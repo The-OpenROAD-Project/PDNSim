@@ -145,9 +145,6 @@ void IRSolver::SolveIR()
   wc_voltage            = vdd;
   dp                    = (double*) Bstore->nzval;
   int num_nodes         = m_Gmat->GetNumNodes();
-  ofstream ir_report;
-  ir_report.open ("V_mat.csv");
-  ir_report<<"Instance:   Location(x,y)(um) Voltage(V)"<<endl;
   for (j = 0; j < B.ncol; ++j) {
     for (i = 0; i < B.nrow; ++i) {
       if (node_num >= num_nodes) {
@@ -167,14 +164,17 @@ void IRSolver::SolveIR()
         float loc_y = ((float)node_loc.second)/((float)unit_micron);
         std::vector<dbInst*> insts = node->GetInstances();
         std::vector<dbInst*>::iterator inst_it;
-        for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
-          ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
+        if (m_out_file != "") {
+          ofstream ir_report;
+          ir_report.open (m_out_file);
+          for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
+            ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
         }
+       ir_report<<endl;
+       ir_report.close();
       }
     }
   }
-  ir_report<<endl;
-  ir_report.close();
   avg_voltage = sum_volt / num_nodes;
   // TODO keep copies for LU for later?
   /* De-allocate storage */
