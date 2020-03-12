@@ -438,7 +438,7 @@ void IRSolver::CreateGmat()
     int x = get<0>(m_C4Bumps[it]);
     int y = get<1>(m_C4Bumps[it]);
     int size = get<2>(m_C4Bumps[it]);
-    int v  = get<3>(m_C4Bumps[it]);
+    double v  = get<3>(m_C4Bumps[it]);
     std::vector<Node*> RDL_nodes;
     RDL_nodes = m_Gmat->GetRDLNodes(m_top_layer, 
                                     m_top_layer_dir,
