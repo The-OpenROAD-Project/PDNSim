@@ -33,5 +33,12 @@
 # Temporary files
 *.sw*
 
+
+# Regression outputs
+aes_voltage.rpt
+gcd_voltage.rpt
+*.log
+*.csv
+
 # Build directory
 build
