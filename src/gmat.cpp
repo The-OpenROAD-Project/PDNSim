@@ -79,6 +79,7 @@ Node* GMat::GetNode(int t_x, int t_y, int t_l, bool t_nearest /*=false*/)
     }
   } else {
     NodeMap::iterator        x_itr = layer_map.lower_bound(t_x);
+  	//cout <<"X value: "<<t_x << "Y value" <<t_y << "Layer:"<<t_l <<endl;
     vector<pair<int, Node*>> node_dist_vector;
     if (layer_map.size() == 1 || x_itr == layer_map.end()
         || x_itr == layer_map.begin()) {
@@ -88,7 +89,9 @@ Node* GMat::GetNode(int t_x, int t_y, int t_l, bool t_nearest /*=false*/)
         x_itr = prev(x_itr);
       } else {  // do nothing as x_itr has the correct value
       }
+  	 //cout <<"Added current source" <<endl;
       return NearestYNode(x_itr, t_y);
+     //cout <<"Added current source" <<endl;
 
     } else {
       NodeMap::iterator x_prev;
