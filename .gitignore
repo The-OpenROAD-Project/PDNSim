@@ -39,7 +39,7 @@ aes_voltage.rpt
 gcd_voltage.rpt
 *.log
 *.csv
-test/results
+test/results/*
 
 # Build directory
 build
