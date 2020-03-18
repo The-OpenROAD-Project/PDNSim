@@ -297,8 +297,9 @@ void IRSolver::CreateJ()
     }
     int x, y;
     inst->getLocation(x, y);
-    int   l      = 1;  // atach to the bottom most routing layer
-    Node* node_J = m_Gmat->GetNode(x, y, l);
+  	//cout << "Got location" <<endl;
+    int   l      = m_bottom_layer;  // atach to the bottom most routing layer
+    Node* node_J = m_Gmat->GetNode(x, y, l,true);
     node_J->AddCurrentSrc(it->second);
     node_J->AddInstance(inst);
   }
@@ -356,6 +357,10 @@ void IRSolver::CreateGmat()
             dbTechLayer* wire_layer = curWire->getTechLayer();
             l = wire_layer->getRoutingLevel();
             layer_dir = wire_layer->getDirection();
+			if (l < m_bottom_layer) {
+            	m_bottom_layer = l ; 
+            	m_bottom_layer_dir = layer_dir;
+         	}
           }
           if (l > m_top_layer) {
             m_top_layer = l ; 
@@ -390,7 +395,7 @@ void IRSolver::CreateGmat()
           curWire->getViaXY(x, y);
           dbTechLayer* via_layer = via->getBottomLayer();
           int          l         = via_layer->getRoutingLevel();
-          if (1 != l && l != m_top_layer) { //do not set for top and bottom layers
+          if (m_bottom_layer != l && l != m_top_layer) { //do not set for top and bottom layers
             m_Gmat->SetNode(x, y, l, bBox);
           }
           via_layer = via->getTopLayer();
@@ -412,7 +417,7 @@ void IRSolver::CreateGmat()
             y_loc1 = curWire->yMin();
             y_loc2 = curWire->yMax();
           }
-          if (l == 1 || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
+          if (l == m_bottom_layer || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
             if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
               int x_i;
               for (x_i = x_loc1; x_i <= x_loc2; x_i = x_i + m_node_density) {
@@ -508,11 +513,13 @@ void IRSolver::CreateGmat()
             //R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
             //cout << "Via Resistance" << R << endl;
           }
-          Node* node_bot = m_Gmat->GetNode(x, y, l);
+		  bool top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
+          Node* node_bot = m_Gmat->GetNode(x, y, l,top_or_bottom);
 
           via_layer      = via->getTopLayer();
           l              = via_layer->getRoutingLevel();
-          Node* node_top = m_Gmat->GetNode(x, y, l);
+		  top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
+          Node* node_top = m_Gmat->GetNode(x, y, l,top_or_bottom);
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
                     "fail ahead."<<endl;

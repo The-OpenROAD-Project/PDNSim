@@ -111,10 +111,14 @@ class IRSolver
   int m_node_density{2800};  // TODO get from somewhere
   //! Routing Level of the top layer
   int m_top_layer{0};
+  
+  int m_bottom_layer{10};
 
   bool m_connection{false};
   //! Direction of the top layer
   odb::dbTechLayerDir::Value m_top_layer_dir;
+
+  odb::dbTechLayerDir::Value m_bottom_layer_dir;
   //! Current vector 1D
   std::vector<double>                            m_J;
   //! C4 bump locations and values

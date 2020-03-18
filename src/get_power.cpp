@@ -67,11 +67,13 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
 //  _sta->makeCorners(&cornerNameSet);
 //  Corner* corner = _sta->findCorner(cornerName.c_str());
   Corner* corner = _sta->cmdCorner();
+  //cout << "Created cornert" << endl;
 
   std::vector<pair<string, double>> power_report;
 
   sta::dbNetwork* network = _sta->getDbNetwork();
   sta::Power*   power   = _sta->power();
+  //cout << "Created power object" << endl;
   PowerResult   total, sequential, combinational, macro, pad;
   power->power(corner,
                total,
@@ -79,11 +81,13 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
                combinational,
                macro,
                pad);  // TODO called for preamble
+  //cout << "Power:" << power<<endl;
   LeafInstanceIterator* inst_iter = network->leafInstanceIterator();
   PowerResult           total_calc;
   total_calc.clear();
   while (inst_iter->hasNext()) {
     Instance*    inst = inst_iter->next();
+    //cout << "Insode while for all isntance:"<<(string(network->name(inst))) << power<<endl;
     LibertyCell* cell = network->libertyCell(inst);
     if (cell) {
       PowerResult inst_power;
@@ -91,13 +95,14 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
       total_calc.incr(inst_power);
       power_report.push_back(
           make_pair(string(network->name(inst)), inst_power.total()));
-      // cout << string(network->name(inst)) << inst_power.total() << endl;
+       //cout << string(network->name(inst)) << inst_power.total() << endl;
     }
   }
+  //cout <<"justoutside loop before delte:" << total.total() << endl;
   delete inst_iter;
 
-  // cout <<"Total power:" << total.total() << endl;
-  // cout <<"Total power calculated:" << total_calc.total() << endl;
+  //cout <<"Total power:" << total.total() << endl;
+  //cout <<"Total power calculated:" << total_calc.total() << endl;
   return power_report;
 }
 
