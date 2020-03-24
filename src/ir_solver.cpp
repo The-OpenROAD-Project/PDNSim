@@ -137,7 +137,7 @@ void IRSolver::SolveIR()
   cout << "INFO: SuperLU finished solving" << endl;
   // dPrint_Dense_Matrix("B", &B);
   DNformat*    Bstore = (DNformat*) B.Store;
-  register int i, j, lda = Bstore->lda;
+  int i, j, lda = Bstore->lda;
   double*      dp;
   double       volt;
   double       sum_volt = 0;
