@@ -108,7 +108,7 @@ class IRSolver
   //! G matrix for voltage 
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources
-  int m_node_density{2800};  // TODO get from somewhere
+  int m_node_density{5600};  // TODO get from somewhere
   //! Routing Level of the top layer
   int m_top_layer{0};
   

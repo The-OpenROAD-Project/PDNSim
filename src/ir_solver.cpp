@@ -145,9 +145,9 @@ void IRSolver::SolveIR()
   wc_voltage            = vdd;
   dp                    = (double*) Bstore->nzval;
   int num_nodes         = m_Gmat->GetNumNodes();
-  ofstream ir_report;
-  ir_report.open (m_out_file);
-  ir_report<<"Instance name, "<<" X location, "<<" Y location, "<<" Voltage "<<"\n";
+  //ofstream ir_report;
+  //ir_report.open (m_out_file);
+  //ir_report<<"Instance name, "<<" X location, "<<" Y location, "<<" Voltage "<<"\n";
   for (j = 0; j < B.ncol; ++j) {
     for (i = 0; i < B.nrow; ++i) {
       if (node_num >= num_nodes) {
@@ -167,16 +167,32 @@ void IRSolver::SolveIR()
         float loc_y = ((float)node_loc.second)/((float)unit_micron);
         std::vector<dbInst*> insts = node->GetInstances();
         std::vector<dbInst*>::iterator inst_it;
-        if (m_out_file != "") {
-          for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
-            ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
-        }
-      }
+        //if (m_out_file != "") {
+         // for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
+           // ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
+        //}
+      //}
     }
   }
   }
-  ir_report<<endl;
-  ir_report.close();
+  //ir_report<<endl;
+ // ir_report.close();
+  ofstream data_report;
+  data_report.open(m_out_file);
+  for (int node_idx = 0; node_idx<num_nodes; node_idx++) {
+     Node* curr_node = m_Gmat->GetNode(node_idx);
+     if(curr_node->GetLayerNum() == m_bottom_layer) {
+        NodeLoc curr_node_loc = curr_node->GetLoc();
+        double curr_value = curr_node->GetCurrent();
+        double curr_voltage = curr_node->GetVoltage();
+        float curr_loc_x = ((float)curr_node_loc.first)/((float)unit_micron);
+        float curr_loc_y = ((float)curr_node_loc.second)/((float)unit_micron);
+        data_report<<curr_loc_x<<", " <<curr_loc_y<<", "<<setprecision(10)<<curr_value<<","<<setprecision(10)<<curr_voltage<<"\n";
+     }
+
+  }
+  data_report.close();
+
   avg_voltage = sum_volt / num_nodes;
   // TODO keep copies for LU for later?
   /* De-allocate storage */
