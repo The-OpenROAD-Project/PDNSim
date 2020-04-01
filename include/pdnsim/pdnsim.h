@@ -28,7 +28,7 @@ class PDNSim
     void import_vsrc_cfg(std::string vsrc);
     void import_out_file(std::string out_file);
 
-    void analyze_power_grid();
+    int analyze_power_grid();
 
     int check_connectivity();
 

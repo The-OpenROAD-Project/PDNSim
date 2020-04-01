@@ -58,18 +58,30 @@ class IRSolver
            std::string              vsrc_loc,
            std::string              out_file)
   {
+  	bool res = true;
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
     m_out_file      = out_file;
     ReadC4Data();
     //ReadResData();
-    CreateGmat();
-    CreateJ();
-    AddC4Bump();
-    m_Gmat->GenerateCSCMatrix();
-    m_connection = CheckConnectivity();
-
+    if(res) {
+		res = CreateGmat(); 
+	}
+    if(res) {
+    	res = CreateJ();
+	}
+    if(res) {
+    	res = AddC4Bump();
+	}
+    if(res) {
+    	res = m_Gmat->GenerateCSCMatrix();
+	}
+    if(res) {
+    	m_connection = CheckConnectivity();
+		res = m_connection;
+	}
+	m_result = res;
   }
   //! IRSolver destructor
   ~IRSolver() {
@@ -95,6 +107,8 @@ class IRSolver
   bool                                        CheckConnectivity();
   
   int                                         GetConnectionTest();
+
+  bool 										  GetResult();
  
  private:
   //! Pointer to the Db
@@ -114,6 +128,8 @@ class IRSolver
   
   int m_bottom_layer{10};
 
+  bool m_result{false};
+
   bool m_connection{false};
   //! Direction of the top layer
   odb::dbTechLayerDir::Value m_top_layer_dir;
@@ -128,13 +144,13 @@ class IRSolver
   //! Locations of the C4 bumps in the G matrix
   std::vector<std::pair<NodeIdx,double>>         m_C4Nodes;
   //! Function to add C4 bumps to the G matrix
-  void                                           AddC4Bump();
+  bool                                           AddC4Bump();
   //! Function that parses the Vsrc file
   void                                           ReadC4Data();
 //  void                                           ReadResData();
   //! Function to create a J vector from the current map
-  void                                           CreateJ();
+  bool                                           CreateJ();
   //! Function to create a G matrix using the nodes
-  void                                           CreateGmat();
+  bool                                           CreateGmat();
 };
 #endif

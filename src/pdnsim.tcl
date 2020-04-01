@@ -11,17 +11,21 @@ proc analyze_power_grid { args } {
     if { [file readable $vsrc_file] } {
       pdnsim_import_vsrc_cfg_cmd $vsrc_file
     } else {
-      puts "Warning: cannot read $vsrc_file"
+      ord::error "Cannot read $vsrc_file"
     }
   } else {
-    puts "Error: key vsrc not defined."
+    ord::error "key vsrc not defined."
   }
 
   if { [info exists keys(-outfile)] } {
     set out_file $keys(-outfile)
      pdnsim_import_out_file_cmd $out_file
   }
-  pdnsim_analyze_power_grid_cmd 
+  if { [ord::db_has_rows] } {
+    pdnsim_analyze_power_grid_cmd
+  } else {
+  	ord::error "no rows defined in design. Use initialize_floorplan to add rows" 
+  }
 }
 
 sta::define_cmd_args "check_power_grid" { 
@@ -36,14 +40,18 @@ proc check_power_grid { args } {
     if { [file readable $vsrc_file] } {
       pdnsim_import_vsrc_cfg_cmd $vsrc_file
     } else {
-      puts "Warning: cannot read $vsrc_file"
+      ord::error "Cannot read $vsrc_file"
     }
   } else {
-    puts "Error: key vsrc not defined."
+      ord::error "key vsrc not defined."
   }
 
-  set res [pdnsim_check_connectivity_cmd]
-  return $res
+  if { [ord::db_has_rows] } {
+  	set res [pdnsim_check_connectivity_cmd]
+  	return $res
+  } else {
+  	ord::error "no rows defined in design. Use initialize_floorplan to add rows" 
+  }
 }
 
 

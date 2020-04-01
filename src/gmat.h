@@ -106,7 +106,7 @@ class GMat
   //! Function to add the voltage source based on C4 bump location
   void       AddC4Bump(int t_loc, int t_C4Num);
   //! Function which generates the compressed sparse column matrix
-  void       GenerateCSCMatrix();
+  bool       GenerateCSCMatrix();
   //! Function to return a vector which contains a  pointer to all the nodes
   std::vector<Node*> GetAllNodes();
 

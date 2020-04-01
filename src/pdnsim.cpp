@@ -84,12 +84,16 @@ void PDNSim::import_out_file(std::string out_file)
 }
 
 
-void PDNSim::analyze_power_grid(){
+int PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
   //IRSolver* irsolve_h = new IRSolver(
   //    db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
   gmat_obj = irsolve_h->GetGMat();
+  if(!irsolve_h->GetResult()){
+  	delete irsolve_h;
+  	return 0;
+  }
   irsolve_h->SolveIR();
   std::vector<Node*> nodes       = gmat_obj->GetAllNodes();
   int                unit_micron = (_db->getTech())->getDbUnitsPerMicron();
@@ -110,10 +114,15 @@ void PDNSim::analyze_power_grid(){
        << endl;
   cout << "######################################" << endl;
   delete irsolve_h;
+  return 1;
 }
 
 int PDNSim::check_connectivity() {
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
+  if(!irsolve_h->GetResult()){
+  	delete irsolve_h;
+  	return 0;
+  }
   int val = irsolve_h->GetConnectionTest();
   delete irsolve_h;
   return val;

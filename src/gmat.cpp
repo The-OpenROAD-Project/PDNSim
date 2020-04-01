@@ -414,7 +414,7 @@ void GMat::AddC4Bump(int t_loc, int t_C4Num)
 //! Function which converts the DOK matrix into CSC format in a sparse method 
 /*!
 */
-void GMat::GenerateCSCMatrix()
+bool GMat::GenerateCSCMatrix()
 {
   m_G_mat_csc.num_cols = m_G_mat_dok.num_cols;
   m_G_mat_csc.num_rows = m_G_mat_dok.num_rows;
@@ -434,6 +434,7 @@ void GMat::GenerateCSCMatrix()
     }
   }
   m_G_mat_csc.col_ptr.push_back(m_G_mat_csc.nnz);
+  return true;
 }
 
 

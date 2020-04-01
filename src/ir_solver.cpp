@@ -51,7 +51,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "node.h"
 #include "gmat.h"
 #include "get_power.h"
+#include "openroad/Error.hh"
 
+using ord::error;
+using ord::warn;
 using odb::dbBlock;
 using odb::dbBox;
 using odb::dbChip;
@@ -192,10 +195,11 @@ void IRSolver::SolveIR()
 
 
 //! Function to add C4 bumps to the G matrix
-void IRSolver::AddC4Bump()
+bool IRSolver::AddC4Bump()
 {
   if (m_C4Bumps.size() == 0) {
     cout << "ERROR: Invalid number of voltage sources" << endl;
+	return false;
   }
   for (unsigned int it = 0; it < m_C4Nodes.size(); ++it) {
     NodeIdx node_loc = m_C4Nodes[it].first;
@@ -204,6 +208,7 @@ void IRSolver::AddC4Bump()
     m_J.push_back(voltage);           // push back first vdd
     vdd = voltage;
   }
+  return true;
 }
 
 
@@ -278,7 +283,7 @@ void IRSolver::ReadC4Data()
 */
 
 //! Function to create a J vector from the current map
-void IRSolver::CreateJ()
+bool IRSolver::CreateJ()
 {  // take current_map as an input?
   int num_nodes = m_Gmat->GetNumNodes();
   m_J.resize(num_nodes, 0);
@@ -309,11 +314,12 @@ void IRSolver::CreateJ()
     // cout << m_J[i] <<endl;
   }
   cout << "INFO: Created J vector" << endl;
+  return true;
 }
 
 
 //! Function to create a G matrix using the nodes
-void IRSolver::CreateGmat()
+bool IRSolver::CreateGmat()
 {
   cout<<"Creating G Matrix"<<endl;
   std::vector<Node*> node_vector;
@@ -373,7 +379,8 @@ void IRSolver::CreateGmat()
     }
   }
   if(vdd_nets.size() == 0) {
-    cout<<"ERROR: No VDD stripes found"<<endl;
+    cout<<"ERROR:No VDD stipes found"<<endl;
+    return false;
   }
   std::vector<dbNet*>::iterator vIter;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
@@ -523,7 +530,7 @@ void IRSolver::CreateGmat()
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
                     "fail ahead."<<endl;
-            exit(1);
+            return false;
           } else {
             m_Gmat->SetConductance(node_bot, node_top, 1 / R);
           }
@@ -553,12 +560,13 @@ void IRSolver::CreateGmat()
   }
   if (err_flag_via == 0) {
     cout << "Error: Atleast one via resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
-    exit(1);
+    return false;
   }
   if (err_flag_layer == 0) {
     cout << "Error: Atleast one layer per unit resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
-    exit(1);
+    return false;
   }
+  return true;
 }
 
 bool IRSolver::CheckConnectivity()
@@ -693,4 +701,8 @@ vector<pair<string, double>> IRSolver::GetPower()
       m_sta);
 
   return power_report;
+}
+
+bool IRSolver::GetResult(){
+  return m_result; 
 }
