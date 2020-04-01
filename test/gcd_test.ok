@@ -7,11 +7,11 @@ Notice 0:
 Reading DEF file: gcd.def
 Notice 0: Design: gcd
 Notice 0:     Created 54 pins.
-Notice 0:     Created 510 components and 2524 component-terminals.
-Notice 0:     Created 2 special nets and 1020 connections.
+Notice 0:     Created 624 components and 2752 component-terminals.
+Notice 0:     Created 2 special nets and 1248 connections.
 Notice 0:     Created 581 nets and 1504 connections.
 Notice 0: Finished DEF file: gcd.def
-Startpoint: _884_ (rising edge-triggered flip-flop clocked by core_clock)
+Startpoint: _870_ (rising edge-triggered flip-flop clocked by core_clock)
 Endpoint: _876_ (rising edge-triggered flip-flop clocked by core_clock)
 Path Group: core_clock
 Path Type: max
@@ -20,27 +20,27 @@ Path Type: max
 ---------------------------------------------------------
    0.00    0.00   clock core_clock (rise edge)
    0.00    0.00   clock network delay (ideal)
-   0.00    0.00 ^ _884_/CK (DFF_X1)
-   0.08    0.08 ^ _884_/Q (DFF_X1)
-   0.04    0.12 ^ _752_/Z (CLKBUF_X1)
-   0.05    0.18 ^ _475_/ZN (XNOR2_X1)
-   0.05    0.23 ^ _477_/ZN (AND2_X1)
-   0.02    0.25 v _481_/ZN (NAND3_X1)
-   0.07    0.31 v _487_/ZN (OR3_X1)
-   0.02    0.33 ^ _502_/ZN (NAND3_X1)
-   0.01    0.34 v _518_/ZN (NAND2_X1)
-   0.04    0.38 v _532_/ZN (AND4_X1)
-   0.03    0.42 ^ _545_/ZN (AOI21_X2)
-   0.03    0.45 v _546_/ZN (NAND2_X1)
+   0.00    0.00 ^ _870_/CK (DFF_X1)
+   0.08    0.08 ^ _870_/Q (DFF_X1)
+   0.04    0.12 ^ _747_/Z (BUF_X1)
+   0.05    0.17 ^ _478_/ZN (XNOR2_X2)
+   0.06    0.23 ^ _480_/ZN (AND2_X1)
+   0.02    0.26 v _481_/ZN (NAND3_X1)
+   0.07    0.32 v _487_/ZN (OR3_X1)
+   0.02    0.34 ^ _502_/ZN (NAND3_X1)
+   0.01    0.35 v _518_/ZN (NAND2_X1)
+   0.04    0.39 v _532_/ZN (AND4_X1)
+   0.04    0.43 ^ _545_/ZN (AOI21_X2)
+   0.02    0.45 v _546_/ZN (NAND2_X2)
    0.05    0.50 v _547_/ZN (OR2_X1)
-   0.03    0.53 v _548_/Z (BUF_X4)
-   0.03    0.56 v _549_/Z (BUF_X4)
-   0.03    0.59 ^ _641_/ZN (OAI21_X1)
-   0.02    0.61 v _649_/ZN (OAI21_X1)
+   0.03    0.54 v _548_/Z (BUF_X4)
+   0.03    0.57 v _549_/Z (BUF_X4)
+   0.03    0.60 ^ _641_/ZN (OAI21_X1)
+   0.02    0.62 v _649_/ZN (OAI21_X1)
    0.02    0.63 ^ _650_/ZN (OAI21_X1)
-   0.03    0.66 ^ _802_/Z (CLKBUF_X1)
-   0.00    0.66 ^ _876_/D (DFF_X1)
-           0.66   data arrival time
+   0.03    0.67 ^ _802_/Z (CLKBUF_X1)
+   0.00    0.67 ^ _876_/D (DFF_X1)
+           0.67   data arrival time
 
   10.00   10.00   clock core_clock (rise edge)
    0.00   10.00   clock network delay (ideal)
@@ -50,9 +50,9 @@ Path Type: max
            9.97   data required time
 ---------------------------------------------------------
            9.97   data required time
-          -0.66   data arrival time
+          -0.67   data arrival time
 ---------------------------------------------------------
-           9.31   slack (MET)
+           9.30   slack (MET)
 
 
 INFO: Reading Voltage source file Vsrc_gcd.loc
@@ -61,7 +61,7 @@ Voltage fileVsrc_gcd.loc
 INFO: Reading location of VDD and VSS sources 
 Creating G Matrix
 INFO: G matrix created 
-INFO: Number of nodes: 1988
+INFO: Number of nodes: 1992
 
 
 INFO: Executing STA for Power
@@ -76,7 +76,7 @@ INFO: SuperLU finished solving
 
 
 ######################################
-Worstcase Voltage: 1.0999
-Average IR drop  : 0.00012337
-Worstcase IR drop: 0.0001387
+Worstcase Voltage: 1.1
+Average IR drop  : 7.5634e-06
+Worstcase IR drop: 1.0542e-05
 ######################################

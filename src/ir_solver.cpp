@@ -69,6 +69,7 @@ using odb::dbTech;
 using odb::dbTechLayer;
 using odb::dbTechLayerDir;
 using odb::dbVia;
+using odb::dbViaParams;
 
 using namespace std;
 using std::vector;
@@ -395,7 +396,7 @@ bool IRSolver::CreateGmat()
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
-          dbBox* via_bBox = via->getBBox();
+		  dbBox* via_bBox = via->getBBox();
           BBox   bBox
               = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
           int x, y;
@@ -506,6 +507,15 @@ bool IRSolver::CreateGmat()
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
+		  int num_via_rows = 1;
+		  int num_via_cols = 1;
+          int check_params = via->hasParams();
+		  if(check_params == 1) {
+		    dbViaParams params;
+			via->getViaParams(params);
+		    num_via_rows = params.getNumCutRows();
+		    num_via_cols = params.getNumCutCols();
+		  }
           dbBox* via_bBox = via->getBBox();
           BBox   bBox
               = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
@@ -515,6 +525,7 @@ bool IRSolver::CreateGmat()
           int          l         = via_layer->getRoutingLevel();
 
           double R = via_layer->getUpperLayer()->getResistance();
+		  R = R/(num_via_rows * num_via_cols);
           if (R == 0.0) {
             err_flag_via = 0;
             //R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
