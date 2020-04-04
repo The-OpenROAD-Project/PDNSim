@@ -45,7 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iterator>
 #include <string>
 
-#include "slu_ddefs.h"
+#include <eigen3/Eigen/Sparse>
+#include<eigen3/Eigen/SparseLU>
 #include "opendb/db.h"
 #include "ir_solver.h"
 #include "node.h"
@@ -73,6 +74,11 @@ using odb::dbViaParams;
 
 using namespace std;
 using std::vector;
+using Eigen::Map;
+using Eigen::VectorXd;
+using Eigen::SparseMatrix; 
+using Eigen::SparseLU;
+using Eigen::Success;
 
 
 //! Returns the created G matrix for the design
@@ -95,7 +101,7 @@ vector<double> IRSolver::GetJ()
 }
 
 
-//! Function to solve for voltage using SuperLU 
+//! Function to solve for voltage using SparseLU 
 void IRSolver::SolveIR()
 {
   if(!m_connection) {
@@ -104,96 +110,75 @@ void IRSolver::SolveIR()
   }
   int unit_micron = (m_db->getTech())->getDbUnitsPerMicron();
   clock_t t1, t2;
-  SuperMatrix       A, L, U, B;
-  SuperLUStat_t     stat;
-  superlu_options_t options;
-  int               nrhs = 1;
   CscMatrix*        Gmat = m_Gmat->GetGMat();
+// fill A
+  int     nnz     = Gmat->nnz;
   int               m    = Gmat->num_rows;
   int               n    = Gmat->num_cols;
-  int               info;
-  int*              perm_r; /* row permutations from partial pivoting */
-  int*              perm_c; /* column permutation vector */
-  vector<double>    J   = GetJ();
-  double*           rhs = &J[0];
-  dCreate_Dense_Matrix(&B, m, nrhs, rhs, m, SLU_DN, SLU_D, SLU_GE);
-  int     nnz     = Gmat->nnz;
   double* values  = &(Gmat->values[0]);
   int*    row_idx = &(Gmat->row_idx[0]);
   int*    col_ptr = &(Gmat->col_ptr[0]);
-  dCreate_CompCol_Matrix(
-      &A, m, n, nnz, values, row_idx, col_ptr, SLU_NC, SLU_D, SLU_GE);
-  if (!(perm_r = intMalloc(m)))
-    ABORT("Malloc fails for perm_r[].");
-  if (!(perm_c = intMalloc(n)))
-    ABORT("Malloc fails for perm_c[].");
-  set_default_options(&options);
-  options.ColPerm = COLAMD;
-  /* Initialize the statistics variables. */
-  StatInit(&stat);
-  // dPrint_CompCol_Matrix("A", &A);
-  // dPrint_Dense_Matrix("B", &B);
-  cout << "\n" << endl;
+  Map<SparseMatrix<double> > A( Gmat->num_rows,
+                                Gmat->num_cols,
+                                Gmat->nnz,
+                                col_ptr, // read-write
+                                row_idx,
+                                values);
+    
+
+  vector<double>    J = GetJ();
+  Map<VectorXd> b(J.data(),J.size());
+  VectorXd x;
+  SparseLU<SparseMatrix<double> > solver;
+  cout << "INFO: Factorizing G" << endl;
+  solver.compute(A);
+  if(solver.info()!=Success) {
+    // decomposition failed
+    cout<<"Error: LU factorization of GMatrix failed"<<endl;
+    return;
+  }
   cout << "INFO: Solving GV=J" << endl;
-  cout << "INFO: SuperLU begin solving" << endl;
-  /* Solve the linear system. */
-  dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-  cout << "INFO: SuperLU finished solving" << endl;
-  // dPrint_Dense_Matrix("B", &B);
-  DNformat*    Bstore = (DNformat*) B.Store;
-  int i, j, lda = Bstore->lda;
-  double*      dp;
-  double       volt;
-  double       sum_volt = 0;
-  int          node_num = 0;
-  wc_voltage            = vdd;
-  dp                    = (double*) Bstore->nzval;
-  int num_nodes         = m_Gmat->GetNumNodes();
+  cout << "INFO: SparseLU begin solving" << endl;
+  x = solver.solve(b);
+  cout << "INFO: SparseLU finished solving" << endl;
+  if(solver.info()!=Success) {
+    // solving failed
+    cout<<"Error: Solving V = inv(G)*J failed"<<endl;
+    return;
+  }
   ofstream ir_report;
   ir_report.open (m_out_file);
   ir_report<<"Instance name, "<<" X location, "<<" Y location, "<<" Voltage "<<"\n";
-  for (j = 0; j < B.ncol; ++j) {
-    for (i = 0; i < B.nrow; ++i) {
-      if (node_num >= num_nodes) {
-        break;
-      }
-      Node* node = m_Gmat->GetNode(node_num);
-      volt       = dp[i + j * lda];
-      sum_volt   = sum_volt + volt;
-      if (volt < wc_voltage) {
-        wc_voltage = volt;
-      }
-      node->SetVoltage(volt);
-      node_num++;
-      if(node->HasInstances()) {
-        NodeLoc node_loc = node->GetLoc();
-        float loc_x = ((float)node_loc.first)/((float)unit_micron);
-        float loc_y = ((float)node_loc.second)/((float)unit_micron);
-        std::vector<dbInst*> insts = node->GetInstances();
-        std::vector<dbInst*>::iterator inst_it;
-        if (m_out_file != "") {
-          for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
-            ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
+  int num_nodes         = m_Gmat->GetNumNodes();
+  int node_num =0;
+  double       sum_volt = 0;
+  wc_voltage            = vdd;
+  while(node_num < num_nodes) {
+    Node* node = m_Gmat->GetNode(node_num);
+    double volt = x(node_num);
+    sum_volt   = sum_volt + volt;
+    if (volt < wc_voltage) {
+      wc_voltage = volt;
+    }
+    node->SetVoltage(volt);
+    node_num++;
+    if(node->HasInstances()) {
+      NodeLoc node_loc = node->GetLoc();
+      float loc_x = ((float)node_loc.first)/((float)unit_micron);
+      float loc_y = ((float)node_loc.second)/((float)unit_micron);
+      std::vector<dbInst*> insts = node->GetInstances();
+      std::vector<dbInst*>::iterator inst_it;
+      if (m_out_file != "") {
+        for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
+          ir_report<<(*inst_it)->getName()<<", "<<loc_x<<", " <<loc_y<<", "<<setprecision(10)<<volt<<"\n";
         }
       }
     }
   }
-  }
   ir_report<<endl;
   ir_report.close();
   avg_voltage = sum_volt / num_nodes;
-  // TODO keep copies for LU for later?
-  /* De-allocate storage */
-  // SUPERLU_FREE (rhs);
-  SUPERLU_FREE(perm_r);
-  SUPERLU_FREE(perm_c);
-  Destroy_SuperMatrix_Store(&A);
-  Destroy_SuperMatrix_Store(&B);
-  Destroy_SuperNode_Matrix(&L);
-  Destroy_CompCol_Matrix(&U);
-  StatFree(&stat);
 }
-
 
 //! Function to add C4 bumps to the G matrix
 bool IRSolver::AddC4Bump()

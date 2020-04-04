@@ -68,11 +68,10 @@ INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Created J vector
 INFO: Connection from Vpad to all nodes established
-
-
+INFO: Factorizing G
 INFO: Solving GV=J
-INFO: SuperLU begin solving
-INFO: SuperLU finished solving
+INFO: SparseLU begin solving
+INFO: SparseLU finished solving
 
 
 ######################################

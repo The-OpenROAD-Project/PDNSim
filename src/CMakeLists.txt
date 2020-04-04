@@ -15,7 +15,6 @@ set(PDNSIM_HOME ${PROJECT_SOURCE_DIR}/src/PDNSim)
 set(OPENSTA_HOME ${PROJECT_SOURCE_DIR}/src/OpenSTA)
 set(DBSTA_HOME ${PROJECT_SOURCE_DIR}/src/dbSta)
 
-set(SUPERLU_HOME ${PDNSIM_HOME}/modules/superlu)
 
 #set(OPENROAD_HOME ${PROJECT_SOURCE_DIR})
 set(OPENDB_HOME ${PROJECT_SOURCE_DIR}/src/OpenDB)
@@ -68,7 +67,6 @@ add_library( pdnsim
     ${PDNSIM_SRC}
 )
 
-add_dependencies(pdnsim superlu )
 
 ############################################################
 # include directories 
@@ -81,8 +79,6 @@ PRIVATE
   ${OPENROAD_HOME}/include
   ${DBSTA_HOME}/include
 
-  ${SUPERLU_HOME}/SRC
-  ${SUPERLU_HOME}/CBLAS
   ${PDNSIM_HOME}/src
 
   ${OPENSTA_HOME}/util
@@ -102,5 +98,4 @@ PRIVATE
 
 target_link_libraries(pdnsim
   PUBLIC
-  superlu
   )
