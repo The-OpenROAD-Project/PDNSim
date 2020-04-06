@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IRSOLVER_Power__ 0
 
 #include <vector>
-
+#include <string>
 namespace sta {
 class dbSta;
 }  // namespace sta
