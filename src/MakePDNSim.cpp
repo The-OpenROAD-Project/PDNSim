@@ -1,5 +1,5 @@
 #include <tcl.h>
-#include "StaMain.hh"
+#include "sta/StaMain.hh"
 #include "openroad/OpenRoad.hh"
 #include "pdnsim/pdnsim.h"
 #include "pdnsim/MakePDNSim.hh"

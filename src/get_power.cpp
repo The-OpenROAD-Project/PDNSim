@@ -36,6 +36,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <tcl.h>
 //#include "util.h"
+
+#include "sta/Power.hh"
+#include "db_sta/dbNetwork.hh"
+#include "db_sta/dbSta.hh"
+
 using namespace sta;
 using namespace std;
 

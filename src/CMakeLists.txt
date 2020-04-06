@@ -12,8 +12,6 @@ set(CMAKE_EXE_LINKER_FLAGS "-ltcl")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(PDNSIM_HOME ${PROJECT_SOURCE_DIR}/src/PDNSim)
-set(OPENSTA_HOME ${PROJECT_SOURCE_DIR}/src/OpenSTA)
-set(DBSTA_HOME ${PROJECT_SOURCE_DIR}/src/dbSta)
 
 
 #set(OPENROAD_HOME ${PROJECT_SOURCE_DIR})
@@ -81,17 +79,8 @@ PRIVATE
 
   ${PDNSIM_HOME}/src
 
-  ${OPENSTA_HOME}/util
-  ${OPENSTA_HOME}/liberty
-  ${OPENSTA_HOME}/network
-  ${OPENSTA_HOME}/graph
-  ${OPENSTA_HOME}/sdc
-  ${OPENSTA_HOME}/parasitics
-  ${OPENSTA_HOME}/dcalc
-  ${OPENSTA_HOME}/search
-  ${OPENSTA_HOME}/app
-
   ${OPENSTA_HOME}/include
+
   ${OPENDB_HOME}/include
   ${TCL_INCLUDE_PATH}
 )
