@@ -24,6 +24,7 @@ set(PDNSIM_TCL_INIT ${CMAKE_CURRENT_BINARY_DIR}/PDNSimTclInitVar.cc)
 find_package(TCL REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SWIG REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 set (PDNSIM_SRC 
   node.cpp
@@ -86,5 +87,5 @@ PRIVATE
 )
 
 target_link_libraries(pdnsim
-  PUBLIC
-  )
+  Eigen3::Eigen
+)

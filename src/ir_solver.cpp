@@ -45,8 +45,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iterator>
 #include <string>
 
-#include <eigen3/Eigen/Sparse>
-#include<eigen3/Eigen/SparseLU>
+#include <Eigen/Sparse>
+#include <Eigen/SparseLU>
 #include "opendb/db.h"
 #include "ir_solver.h"
 #include "node.h"
