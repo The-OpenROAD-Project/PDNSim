@@ -58,7 +58,7 @@ class IRSolver
            std::string              vsrc_loc,
            std::string              out_file)
   {
-  	bool res = true;
+    bool res = true;
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
@@ -66,22 +66,22 @@ class IRSolver
     ReadC4Data();
     //ReadResData();
     if(res) {
-		res = CreateGmat(); 
-	}
+      res = CreateGmat(); 
+    }
     if(res) {
-    	res = CreateJ();
-	}
+      res = CreateJ();
+    }
     if(res) {
-    	res = AddC4Bump();
-	}
+      res = AddC4Bump();
+    }
     if(res) {
-    	res = m_Gmat->GenerateCSCMatrix();
-	}
+      res = m_Gmat->GenerateCSCMatrix();
+    }
     if(res) {
-    	m_connection = CheckConnectivity();
-		res = m_connection;
-	}
-	m_result = res;
+      m_connection = CheckConnectivity();
+      res = m_connection;
+    }
+    m_result = res;
   }
   //! IRSolver destructor
   ~IRSolver() {
@@ -108,7 +108,9 @@ class IRSolver
   
   int                                         GetConnectionTest();
 
-  bool 										  GetResult();
+  bool                                        GetResult();
+
+  void                                        PrintSpice();
  
  private:
   //! Pointer to the Db

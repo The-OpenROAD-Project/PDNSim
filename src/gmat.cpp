@@ -259,6 +259,12 @@ CscMatrix* GMat::GetGMat()
   return &m_G_mat_csc;
 }
 
+//! Function to return a pointer to the G matrix in DOK format 
+CscMatrix* GMat::GetGMatDOK()
+{  // Nodes debug
+  return &m_G_mat_dok;
+}
+
 
 //! Function that gets the value of the conductance of the stripe and 
 //updates the G matrix

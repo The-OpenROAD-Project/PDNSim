@@ -177,6 +177,7 @@ void IRSolver::SolveIR()
   }
   ir_report<<endl;
   ir_report.close();
+  PrintSpice();
   avg_voltage = sum_volt / num_nodes;
 }
 
@@ -185,7 +186,7 @@ bool IRSolver::AddC4Bump()
 {
   if (m_C4Bumps.size() == 0) {
     cout << "ERROR: Invalid number of voltage sources" << endl;
-	return false;
+    return false;
   }
   for (unsigned int it = 0; it < m_C4Nodes.size(); ++it) {
     NodeIdx node_loc = m_C4Nodes[it].first;
@@ -288,7 +289,7 @@ bool IRSolver::CreateJ()
     }
     int x, y;
     inst->getLocation(x, y);
-  	//cout << "Got location" <<endl;
+    //cout << "Got location" <<endl;
     int   l      = m_bottom_layer;  // atach to the bottom most routing layer
     Node* node_J = m_Gmat->GetNode(x, y, l,true);
     node_J->AddCurrentSrc(it->second);
@@ -349,10 +350,10 @@ bool IRSolver::CreateGmat()
             dbTechLayer* wire_layer = curWire->getTechLayer();
             l = wire_layer->getRoutingLevel();
             layer_dir = wire_layer->getDirection();
-			if (l < m_bottom_layer) {
-            	m_bottom_layer = l ; 
-            	m_bottom_layer_dir = layer_dir;
-         	}
+            if (l < m_bottom_layer) {
+              m_bottom_layer = l ; 
+              m_bottom_layer_dir = layer_dir;
+            }
           }
           if (l > m_top_layer) {
             m_top_layer = l ; 
@@ -381,7 +382,7 @@ bool IRSolver::CreateGmat()
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
-		  dbBox* via_bBox = via->getBBox();
+          dbBox* via_bBox = via->getBBox();
           BBox   bBox
               = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
           int x, y;
@@ -492,15 +493,15 @@ bool IRSolver::CreateGmat()
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
-		  int num_via_rows = 1;
-		  int num_via_cols = 1;
+          int num_via_rows = 1;
+          int num_via_cols = 1;
           int check_params = via->hasParams();
-		  if(check_params == 1) {
-		    dbViaParams params;
-			via->getViaParams(params);
-		    num_via_rows = params.getNumCutRows();
-		    num_via_cols = params.getNumCutCols();
-		  }
+          if(check_params == 1) {
+            dbViaParams params;
+            via->getViaParams(params);
+            num_via_rows = params.getNumCutRows();
+            num_via_cols = params.getNumCutCols();
+          }
           dbBox* via_bBox = via->getBBox();
           BBox   bBox
               = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
@@ -510,18 +511,18 @@ bool IRSolver::CreateGmat()
           int          l         = via_layer->getRoutingLevel();
 
           double R = via_layer->getUpperLayer()->getResistance();
-		  R = R/(num_via_rows * num_via_cols);
+          R = R/(num_via_rows * num_via_cols);
           if (R == 0.0) {
             err_flag_via = 0;
             //R = get<2>(m_layer_res[l]); /// Must figure out via resistance value
             //cout << "Via Resistance" << R << endl;
           }
-		  bool top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
+          bool top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
           Node* node_bot = m_Gmat->GetNode(x, y, l,top_or_bottom);
 
           via_layer      = via->getTopLayer();
           l              = via_layer->getRoutingLevel();
-		  top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
+          top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
           Node* node_top = m_Gmat->GetNode(x, y, l,top_or_bottom);
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
@@ -702,3 +703,66 @@ vector<pair<string, double>> IRSolver::GetPower()
 bool IRSolver::GetResult(){
   return m_result; 
 }
+
+void IRSolver::PrintSpice() {
+  DokMatrix*        Gmat = m_Gmat->GetGMat();
+  map<GMatLoc, double>::iterator it;
+  
+  ofstream spice_file;
+  spice_file.open ("pdn_spice");
+  
+  vector<double>    J = GetJ();
+  int num_nodes = Gmat->GetNumNodes()
+  int resistance_number = 0;
+  int voltage_number = 0;
+
+  for(it = Gmat->values.begin(); it!= Gmat->values.end(); it++){
+    NodeIdx col = (it->first).first;
+    NodeIdx row = (it->first).second;
+    if(col <= row) {
+      continue; //ignore lower half and diagonal as matrix is symmetric
+    }
+    double cond = it->second;           // get cond value
+    if(abs(cond) < 1e-15){            //ignore if an empty cell
+      continue;
+    }
+
+    string net_name = "vdd";
+    if(col < num_nodes) { //resistances
+      double resistance = 1/cond;
+
+      Node* node1 = m_GMat->GetNode(col); 
+      Node* node2 = m_GMat->GetNode(row); 
+      node_loc = node1->GetLoc();
+      int x1 = node_loc.first;
+      int y1 = node_loc.second;
+      int l1 = node1->GetLayerNum();
+      string node1_name = net_name + "_" + to_string(x1) + "_" + to_string(y1) + "_" + to_string(l1);
+
+      node_loc = node2->GetLoc();
+      int x2 = node_loc.first;
+      int y2 = node_loc.second;
+      int l2 = node2->GetLayerNum();
+      string node2_name = net_name + "_" + to_string(x2) + "_" + to_string(y2) + "_" + to_string(l2);
+      
+      string resistance_name = "R" + resistance_number; 
+      resistance_number++;
+
+      spice_file<< resistance_name <<" "<< node1_name << " " << node2_name <<" "<< to_string(resistance) <<"\n";
+    } else { //voltage
+      Node* node1 = m_GMat->GetNode(row); //VDD location 
+      node_loc = node1->GetLoc();
+      double voltage = J[row]
+      int x1 = node_loc.first;
+      int y1 = node_loc.second;
+      int l1 = node1->GetLayerNum();
+      string node1_name = net_name + "_" + to_string(x1) + "_" + to_string(y1) + "_" + to_string(l1);
+      string voltage_name = "V" + voltage_number; 
+      voltage_number++
+      spice_file<< voltage_name <<" "<< node1_name << " 0 " << to_string(voltage) <<"\n";
+    }
+  }
+  spice_file<<endl;
+  spice_file.close();
+}
+
