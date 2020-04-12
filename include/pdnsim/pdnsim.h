@@ -27,8 +27,10 @@ class PDNSim
     
     void import_vsrc_cfg(std::string vsrc);
     void import_out_file(std::string out_file);
+    void import_spice_out_file(std::string out_file);
 
     int analyze_power_grid();
+    void write_pg_spice();
 
     int check_connectivity();
 
@@ -37,6 +39,7 @@ class PDNSim
     sta::dbSta* _sta;
     std::string _vsrc_loc;
     std::string _out_file;
+    std::string _spice_out_file;
 
 
 };

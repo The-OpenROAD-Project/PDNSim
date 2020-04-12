@@ -30,6 +30,13 @@ pdnsim_import_out_file_cmd(const char* out_file)
 }
 
 void 
+pdnsim_import_spice_out_file_cmd(const char* out_file)
+{
+  PDNSim* pdnsim = getPDNSim();
+  pdnsim->import_spice_out_file(out_file);
+}
+
+void 
 pdnsim_analyze_power_grid_cmd()
 {
   PDNSim* pdnsim = getPDNSim();
@@ -42,6 +49,14 @@ pdnsim_check_connectivity_cmd()
   PDNSim* pdnsim = getPDNSim();
   return pdnsim->check_connectivity();
 }
+
+void
+pdnsim_write_pg_spice_cmd()
+{
+  PDNSim* pdnsim = getPDNSim();
+  return pdnsim->write_pg_spice();
+}
+
 
 %} // inline
 

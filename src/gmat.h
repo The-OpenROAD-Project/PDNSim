@@ -111,7 +111,7 @@ class GMat
   std::vector<Node*> GetAllNodes();
 
   //! Function to return a pointer to the G matrix in DOK format 
-  DokMatrix* GetGmatDOK();
+  DokMatrix* GetGMatDOK();
 
  private:
   //! Number of nodes in G matrix

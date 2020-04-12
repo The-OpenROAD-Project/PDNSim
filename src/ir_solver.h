@@ -56,13 +56,15 @@ class IRSolver
   IRSolver(odb::dbDatabase*         t_db,
            sta::dbSta*              t_sta,
            std::string              vsrc_loc,
-           std::string              out_file)
+           std::string              out_file,
+           std::string              spice_out_file)
   {
     bool res = true;
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
     m_out_file      = out_file;
+    m_spice_out_file      = spice_out_file;
     ReadC4Data();
     //ReadResData();
     if(res) {
@@ -110,7 +112,7 @@ class IRSolver
 
   bool                                        GetResult();
 
-  void                                        PrintSpice();
+  int                                         PrintSpice();
  
  private:
   //! Pointer to the Db
@@ -121,6 +123,7 @@ class IRSolver
   std::string              m_vsrc_file;
   //! Resistance configuration file
   std::string              m_out_file;
+  std::string              m_spice_out_file;
   //! G matrix for voltage 
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources

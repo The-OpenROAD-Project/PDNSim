@@ -56,7 +56,7 @@ Path Type: max
 
 
 INFO: Reading Voltage source file Vsrc_gcd.loc
-INFO: Output voltage file specified ./results/gcd_voltage.rpt
+INFO: Output spice file specified ./results/gcd_spice.sp
 Voltage fileVsrc_gcd.loc
 INFO: Reading location of VDD and VSS sources 
 Creating G Matrix
@@ -68,15 +68,5 @@ INFO: Executing STA for Power
 INFO: Execute STA
 INFO: Created J vector
 INFO: Connection from Vpad to all nodes established
-INFO: Factorizing G
-INFO: Solving GV=J
-INFO: SparseLU begin solving
-INFO: SparseLU finished solving
-
-
-######################################
-Worstcase Voltage: 1.1
-Average IR drop  : 7.5634e-06
-Worstcase IR drop: 1.0542e-05
-######################################
+Spice file written: ./results/gcd_spice.sp
 No differences found.

@@ -54,4 +54,32 @@ proc check_power_grid { args } {
   }
 }
 
+sta::define_cmd_args "write_pg_spice" { 
+  [-vsrc vsrc_file ]
+  [-outfile out_file]}
 
+proc write_pg_spice { args } {
+  sta::parse_key_args "write_pg_spice" args \
+    keys {-vsrc -outfile} flags {}
+
+  if { [info exists keys(-vsrc)] } {
+    set vsrc_file $keys(-vsrc)
+    if { [file readable $vsrc_file] } {
+      pdnsim_import_vsrc_cfg_cmd $vsrc_file
+    } else {
+      ord::error "Cannot read $vsrc_file"
+    }
+  } else {
+    ord::error "key vsrc not defined."
+  }
+
+  if { [info exists keys(-outfile)] } {
+    set out_file $keys(-outfile)
+     pdnsim_import_spice_out_file_cmd $out_file
+  }
+  if { [ord::db_has_rows] } {
+    pdnsim_write_pg_spice_cmd
+  } else {
+  	ord::error "no rows defined in design. Use initialize_floorplan to add rows" 
+  }
+}

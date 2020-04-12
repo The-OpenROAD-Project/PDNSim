@@ -177,7 +177,11 @@ void IRSolver::SolveIR()
   }
   ir_report<<endl;
   ir_report.close();
-  PrintSpice();
+  //cout << "SPICe file " <<m_spice_out_file <<endl;
+  //if ( m_spice_out_file != "") {
+  //  cout << "Inside print spice if" <<endl;
+  //  check_spice = PrintSpice();
+  //}
   avg_voltage = sum_volt / num_nodes;
 }
 
@@ -704,18 +708,23 @@ bool IRSolver::GetResult(){
   return m_result; 
 }
 
-void IRSolver::PrintSpice() {
-  DokMatrix*        Gmat = m_Gmat->GetGMat();
+int IRSolver::PrintSpice() {
+  DokMatrix*        Gmat = m_Gmat->GetGMatDOK();
   map<GMatLoc, double>::iterator it;
   
-  ofstream spice_file;
-  spice_file.open ("pdn_spice");
-  
+  ofstream pdnsim_spice_file;
+  pdnsim_spice_file.open (m_spice_out_file);
+  if (!pdnsim_spice_file.is_open()) {
+    cout << "File did not open" << endl;
+    return 0;
+  }
   vector<double>    J = GetJ();
-  int num_nodes = Gmat->GetNumNodes()
+  int num_nodes = m_Gmat->GetNumNodes();
   int resistance_number = 0;
   int voltage_number = 0;
+  int current_number = 0; 
 
+  NodeLoc node_loc;
   for(it = Gmat->values.begin(); it!= Gmat->values.end(); it++){
     NodeIdx col = (it->first).first;
     NodeIdx row = (it->first).second;
@@ -729,10 +738,10 @@ void IRSolver::PrintSpice() {
 
     string net_name = "vdd";
     if(col < num_nodes) { //resistances
-      double resistance = 1/cond;
+      double resistance = -1/cond;
 
-      Node* node1 = m_GMat->GetNode(col); 
-      Node* node2 = m_GMat->GetNode(row); 
+      Node* node1 = m_Gmat->GetNode(col); 
+      Node* node2 = m_Gmat->GetNode(row); 
       node_loc = node1->GetLoc();
       int x1 = node_loc.first;
       int y1 = node_loc.second;
@@ -745,24 +754,38 @@ void IRSolver::PrintSpice() {
       int l2 = node2->GetLayerNum();
       string node2_name = net_name + "_" + to_string(x2) + "_" + to_string(y2) + "_" + to_string(l2);
       
-      string resistance_name = "R" + resistance_number; 
+      string resistance_name = "R" + to_string(resistance_number); 
       resistance_number++;
 
-      spice_file<< resistance_name <<" "<< node1_name << " " << node2_name <<" "<< to_string(resistance) <<"\n";
+      pdnsim_spice_file<< resistance_name <<" "<< node1_name << " " << node2_name <<" "<< to_string(resistance) <<endl;
+
+      double current = node1->GetCurrent();
+      string current_name = "I" + to_string(current_number); 
+      if(abs(current)> 1e-18) {
+        pdnsim_spice_file<< current_name <<" "<< node1_name << " " << 0 <<" "<< current <<endl;
+        current_number++;
+      }
+
+
     } else { //voltage
-      Node* node1 = m_GMat->GetNode(row); //VDD location 
+      Node* node1 = m_Gmat->GetNode(row); //VDD location 
       node_loc = node1->GetLoc();
-      double voltage = J[row]
+      double voltage = J[col];
       int x1 = node_loc.first;
       int y1 = node_loc.second;
       int l1 = node1->GetLayerNum();
       string node1_name = net_name + "_" + to_string(x1) + "_" + to_string(y1) + "_" + to_string(l1);
-      string voltage_name = "V" + voltage_number; 
-      voltage_number++
-      spice_file<< voltage_name <<" "<< node1_name << " 0 " << to_string(voltage) <<"\n";
+      string voltage_name = "V" + to_string(voltage_number); 
+      voltage_number++;
+      pdnsim_spice_file<< voltage_name <<" "<< node1_name << " 0 " << to_string(voltage) <<endl;
     }
-  }
-  spice_file<<endl;
-  spice_file.close();
+  } 
+  
+  pdnsim_spice_file<<".OPTION NUMDGT=6"<<endl;
+  pdnsim_spice_file<<".OP"<<endl;
+  pdnsim_spice_file<<".END"<<endl;
+  pdnsim_spice_file<<endl;
+  pdnsim_spice_file.close();
+  return 1;
 }
 

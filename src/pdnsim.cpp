@@ -54,7 +54,8 @@ PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
   _vsrc_loc(""),
-  _out_file(""){
+  _out_file(""),
+  _spice_out_file(""){
 };
 
 PDNSim::~PDNSim() {
@@ -62,6 +63,7 @@ PDNSim::~PDNSim() {
   _sta = nullptr; 
   _vsrc_loc = "";
   _out_file = "";
+  _spice_out_file = "";
 }
 
 void PDNSim::setDb(odb::dbDatabase* db){
@@ -83,12 +85,28 @@ void PDNSim::import_out_file(std::string out_file)
   cout << "INFO: Output voltage file specified " << _out_file << endl;
 }
 
+void PDNSim::import_spice_out_file(std::string out_file)
+{
+  _spice_out_file = out_file;
+  cout << "INFO: Output spice file specified " << _spice_out_file << endl;
+}
+
+void PDNSim::write_pg_spice() {
+ IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
+ int check_spice = irsolve_h->PrintSpice();
+  if(check_spice){
+  	cout << "Spice file written: "<<_spice_out_file <<endl;
+  }
+  else {
+    cout << "Spice file not written"<< endl;
+  }
+}
 
 int PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
   //IRSolver* irsolve_h = new IRSolver(
   //    db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
   gmat_obj = irsolve_h->GetGMat();
   if(!irsolve_h->GetResult()){
   	delete irsolve_h;
@@ -118,7 +136,7 @@ int PDNSim::analyze_power_grid(){
 }
 
 int PDNSim::check_connectivity() {
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
   if(!irsolve_h->GetResult()){
   	delete irsolve_h;
   	return 0;

@@ -260,7 +260,7 @@ CscMatrix* GMat::GetGMat()
 }
 
 //! Function to return a pointer to the G matrix in DOK format 
-CscMatrix* GMat::GetGMatDOK()
+DokMatrix* GMat::GetGMatDOK()
 {  // Nodes debug
   return &m_G_mat_dok;
 }

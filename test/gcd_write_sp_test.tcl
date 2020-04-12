@@ -9,7 +9,7 @@ report_checks
 # The command below runs a check for connectivity of the power grid
 # The analyze_power_grid command calls it by default
 # check_power_grid -vsrc Vsrc_gcd.loc 
-set voltage_file [make_result_file gcd_voltage.rpt]
+set spice_file [make_result_file gcd_spice.sp]
 
-analyze_power_grid -vsrc Vsrc_gcd.loc -outfile $voltage_file
-diff $voltage_file gcd_voltage.rptok
+write_pg_spice -vsrc Vsrc_gcd.loc -outfile $spice_file
+diff_files $spice_file gcd_spice.spok
