@@ -310,7 +310,7 @@ bool IRSolver::CreateJ()
 
 
 //! Function to create a G matrix using the nodes
-bool IRSolver::CreateGmat()
+bool IRSolver::CreateGmat(bool connection_only)
 {
   cout<<"Creating G Matrix"<<endl;
   std::vector<Node*> node_vector;
@@ -334,6 +334,7 @@ bool IRSolver::CreateGmat()
     if (nType == dbSigType::GROUND) {
       gnd_nets.push_back(curDnet);
     } else if (nType == dbSigType::POWER) {
+      //cout<<"Name: "<<curDnet->getName()<<endl;
       vdd_nets.push_back(curDnet);
       dbSet<dbSWire>           swires  = curDnet->getSWires();
       dbSet<dbSWire>::iterator sIter;
@@ -374,6 +375,7 @@ bool IRSolver::CreateGmat()
     return false;
   }
   std::vector<dbNet*>::iterator vIter;
+  int via_count =0;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
     dbNet*                   curDnet = *vIter;
     dbSet<dbSWire>           swires  = curDnet->getSWires();
@@ -399,10 +401,12 @@ bool IRSolver::CreateGmat()
           via_layer = via->getTopLayer();
           l         = via_layer->getRoutingLevel();
           m_Gmat->SetNode(x, y, l, bBox);
+          via_count++;
         } else {
           int                   x_loc1, x_loc2, y_loc1, y_loc2;
           dbTechLayer*          wire_layer = curWire->getTechLayer();
           int                   l          = wire_layer->getRoutingLevel();
+          //printf("Layer number is: %d \n",l);
           dbTechLayerDir::Value layer_dir  = wire_layer->getDirection();
           if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
             y_loc1 = (curWire->yMin() + curWire->yMax()) / 2;
@@ -418,10 +422,17 @@ bool IRSolver::CreateGmat()
           if (l == m_bottom_layer || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
             if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
               int x_i;
+              x_loc1 = (x_loc1/m_node_density)*m_node_density; //quantize the horizontal direction
+              x_loc2 = (x_loc2/m_node_density)*m_node_density; //quantize the horizontal direction
               for (x_i = x_loc1; x_i <= x_loc2; x_i = x_i + m_node_density) {
                 m_Gmat->SetNode(x_i, y_loc1, l, make_pair(0, 0));
+                //if(y_loc1 == 67200 && l == 1){
+                //    cout<<"Creating node: x:"<<x_i<<" y: "<<y_loc1<<endl;
+                //}
               }
             } else {
+              y_loc1 = (y_loc1/m_node_density)*m_node_density; //quantize the vertical direction
+              y_loc2 = (y_loc2/m_node_density)*m_node_density; //quantize the vertical direction
               int y_i;
               for (y_i = y_loc1; y_i <= y_loc2; y_i = y_i + m_node_density) {
                 m_Gmat->SetNode(x_loc1, y_i, l, make_pair(0, 0));
@@ -435,6 +446,7 @@ bool IRSolver::CreateGmat()
       }
     }
   }
+  //cout<<"number of Vias = "<<via_count<<endl;
   // insert c4 bumps as nodes
   int num_C4 =0;
   for (unsigned int it = 0; it < m_C4Bumps.size(); ++it) {
@@ -523,6 +535,13 @@ bool IRSolver::CreateGmat()
           }
           bool top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
           Node* node_bot = m_Gmat->GetNode(x, y, l,top_or_bottom);
+          if(l == m_bottom_layer){
+            //if(y ==  67200){
+            //    cout<<"bottom connection to via: "<<m_bottom_layer<<endl;
+            //    cout<<"x: "<<x<<" y: "<<y<<endl;
+            //    node_bot->Print();
+            //}
+          }
 
           via_layer      = via->getTopLayer();
           l              = via_layer->getRoutingLevel();
@@ -533,7 +552,11 @@ bool IRSolver::CreateGmat()
                     "fail ahead."<<endl;
             return false;
           } else {
-            m_Gmat->SetConductance(node_bot, node_top, 1 / R);
+            if(R <= 1e-12){ //if the resitance was not set.
+                m_Gmat->SetConductance(node_bot, node_top, 0);
+            } else {
+                m_Gmat->SetConductance(node_bot, node_top, 1 / R);
+            }
           }
         } else {
           dbTechLayer* wire_layer = curWire->getTechLayer();
@@ -541,29 +564,40 @@ bool IRSolver::CreateGmat()
           double       rho        = wire_layer->getResistance()
                        * double(wire_layer->getWidth())
                        / double(unit_micron);
-          if (rho == 0.0) {
+          if (rho <= 1e-12) {
+            rho = 0;
             err_flag_layer = 0;
-            //rho = get<1>(m_layer_res[l]) * double(wire_layer->getWidth())
-            //        / double(unit_micron);
-            //cout << "rho value " <<rho << endl;
           }
           dbTechLayerDir::Value layer_dir = wire_layer->getDirection();
+          int x_loc1 = curWire->xMin();
+          int x_loc2 = curWire->xMax();
+          int y_loc1 = curWire->yMin();
+          int y_loc2 = curWire->yMax();
+          if (l == m_bottom_layer || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+              x_loc1 = (x_loc1/m_node_density)*m_node_density; //quantize the horizontal direction
+              x_loc2 = (x_loc2/m_node_density)*m_node_density; //quantize the horizontal direction
+            } else {
+              y_loc1 = (y_loc1/m_node_density)*m_node_density; //quantize the vertical direction
+              y_loc2 = (y_loc2/m_node_density)*m_node_density; //quantize the vertical direction
+            }
+          }
           m_Gmat->GenerateStripeConductance(wire_layer->getRoutingLevel(),
                                             layer_dir,
-                                            curWire->xMin(),
-                                            curWire->xMax(),
-                                            curWire->yMin(),
-                                            curWire->yMax(),
+                                            x_loc1,    
+                                            x_loc2,
+                                            y_loc1,
+                                            y_loc2,
                                             rho);
         }
       }
     }
   }
-  if (err_flag_via == 0) {
+  if (err_flag_via == 0 && !connection_only) {
     cout << "Error: Atleast one via resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
     return false;
   }
-  if (err_flag_layer == 0) {
+  if (err_flag_layer == 0 && !connection_only) {
     cout << "Error: Atleast one layer per unit resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
     return false;
   }
@@ -574,20 +608,8 @@ bool IRSolver::CheckConnectivity()
 {
   std::vector<std::pair<NodeIdx,double>>::iterator c4_node_it;
   int x,y;
-  CscMatrix*        Gmat = m_Gmat->GetGMat();
+  CscMatrix*        Amat = m_Gmat->GetAMat();
   int num_nodes = m_Gmat->GetNumNodes();
-  //SuperMatrix       A;
-  //  int               m    = Gmat->num_rows;
-  //int               n    = Gmat->num_cols;
-  //int               info;
-  //int     nnz     = Gmat->nnz;
-  //double* values  = &(Gmat->values[0]);
-  //int*    row_idx = &(Gmat->row_idx[0]);
-  //int*    col_ptr = &(Gmat->col_ptr[0]);
-  //dCreate_CompCol_Matrix(
-  //    &A, m, n, nnz, values, row_idx, col_ptr, SLU_NC, SLU_D, SLU_GE);
-  //dPrint_CompCol_Matrix("A", &A);
-
 
   dbTech* tech   = m_db->getTech();
   int unit_micron = tech->getDbUnitsPerMicron();
@@ -596,46 +618,33 @@ bool IRSolver::CheckConnectivity()
     Node* c4_node = m_Gmat->GetNode((*c4_node_it).first);
     std::queue<Node*> node_q;
     node_q.push(c4_node);
-    //cout<<"adding_node"<<endl;
     while(!node_q.empty()) {
       NodeIdx col_loc, n_col_loc;
       Node* node = node_q.front();
       node_q.pop();
       node->SetConnected();
       NodeIdx col_num = node->GetGLoc();
-      //cout<<"working on node "<<col_num<<endl;
-      col_loc  = Gmat->col_ptr[col_num];
-      if(col_num < Gmat->col_ptr.size()-1) {
-        n_col_loc  = Gmat->col_ptr[col_num+1];
+      col_loc  = Amat->col_ptr[col_num];
+      if(col_num < Amat->col_ptr.size()-1) {
+        n_col_loc  = Amat->col_ptr[col_num+1];
       } else {
-        n_col_loc  = Gmat->row_idx.size() ;
+        n_col_loc  = Amat->row_idx.size() ;
       }
-      //cout<<"getting values form col_vec"<<endl;
-      std::vector<NodeIdx> col_vec(Gmat->row_idx.begin()+col_loc,
-                                   Gmat->row_idx.begin()+n_col_loc);
-      //cout<<col_loc<<"  "<<n_col_loc<<endl; 
-      //cout<<Gmat->row_idx.size()<<endl;
+      std::vector<NodeIdx> col_vec(Amat->row_idx.begin()+col_loc,
+                                   Amat->row_idx.begin()+n_col_loc);
 
-      //cout<<"got col_vec"<<endl;
 
       std::vector<NodeIdx>::iterator col_vec_it;
       for(col_vec_it = col_vec.begin(); col_vec_it != col_vec.end(); col_vec_it++){
-        //cout<<"child node"<<endl;
-        //cout<<*col_vec_it<<endl;
         if(*col_vec_it<num_nodes) {
           Node* node_next = m_Gmat->GetNode(*col_vec_it);
-          //cout<<"valid child"<<endl;
           if(!(node_next->GetConnected())) {
-            //cout<<"got child that is unconnected"<<endl;
-            //cout<<node_next->GetGLoc()<<endl;
             node_q.push(node_next);
-            //cout<<"pushing child node"<<endl;
           }
         }
       }
     }
   }
-  //cout<<"created connection matrix"<<endl;
   int uncon_err_cnt = 0;
   int uncon_err_flag = 0;
   int uncon_inst_cnt = 0;
@@ -644,7 +653,6 @@ bool IRSolver::CheckConnectivity()
   std::vector<Node*>::iterator node_list_it;
   bool unconnected_node =false;
   for(node_list_it = node_list.begin(); node_list_it != node_list.end(); node_list_it++){
-    //cout<<"iteration nodes"<<endl;
     if(!(*node_list_it)->GetConnected()){
       uncon_err_cnt++;
       NodeLoc node_loc = (*node_list_it)->GetLoc();
@@ -655,10 +663,9 @@ bool IRSolver::CheckConnectivity()
         uncon_err_flag =1;
         cout<<"Error display limit reached, suppressing further unconnected node error messages"<<endl;
       } else if( uncon_err_flag ==0) {
-        //cout<<"node_not_connected ================================="<<endl;
-        unconnected_node =true;
-        cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
-            <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
+      unconnected_node =true;
+      cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
+          <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
       }
       if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
         uncon_inst_flag =1;
@@ -788,4 +795,49 @@ int IRSolver::PrintSpice() {
   pdnsim_spice_file.close();
   return 1;
 }
+
+bool IRSolver::Build() {
+  bool res = true;
+  ReadC4Data();
+  if(res) {
+    res = CreateGmat(); 
+  }
+  if(res) {
+    res = CreateJ();
+  }
+  if(res) {
+    res = AddC4Bump();
+  }
+  if(res) {
+    res = m_Gmat->GenerateCSCMatrix();
+    res = m_Gmat->GenerateACSCMatrix();
+  }
+  if(res) {
+    m_connection = CheckConnectivity();
+    res = m_connection;
+  }
+  m_result = res;
+  return m_result;
+}
+
+bool IRSolver::BuildConnection() {
+  bool res = true;
+  ReadC4Data();
+  if(res) {
+    res = CreateGmat(true); 
+  }
+  if(res) {
+    res = AddC4Bump();
+  }
+  if(res) {
+    res = m_Gmat->GenerateACSCMatrix();
+  }
+  if(res) {
+    m_connection = CheckConnectivity();
+    res = m_connection;
+  }
+  m_result = res;
+  return m_result;
+}
+
 

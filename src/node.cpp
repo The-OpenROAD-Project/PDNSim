@@ -118,6 +118,8 @@ void Node::Print()
        << endl;
   cout << "    Current: " << m_current_src << endl;
   cout << "    Voltage: " << m_voltage << endl;
+  cout << "    Has connection: " << m_connected <<endl;
+  cout << "    Has instances:  " << m_has_instances <<endl;
 }
 
 //! Function to set the bounding box of the stripe

@@ -88,6 +88,8 @@ class GMat
   NodeIdx    GetNumNodes();
   //! Function to return a pointer to the G matrix 
   CscMatrix* GetGMat();
+  //! Function to return a pointer to the A matrix 
+  CscMatrix* GetAMat();
   //! Function to get the conductance of the strip of the power grid
   void       GenerateStripeConductance(int                        t_l,
                                        odb::dbTechLayerDir::Value layer_dir,
@@ -107,6 +109,8 @@ class GMat
   void       AddC4Bump(int t_loc, int t_C4Num);
   //! Function which generates the compressed sparse column matrix
   bool       GenerateCSCMatrix();
+  //! Function which generates the compressed sparse column matrix for A
+  bool       GenerateACSCMatrix();
   //! Function to return a vector which contains a  pointer to all the nodes
   std::vector<Node*> GetAllNodes();
 
@@ -122,6 +126,10 @@ class GMat
   DokMatrix            m_G_mat_dok;
   //! Compressed sparse column matrix for superLU
   CscMatrix            m_G_mat_csc;
+  //! Dictionary of keys for A matrix
+  DokMatrix            m_A_mat_dok;
+  //! Compressed sparse column matrix for A
+  CscMatrix            m_A_mat_csc;
   //! Vector of pointers to all nodes in the G matrix
   std::vector<Node*>   m_G_mat_nodes;
   //! Vector of maps to all nodes

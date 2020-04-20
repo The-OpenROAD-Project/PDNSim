@@ -79,7 +79,6 @@ Node* GMat::GetNode(int t_x, int t_y, int t_l, bool t_nearest /*=false*/)
     }
   } else {
     NodeMap::iterator        x_itr = layer_map.lower_bound(t_x);
-  	//cout <<"X value: "<<t_x << "Y value" <<t_y << "Layer:"<<t_l <<endl;
     vector<pair<int, Node*>> node_dist_vector;
     if (layer_map.size() == 1 || x_itr == layer_map.end()
         || x_itr == layer_map.begin()) {
@@ -241,6 +240,8 @@ void GMat::InitializeGmatDok(int t_numC4)
   } else {
     m_G_mat_dok.num_cols = m_n_nodes + t_numC4;
     m_G_mat_dok.num_rows = m_n_nodes + t_numC4;
+    m_A_mat_dok.num_cols = m_n_nodes + t_numC4;
+    m_A_mat_dok.num_rows = m_n_nodes + t_numC4;
   }
 }
 
@@ -257,6 +258,12 @@ NodeIdx GMat::GetNumNodes()
 CscMatrix* GMat::GetGMat()
 {  // Nodes debug
   return &m_G_mat_csc;
+}
+
+//! Function to return a pointer to the A matrix in CSC format 
+CscMatrix* GMat::GetAMat()
+{  // Nodes debug
+  return &m_A_mat_csc;
 }
 
 //! Function to return a pointer to the G matrix in DOK format 
@@ -370,7 +377,6 @@ std::vector<Node*> GMat::GetRDLNodes(int t_l,
          y_itr->first <= t_y_max && y_itr != y_map.end();
          ++y_itr) {
       node1  = y_itr->second;
-      //node1->Print();
       RDLNodes.push_back(node1);
     }
     y_map = layer_map.at(x2);
@@ -378,7 +384,6 @@ std::vector<Node*> GMat::GetRDLNodes(int t_l,
          y_itr->first <= t_y_max && y_itr != y_map.end();
          ++y_itr) {
       node2  = y_itr->second;
-      //node2->Print();
       RDLNodes.push_back(node2);
     }
   } else {
@@ -442,6 +447,29 @@ bool GMat::GenerateCSCMatrix()
   m_G_mat_csc.col_ptr.push_back(m_G_mat_csc.nnz);
   return true;
 }
+bool GMat::GenerateACSCMatrix()
+{
+  m_A_mat_csc.num_cols = m_A_mat_dok.num_cols;
+  m_A_mat_csc.num_rows = m_A_mat_dok.num_rows;
+  m_A_mat_csc.nnz      = 0;
+
+  for (NodeIdx col = 0; col < m_A_mat_csc.num_cols; ++col) {
+    m_A_mat_csc.col_ptr.push_back(m_A_mat_csc.nnz);
+    map<GMatLoc, double>::iterator it;
+    map<GMatLoc, double>::iterator it_lower
+        = m_A_mat_dok.values.lower_bound(make_pair(col, 0));
+    map<GMatLoc, double>::iterator it_upper
+        = m_A_mat_dok.values.upper_bound(make_pair(col, m_A_mat_csc.num_rows));
+    for (it = it_lower; it != it_upper; ++it) {
+      m_A_mat_csc.values.push_back(it->second);           // push back value
+      m_A_mat_csc.row_idx.push_back((it->first).second);  // push back row idx
+      m_A_mat_csc.nnz++;
+    }
+  }
+  m_A_mat_csc.col_ptr.push_back(m_A_mat_csc.nnz);
+  return true;
+}
+
 
 
 //! Function which returns the value of the conductance row and column in G
@@ -488,6 +516,7 @@ void GMat::UpdateConductance(NodeIdx t_row, NodeIdx t_col, double t_cond)
   }
   GMatLoc key             = make_pair(t_col, t_row);
   m_G_mat_dok.values[key] = t_cond;
+  m_A_mat_dok.values[key] = 1;
 }
 
 
@@ -503,6 +532,14 @@ Node* GMat::NearestYNode(NodeMap::iterator x_itr, int t_y)
 {
   map<int, Node*>&          y_map = x_itr->second;
   map<int, Node*>::iterator y_itr = y_map.lower_bound(t_y);
+  //if(t_y ==67200){
+  //cout<<"Ymap"<<endl;
+  //for(auto it = y_map.begin(); it != y_map.end(); ++it)
+  //{
+  //  std::cout << it->first<<"  ";
+  //}
+  //cout<<endl;
+  //}
   if (y_map.size() == 1 || y_itr == y_map.end() || y_itr == y_map.begin()) {
     if (y_map.size() == 1) {
       y_itr = y_map.begin();

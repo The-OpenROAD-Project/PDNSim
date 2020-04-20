@@ -92,26 +92,30 @@ void PDNSim::import_spice_out_file(std::string out_file)
 }
 
 void PDNSim::write_pg_spice() {
- IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
- int check_spice = irsolve_h->PrintSpice();
-  if(check_spice){
-  	cout << "Spice file written: "<<_spice_out_file <<endl;
-  }
-  else {
-    cout << "Spice file not written"<< endl;
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
+
+  if(!irsolve_h->Build()){
+  	delete irsolve_h;
+  } else {
+    int check_spice = irsolve_h->PrintSpice();
+    if(check_spice){
+    	cout << "Spice file written: "<<_spice_out_file <<endl;
+    }
+    else {
+      cout << "Spice file not written"<< endl;
+    }
   }
 }
 
 int PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
-  //IRSolver* irsolve_h = new IRSolver(
-  //    db, verilog_stor, top_cell_name, sdc_file, lib_stor, vsrc_loc, def_res_val);
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
-  gmat_obj = irsolve_h->GetGMat();
-  if(!irsolve_h->GetResult()){
+  
+  if(!irsolve_h->Build()){
   	delete irsolve_h;
   	return 0;
   }
+  gmat_obj = irsolve_h->GetGMat();
   irsolve_h->SolveIR();
   std::vector<Node*> nodes       = gmat_obj->GetAllNodes();
   int                unit_micron = (_db->getTech())->getDbUnitsPerMicron();
@@ -137,7 +141,7 @@ int PDNSim::analyze_power_grid(){
 
 int PDNSim::check_connectivity() {
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
-  if(!irsolve_h->GetResult()){
+  if(!irsolve_h->BuildConnection()){
   	delete irsolve_h;
   	return 0;
   }

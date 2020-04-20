@@ -59,31 +59,11 @@ class IRSolver
            std::string              out_file,
            std::string              spice_out_file)
   {
-    bool res = true;
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
     m_out_file      = out_file;
     m_spice_out_file      = spice_out_file;
-    ReadC4Data();
-    //ReadResData();
-    if(res) {
-      res = CreateGmat(); 
-    }
-    if(res) {
-      res = CreateJ();
-    }
-    if(res) {
-      res = AddC4Bump();
-    }
-    if(res) {
-      res = m_Gmat->GenerateCSCMatrix();
-    }
-    if(res) {
-      m_connection = CheckConnectivity();
-      res = m_connection;
-    }
-    m_result = res;
   }
   //! IRSolver destructor
   ~IRSolver() {
@@ -113,6 +93,10 @@ class IRSolver
   bool                                        GetResult();
 
   int                                         PrintSpice();
+
+  bool                                        Build();
+
+  bool                                        BuildConnection();
  
  private:
   //! Pointer to the Db
@@ -156,6 +140,6 @@ class IRSolver
   //! Function to create a J vector from the current map
   bool                                           CreateJ();
   //! Function to create a G matrix using the nodes
-  bool                                           CreateGmat();
+  bool                                           CreateGmat(bool connection_only=false);
 };
 #endif
