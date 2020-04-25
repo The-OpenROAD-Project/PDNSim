@@ -323,12 +323,18 @@ void GMat::GenerateStripeConductance(int                        t_l,
     map<int, Node*>::iterator y_itr;
     map<int, Node*>::iterator y_prev;
     int                       i = 0;
+    //if(x_loc == 1202200){
+    //    cout<<"generate conductance: "<<endl;
+    //}
     for (y_itr = y_map.lower_bound(t_y_min);
          y_itr->first <= t_y_max && y_itr != y_map.end();
          ++y_itr) {
       if (i == 0) {
         i = 1;
       } else {
+        //if(x_loc == 1202200){
+        //    cout<<"y "<<y_prev->first<<" "<<y_itr->first<<endl;
+        //}
         Node*  node1  = y_itr->second;
         Node*  node2  = y_prev->second;
         int    width  = t_x_max - t_x_min;

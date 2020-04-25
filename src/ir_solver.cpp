@@ -177,11 +177,6 @@ void IRSolver::SolveIR()
   }
   ir_report<<endl;
   ir_report.close();
-  //cout << "SPICe file " <<m_spice_out_file <<endl;
-  //if ( m_spice_out_file != "") {
-  //  cout << "Inside print spice if" <<endl;
-  //  check_spice = PrintSpice();
-  //}
   avg_voltage = sum_volt / num_nodes;
 }
 
@@ -296,6 +291,11 @@ bool IRSolver::CreateJ()
     //cout << "Got location" <<endl;
     int   l      = m_bottom_layer;  // atach to the bottom most routing layer
     Node* node_J = m_Gmat->GetNode(x, y, l,true);
+    NodeLoc node_loc = node_J->GetLoc();
+    if( abs(node_loc.first - x) > m_node_density || abs(node_loc.second - y) > m_node_density ){
+      cout<<"WARNING: Instance current node at "<<node_loc.first<<" "<<node_loc.second<<" layer "<<l<<" moved from "<<x<<" "<<y<<endl;
+      cout<<"Instance: " << it->first <<endl;
+    }
     node_J->AddCurrentSrc(it->second);
     node_J->AddInstance(inst);
   }
@@ -327,6 +327,7 @@ bool IRSolver::CreateGmat(bool connection_only)
   std::vector<dbNet*> vdd_nets;
   std::vector<dbNet*> gnd_nets;
 
+  int num_wires =0;
   dbSet<dbNet>::iterator nIter;
   for (nIter = nets.begin(); nIter != nets.end(); ++nIter) {
     dbNet* curDnet = *nIter;
@@ -334,7 +335,6 @@ bool IRSolver::CreateGmat(bool connection_only)
     if (nType == dbSigType::GROUND) {
       gnd_nets.push_back(curDnet);
     } else if (nType == dbSigType::POWER) {
-      //cout<<"Name: "<<curDnet->getName()<<endl;
       vdd_nets.push_back(curDnet);
       dbSet<dbSWire>           swires  = curDnet->getSWires();
       dbSet<dbSWire>::iterator sIter;
@@ -343,6 +343,7 @@ bool IRSolver::CreateGmat(bool connection_only)
         dbSet<dbSBox>           wires    = curSWire->getWires();
         dbSet<dbSBox>::iterator wIter;
         for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
+          num_wires++;
           dbSBox* curWire = *wIter;
           int l;
           dbTechLayerDir::Value layer_dir; 
@@ -375,7 +376,9 @@ bool IRSolver::CreateGmat(bool connection_only)
     return false;
   }
   std::vector<dbNet*>::iterator vIter;
-  int via_count =0;
+  cout<<"Creating Nodes:     ";
+  int progress_wires=0;
+  int progress_percent=1;
   for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
     dbNet*                   curDnet = *vIter;
     dbSet<dbSWire>           swires  = curDnet->getSWires();
@@ -385,29 +388,100 @@ bool IRSolver::CreateGmat(bool connection_only)
       dbSet<dbSBox>           wires    = curSWire->getWires();
       dbSet<dbSBox>::iterator wIter;
       for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
+        if(progress_wires >= ((progress_percent/100.0)*num_wires)-1.0 ){
+          cout<<"\b\b\b\b"<<setw(3)<<progress_percent++<<"%"<< std::flush;
+        }
+        progress_wires++;
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
           dbBox* via_bBox = via->getBBox();
-          BBox   bBox
-              = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
+          int check_params = via->hasParams();
+          int x_cut_size = 0;
+          int y_cut_size = 0;
+          int x_bottom_enclosure = 0;
+          int y_bottom_enclosure = 0;
+          int x_top_enclosure = 0;
+          int y_top_enclosure = 0;
+		  if(check_params == 1) {
+		    dbViaParams params;
+			via->getViaParams(params);
+		    x_cut_size = params.getXCutSize();
+		    y_cut_size = params.getYCutSize();
+            x_bottom_enclosure = params.getXBottomEnclosure();
+            y_bottom_enclosure = params.getYBottomEnclosure();
+            x_top_enclosure = params.getXTopEnclosure();
+            y_top_enclosure = params.getYTopEnclosure();
+		  }
+          BBox   bBox = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
           int x, y;
           curWire->getViaXY(x, y);
           dbTechLayer* via_layer = via->getBottomLayer();
+          dbTechLayerDir::Value layer_dir  = via_layer->getDirection();
           int          l         = via_layer->getRoutingLevel();
-          if (m_bottom_layer != l && l != m_top_layer) { //do not set for top and bottom layers
+          int x_loc1,x_loc2,y_loc1,y_loc2;
+          if (m_bottom_layer != l && l != m_top_layer) {//do not set for top and bottom layers
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+              y_loc1 = y;
+              y_loc2 = y;
+              x_loc1 = x - (x_bottom_enclosure+x_cut_size/2);
+              x_loc2 = x + (x_bottom_enclosure+x_cut_size/2);
+            } else {
+              y_loc1 = y - (y_bottom_enclosure+y_cut_size/2);
+              y_loc2 = y + (y_bottom_enclosure+y_cut_size/2);
+              x_loc1 = x;
+              x_loc2 = x;
+            }
+            m_Gmat->SetNode(x_loc1, y_loc1, l, make_pair(0, 0));
+            m_Gmat->SetNode(x_loc2, y_loc2, l, make_pair(0, 0));
             m_Gmat->SetNode(x, y, l, bBox);
           }
+          //if(x == 1202200 && l == 3){
+          //  cout<<"bot node"<<endl;
+          //  Node* node = m_Gmat->GetNode(x,y,l);
+          //  node->Print();
+          //  node = m_Gmat->GetNode(x,y_loc1,l);
+          //  node->Print();
+          //  node = m_Gmat->GetNode(x,y_loc2,l);
+          //  node->Print();
+          //}
           via_layer = via->getTopLayer();
           l         = via_layer->getRoutingLevel();
-          m_Gmat->SetNode(x, y, l, bBox);
-          via_count++;
+          //if(x == 1202200 && l == 3){
+          //  cout<<"top node"<<endl;
+          //  Node* node = m_Gmat->GetNode(x,y,l);
+          //  node->Print();
+          //}
+          //exit(1);
+          //
+
+          //TODO this may count the stripe conductance twice but is needed to
+          //fix a staggered stacked via
+          layer_dir  = via_layer->getDirection();
+          if (m_bottom_layer != l && l != m_top_layer) {//do not set for top and bottom layers
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+              y_loc1 = y;
+              y_loc2 = y;
+              x_loc1 = x - (x_top_enclosure+x_cut_size/2);
+              x_loc2 = x + (x_top_enclosure+x_cut_size/2);
+            } else {
+              y_loc1 = y - (y_top_enclosure+y_cut_size/2);
+              y_loc2 = y + (y_top_enclosure+y_cut_size/2);
+              x_loc1 = x;
+              x_loc2 = x;
+            }
+            m_Gmat->SetNode(x_loc1, y_loc1, l, make_pair(0, 0));
+            m_Gmat->SetNode(x_loc2, y_loc2, l, make_pair(0, 0));
+            m_Gmat->SetNode(x, y, l, bBox);
+          }
         } else {
           int                   x_loc1, x_loc2, y_loc1, y_loc2;
           dbTechLayer*          wire_layer = curWire->getTechLayer();
           int                   l          = wire_layer->getRoutingLevel();
-          //printf("Layer number is: %d \n",l);
           dbTechLayerDir::Value layer_dir  = wire_layer->getDirection();
+          if(l == m_bottom_layer){
+            layer_dir = dbTechLayerDir::Value::HORIZONTAL;
+          }
           if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
             y_loc1 = (curWire->yMin() + curWire->yMax()) / 2;
             y_loc2 = (curWire->yMin() + curWire->yMax()) / 2;
@@ -420,16 +494,19 @@ bool IRSolver::CreateGmat(bool connection_only)
             y_loc2 = curWire->yMax();
           }
           if (l == m_bottom_layer || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
-            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL ) {
               int x_i;
               x_loc1 = (x_loc1/m_node_density)*m_node_density; //quantize the horizontal direction
               x_loc2 = (x_loc2/m_node_density)*m_node_density; //quantize the horizontal direction
               for (x_i = x_loc1; x_i <= x_loc2; x_i = x_i + m_node_density) {
                 m_Gmat->SetNode(x_i, y_loc1, l, make_pair(0, 0));
-                //if(y_loc1 == 67200 && l == 1){
-                //    cout<<"Creating node: x:"<<x_i<<" y: "<<y_loc1<<endl;
+                //if(l == 1){
+                //    cout<<"Creating node at "<<x_i<<" "<<y_loc1<<" "<<l<<endl;
                 //}
               }
+              //if(l == 1){
+              //  cout<<"Horizontal ";
+              //}
             } else {
               y_loc1 = (y_loc1/m_node_density)*m_node_density; //quantize the vertical direction
               y_loc2 = (y_loc2/m_node_density)*m_node_density; //quantize the vertical direction
@@ -437,7 +514,14 @@ bool IRSolver::CreateGmat(bool connection_only)
               for (y_i = y_loc1; y_i <= y_loc2; y_i = y_i + m_node_density) {
                 m_Gmat->SetNode(x_loc1, y_i, l, make_pair(0, 0));
               }
+              //if(l == 1){
+              //  cout<<"Vertical ";
+              //}
             }
+          //if(l == 1){
+          //  cout<<"layer one stripe node 2 loc"<<endl;
+          //  cout<<"x1 "<<x_loc1<<" x2 "<<x_loc2<<" y1 "<<y_loc1<<" y2 "<<y_loc2<<endl;
+          //}
           } else {  // add end nodes
             m_Gmat->SetNode(x_loc1, y_loc1, l, make_pair(0, 0));
             m_Gmat->SetNode(x_loc2, y_loc2, l, make_pair(0, 0));
@@ -446,7 +530,10 @@ bool IRSolver::CreateGmat(bool connection_only)
       }
     }
   }
-  //cout<<"number of Vias = "<<via_count<<endl;
+  cout<<endl;
+  cout<<num_wires<<endl;
+  progress_wires =0;
+  progress_percent =1;
   // insert c4 bumps as nodes
   int num_C4 =0;
   for (unsigned int it = 0; it < m_C4Bumps.size(); ++it) {
@@ -487,11 +574,11 @@ bool IRSolver::CreateGmat(bool connection_only)
       num_C4++;
     }
   }
-  
   // All new nodes must be inserted by this point
   // initialize G Matrix
-  cout << "INFO: G matrix created " << endl;
+
   cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
+  cout << "Creating Connections:     ";
   m_Gmat->InitializeGmatDok(num_C4);
   int err_flag_via = 1;
   int err_flag_layer = 1;
@@ -506,18 +593,34 @@ bool IRSolver::CreateGmat(bool connection_only)
       dbSet<dbSBox>           wires    = curSWire->getWires();
       dbSet<dbSBox>::iterator wIter;
       for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
+        if(progress_wires >= ((progress_percent/100.0)*num_wires)-1.0 ){
+          cout<<"\b\b\b\b"<<setw(3)<<progress_percent++<<"%"<< std::flush;
+        }
+        progress_wires++;
         dbSBox* curWire = *wIter;
         if (curWire->isVia()) {
           dbVia* via      = curWire->getBlockVia();
           int num_via_rows = 1;
           int num_via_cols = 1;
           int check_params = via->hasParams();
-          if(check_params == 1) {
-            dbViaParams params;
-            via->getViaParams(params);
-            num_via_rows = params.getNumCutRows();
-            num_via_cols = params.getNumCutCols();
-          }
+          int x_cut_size = 0;
+          int y_cut_size = 0;
+          int x_bottom_enclosure = 0;
+          int y_bottom_enclosure = 0;
+          int x_top_enclosure = 0;
+          int y_top_enclosure = 0;
+		  if(check_params == 1) {
+		    dbViaParams params;
+			via->getViaParams(params);
+		    num_via_rows = params.getNumCutRows();
+		    num_via_cols = params.getNumCutCols();
+		    x_cut_size = params.getXCutSize();
+		    y_cut_size = params.getYCutSize();
+            x_bottom_enclosure = params.getXBottomEnclosure();
+            y_bottom_enclosure = params.getYBottomEnclosure();
+            x_top_enclosure = params.getXTopEnclosure();
+            y_top_enclosure = params.getYTopEnclosure();
+		  }
           dbBox* via_bBox = via->getBBox();
           BBox   bBox
               = make_pair((via_bBox->getDX()) / 2, (via_bBox->getDY()) / 2);
@@ -535,18 +638,20 @@ bool IRSolver::CreateGmat(bool connection_only)
           }
           bool top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
           Node* node_bot = m_Gmat->GetNode(x, y, l,top_or_bottom);
-          if(l == m_bottom_layer){
-            //if(y ==  67200){
-            //    cout<<"bottom connection to via: "<<m_bottom_layer<<endl;
-            //    cout<<"x: "<<x<<" y: "<<y<<endl;
-            //    node_bot->Print();
-            //}
+          NodeLoc node_loc = node_bot->GetLoc();
+          if( abs(node_loc.first - x) > m_node_density || abs(node_loc.second - y) > m_node_density ){
+            cout<<"WARNING: Node at "<<node_loc.first<<" "<<node_loc.second<<" layer "<<l<<" moved from "<<x<<" "<<y<<endl;
           }
 
           via_layer      = via->getTopLayer();
           l              = via_layer->getRoutingLevel();
           top_or_bottom = ((l == m_bottom_layer) || (l == m_top_layer));
           Node* node_top = m_Gmat->GetNode(x, y, l,top_or_bottom);
+          node_loc = node_top->GetLoc();
+          if( abs(node_loc.first - x) > m_node_density || abs(node_loc.second - y) > m_node_density ){
+            cout<<"WARNING: Node at "<<node_loc.first<<" "<<node_loc.second<<" layer "<<l<<" moved from "<<x<<" "<<y<<endl;
+          }
+
           if (node_bot == nullptr || node_top == nullptr) {
             cout << "ERROR: null pointer received for expected node. Code may "
                     "fail ahead."<<endl;
@@ -558,6 +663,76 @@ bool IRSolver::CreateGmat(bool connection_only)
                 m_Gmat->SetConductance(node_bot, node_top, 1 / R);
             }
           }
+          
+          via_layer = via->getBottomLayer();
+          dbTechLayerDir::Value layer_dir  = via_layer->getDirection();
+          l         = via_layer->getRoutingLevel();
+          if(l != m_bottom_layer) {
+            double       rho        = via_layer->getResistance()
+                         * double(via_layer->getWidth())
+                         / double(unit_micron);
+            if (rho <= 1e-12) {
+              rho = 0;
+              err_flag_layer = 0;
+            }
+            int x_loc1,x_loc2,y_loc1,y_loc2;
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+              y_loc1 = y - y_cut_size/2;
+              y_loc2 = y + y_cut_size/2;
+              x_loc1 = x - (x_bottom_enclosure+x_cut_size/2);
+              x_loc2 = x + (x_bottom_enclosure+x_cut_size/2);
+            } else {
+              y_loc1 = y - (y_bottom_enclosure+y_cut_size/2);
+              y_loc2 = y + (y_bottom_enclosure+y_cut_size/2);
+              x_loc1 = x - x_cut_size/2;
+              x_loc2 = x + x_cut_size/2;
+            }
+            //if( x == 1202200 && l==3){
+            //    cout<<"Stripe"<<endl;
+            //    cout<<"y locs: "<<y_loc1<<" "<<y_loc2<<endl;
+            //    cout<<"rhp: "<<rho<<endl;
+            //}
+            m_Gmat->GenerateStripeConductance(via_layer->getRoutingLevel(),
+                                              layer_dir,
+                                              x_loc1,
+                                              x_loc2,
+                                              y_loc1,
+                                              y_loc2,
+                                              rho);
+          }
+          via_layer = via->getTopLayer();
+          layer_dir  = via_layer->getDirection();
+          l         = via_layer->getRoutingLevel();
+          if(l != m_top_layer) {
+            double       rho        = via_layer->getResistance()
+                         * double(via_layer->getWidth())
+                         / double(unit_micron);
+            if (rho <= 1e-12) {
+              rho = 0;
+              err_flag_layer = 0;
+            }
+            int x_loc1,x_loc2,y_loc1,y_loc2;
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+              y_loc1 = y - y_cut_size/2;
+              y_loc2 = y + y_cut_size/2;
+              x_loc1 = x - (x_top_enclosure+x_cut_size/2);
+              x_loc2 = x + (x_top_enclosure+x_cut_size/2);
+            } else {
+              y_loc1 = y - (y_top_enclosure+y_cut_size/2);
+              y_loc2 = y + (y_top_enclosure+y_cut_size/2);
+              x_loc1 = x - x_cut_size/2;
+              x_loc2 = x + x_cut_size/2;
+            }
+            m_Gmat->GenerateStripeConductance(via_layer->getRoutingLevel(),
+                                              layer_dir,
+                                              x_loc1,
+                                              x_loc2,
+                                              y_loc1,
+                                              y_loc2,
+                                              rho);
+          }
+
+
         } else {
           dbTechLayer* wire_layer = curWire->getTechLayer();
           int l  = wire_layer->getRoutingLevel();
@@ -569,12 +744,15 @@ bool IRSolver::CreateGmat(bool connection_only)
             err_flag_layer = 0;
           }
           dbTechLayerDir::Value layer_dir = wire_layer->getDirection();
+          if (l == m_bottom_layer){//ensure that the bootom layer(rail) is horizontal
+            layer_dir = dbTechLayerDir::Value::HORIZONTAL;
+          }
           int x_loc1 = curWire->xMin();
           int x_loc2 = curWire->xMax();
           int y_loc1 = curWire->yMin();
           int y_loc2 = curWire->yMax();
           if (l == m_bottom_layer || l == m_top_layer) {  // special case for bottom and top layers we design a dense grid
-            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL) {
+            if (layer_dir == dbTechLayerDir::Value::HORIZONTAL ) {
               x_loc1 = (x_loc1/m_node_density)*m_node_density; //quantize the horizontal direction
               x_loc2 = (x_loc2/m_node_density)*m_node_density; //quantize the horizontal direction
             } else {
@@ -593,6 +771,8 @@ bool IRSolver::CreateGmat(bool connection_only)
       }
     }
   }
+  cout<<endl;
+  cout << "INFO: G matrix created " << endl;
   if (err_flag_via == 0 && !connection_only) {
     cout << "Error: Atleast one via resistance not found in DB. Check the LEF or set it with a odb::setResistance command"<<endl;
     return false;
@@ -659,18 +839,19 @@ bool IRSolver::CheckConnectivity()
       float loc_x = ((float)node_loc.first)/((float)unit_micron);
       float loc_y = ((float)node_loc.second)/((float)unit_micron);
 
-      if(uncon_err_cnt>25 && uncon_err_flag ==0 ) {
-        uncon_err_flag =1;
-        cout<<"Error display limit reached, suppressing further unconnected node error messages"<<endl;
-      } else if( uncon_err_flag ==0) {
-      unconnected_node =true;
-      cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
-          <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
-      }
-      if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
-        uncon_inst_flag =1;
-        cout<<"Error display limit reached, suppressing further unconnected instance error messages"<<endl;
-      } else if( uncon_inst_flag ==0) {
+      //if(uncon_err_cnt>25 && uncon_err_flag ==0 ) {
+      //  uncon_err_flag =1;
+      //  cout<<"Error display limit reached, suppressing further unconnected node error messages"<<endl;
+      //} else if( uncon_err_flag ==0) {
+        //cout<<"node_not_connected ================================="<<endl;
+        unconnected_node =true;
+        cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
+            <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
+      //}
+      //if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
+      //  uncon_inst_flag =1;
+      //  cout<<"Error display limit reached, suppressing further unconnected instance error messages"<<endl;
+      //} else if( uncon_inst_flag ==0) {
         if((*node_list_it)->HasInstances()){
           std::vector<dbInst*> insts = (*node_list_it)->GetInstances();
           std::vector<dbInst*>::iterator inst_it;
@@ -680,7 +861,7 @@ bool IRSolver::CheckConnectivity()
               <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
           }
         }
-      }
+      //}
     }
   }
   if(unconnected_node == false){
@@ -839,5 +1020,4 @@ bool IRSolver::BuildConnection() {
   m_result = res;
   return m_result;
 }
-
-
+ 
