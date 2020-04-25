@@ -87,6 +87,8 @@ proc write_pg_spice { args } {
     set out_file $keys(-outfile)
      pdnsim_import_spice_out_file_cmd $out_file
   }
+  set net "VDD"
+  pdnsim_set_power_net $net
   if { [ord::db_has_rows] } {
     pdnsim_write_pg_spice_cmd
   } else {
