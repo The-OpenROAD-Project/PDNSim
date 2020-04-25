@@ -54,7 +54,7 @@ PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
   _vsrc_loc(""),
-  _power_net("VDD"),
+  _power_net(""),
   _out_file(""),
   _spice_out_file(""){
 };

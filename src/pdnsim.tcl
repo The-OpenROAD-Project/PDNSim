@@ -16,7 +16,8 @@ proc analyze_power_grid { args } {
   } else {
     ord::error "key vsrc not defined."
   }
-
+  set net "VDD"
+  pdnsim_set_power_net $net
   if { [info exists keys(-outfile)] } {
     set out_file $keys(-outfile)
      pdnsim_import_out_file_cmd $out_file
