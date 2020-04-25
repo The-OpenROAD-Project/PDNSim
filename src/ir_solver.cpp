@@ -203,7 +203,6 @@ bool IRSolver::AddC4Bump()
 void IRSolver::ReadC4Data()
 {
   int unit_micron = (m_db->getTech())->getDbUnitsPerMicron();
-  cout << "Voltage file" << m_vsrc_file << endl;
   cout << "INFO: Reading location of VDD and VSS sources " << endl;
   std::ifstream file(m_vsrc_file);    
   std::string line = "";
@@ -449,24 +448,8 @@ bool IRSolver::CreateGmat(bool connection_only)
             m_Gmat->SetNode(x_loc2, y_loc2, l, make_pair(0, 0));
             m_Gmat->SetNode(x, y, l, bBox);
           }
-          //if(x == 1202200 && l == 3){
-          //  cout<<"bot node"<<endl;
-          //  Node* node = m_Gmat->GetNode(x,y,l);
-          //  node->Print();
-          //  node = m_Gmat->GetNode(x,y_loc1,l);
-          //  node->Print();
-          //  node = m_Gmat->GetNode(x,y_loc2,l);
-          //  node->Print();
-          //}
           via_layer = via->getTopLayer();
           l         = via_layer->getRoutingLevel();
-          //if(x == 1202200 && l == 3){
-          //  cout<<"top node"<<endl;
-          //  Node* node = m_Gmat->GetNode(x,y,l);
-          //  node->Print();
-          //}
-          //exit(1);
-          //
 
           //TODO this may count the stripe conductance twice but is needed to
           //fix a staggered stacked via
@@ -513,13 +496,7 @@ bool IRSolver::CreateGmat(bool connection_only)
               x_loc2 = (x_loc2/m_node_density)*m_node_density; //quantize the horizontal direction
               for (x_i = x_loc1; x_i <= x_loc2; x_i = x_i + m_node_density) {
                 m_Gmat->SetNode(x_i, y_loc1, l, make_pair(0, 0));
-                //if(l == 1){
-                //    cout<<"Creating node at "<<x_i<<" "<<y_loc1<<" "<<l<<endl;
-                //}
               }
-              //if(l == 1){
-              //  cout<<"Horizontal ";
-              //}
             } else {
               y_loc1 = (y_loc1/m_node_density)*m_node_density; //quantize the vertical direction
               y_loc2 = (y_loc2/m_node_density)*m_node_density; //quantize the vertical direction
@@ -527,14 +504,7 @@ bool IRSolver::CreateGmat(bool connection_only)
               for (y_i = y_loc1; y_i <= y_loc2; y_i = y_i + m_node_density) {
                 m_Gmat->SetNode(x_loc1, y_i, l, make_pair(0, 0));
               }
-              //if(l == 1){
-              //  cout<<"Vertical ";
-              //}
             }
-          //if(l == 1){
-          //  cout<<"layer one stripe node 2 loc"<<endl;
-          //  cout<<"x1 "<<x_loc1<<" x2 "<<x_loc2<<" y1 "<<y_loc1<<" y2 "<<y_loc2<<endl;
-          //}
           } else {  // add end nodes
             m_Gmat->SetNode(x_loc1, y_loc1, l, make_pair(0, 0));
             m_Gmat->SetNode(x_loc2, y_loc2, l, make_pair(0, 0));
@@ -543,8 +513,6 @@ bool IRSolver::CreateGmat(bool connection_only)
       }
     }
   }
-  cout<<endl;
-  cout<<num_wires<<endl;
   progress_wires =0;
   progress_percent =1;
   // insert c4 bumps as nodes
@@ -700,11 +668,6 @@ bool IRSolver::CreateGmat(bool connection_only)
               x_loc1 = x - x_cut_size/2;
               x_loc2 = x + x_cut_size/2;
             }
-            //if( x == 1202200 && l==3){
-            //    cout<<"Stripe"<<endl;
-            //    cout<<"y locs: "<<y_loc1<<" "<<y_loc2<<endl;
-            //    cout<<"rhp: "<<rho<<endl;
-            //}
             m_Gmat->GenerateStripeConductance(via_layer->getRoutingLevel(),
                                               layer_dir,
                                               x_loc1,
