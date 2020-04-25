@@ -301,6 +301,7 @@ bool IRSolver::CreateJ()
       cout<<"WARNING: Instance current node at "<<node_loc.first<<" "<<node_loc.second<<" layer "<<l<<" moved from "<<x<<" "<<y<<endl;
       cout<<"Instance: " << it->first <<endl;
     }
+    //TODO modify for ground network
     node_J->AddCurrentSrc(it->second);
     node_J->AddInstance(inst);
   }

@@ -294,22 +294,33 @@ void GMat::GenerateStripeConductance(int                        t_l,
                                      double                     t_rho)
 {
   NodeMap& layer_map = m_layer_maps[t_l];
+  if(t_x_min>t_x_max || t_y_min >t_y_max)
+    cout<<"ERROR: creating stripe condunctance with invalid inputs. Min and max values for X or Y are interchanged."<<endl;
   if (layer_dir == odb::dbTechLayerDir::Value::HORIZONTAL) {
     NodeMap::iterator x_itr;
     NodeMap::iterator x_prev;
-    int               y_loc = (t_y_min + t_y_max) / 2;
+    //int               y_loc = (t_y_min + t_y_max) / 2;
     int               i     = 0;
     for (x_itr = layer_map.lower_bound(t_x_min);
-         x_itr->first <= t_x_max && x_itr != layer_map.end();
+         x_itr != layer_map.upper_bound(t_x_max);
          ++x_itr) {
-      if ((x_itr->second).find(y_loc) == (x_itr->second).end()) {
+      map<int, Node*>::iterator y_itr = (x_itr->second).lower_bound(t_y_min);
+      if(y_itr == (x_itr->second).end())
         continue;
-      }
+      else if (y_itr->first < t_y_min || y_itr->first > t_y_max )
+        continue;
+      //if ((x_itr->second).find(y_loc) == (x_itr->second).end()) {
+      //  continue;
+      //}
       if (i == 0) {
         i = 1;
       } else {
-        Node* node1 = (x_itr->second).at(y_loc);
-        Node*  node2  = (x_prev->second).at(y_loc);
+        y_itr = (x_itr->second).lower_bound(t_y_min);
+        Node* node1 = y_itr->second;
+        y_itr = (x_prev->second).lower_bound(t_y_min);
+        Node*  node2  = y_itr->second;
+        //Node* node1 = (x_itr->second).at(y_loc);
+        //Node*  node2  = (x_prev->second).at(y_loc);
         int    width  = t_y_max - t_y_min;
         int    length = x_itr->first - x_prev->first;
         double cond   = GetConductivity(width, length, t_rho);
@@ -318,8 +329,16 @@ void GMat::GenerateStripeConductance(int                        t_l,
       x_prev = x_itr;
     }
   } else {
-    int                       x_loc = (t_x_min + t_x_max) / 2;
-    map<int, Node*>           y_map = layer_map.at(x_loc);
+    //int                       x_loc = (t_x_min + t_x_max) / 2;
+    map<int, Node*>           y_map;
+    for (auto x_itr = layer_map.lower_bound(t_x_min);
+         x_itr != layer_map.upper_bound(t_x_max);
+         ++x_itr) {
+      map<int, Node*> y_itr_map = x_itr->second;
+      y_map.insert( y_itr_map.lower_bound(t_y_min), y_itr_map.upper_bound(t_y_max));
+    }
+    
+    //map<int, Node*>           y_map = layer_map.at(x_loc);
     map<int, Node*>::iterator y_itr;
     map<int, Node*>::iterator y_prev;
     int                       i = 0;
