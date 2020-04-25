@@ -326,60 +326,73 @@ bool IRSolver::CreateGmat(bool connection_only)
   dbSet<dbNet>        nets  = block->getNets();
   std::vector<dbNet*> vdd_nets;
   std::vector<dbNet*> gnd_nets;
-
+  std::vector<dbNet*> power_nets;
   int num_wires =0;
+  cout << "Extracting power stripes on net " << m_power_net <<endl;
   dbSet<dbNet>::iterator nIter;
   for (nIter = nets.begin(); nIter != nets.end(); ++nIter) {
     dbNet* curDnet = *nIter;
     dbSigType nType = curDnet->getSigType();
-    if (nType == dbSigType::GROUND) {
-      gnd_nets.push_back(curDnet);
-    } else if (nType == dbSigType::POWER) {
-      vdd_nets.push_back(curDnet);
-      dbSet<dbSWire>           swires  = curDnet->getSWires();
-      dbSet<dbSWire>::iterator sIter;
-      for (sIter = swires.begin(); sIter != swires.end(); ++sIter) {
-        dbSWire*                curSWire = *sIter;
-        dbSet<dbSBox>           wires    = curSWire->getWires();
-        dbSet<dbSBox>::iterator wIter;
-        for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
-          num_wires++;
-          dbSBox* curWire = *wIter;
-          int l;
-          dbTechLayerDir::Value layer_dir; 
-          if (curWire->isVia()) {
-            dbVia* via      = curWire->getBlockVia();
-            dbTechLayer* via_layer = via->getTopLayer();
-            l = via_layer->getRoutingLevel();
-            layer_dir = via_layer->getDirection();
-          } else {
-            dbTechLayer* wire_layer = curWire->getTechLayer();
-            l = wire_layer->getRoutingLevel();
-            layer_dir = wire_layer->getDirection();
-            if (l < m_bottom_layer) {
-              m_bottom_layer = l ; 
-              m_bottom_layer_dir = layer_dir;
-            }
-          }
-          if (l > m_top_layer) {
-            m_top_layer = l ; 
-            m_top_layer_dir = layer_dir;
-          }
-        }
+    if(m_power_net == "VSS") {
+      if (nType == dbSigType::GROUND) {
+        power_nets.push_back(curDnet);
+      } else {
+        continue;
+      }
+    } else if(m_power_net == "VDD") {
+      if (nType == dbSigType::POWER) {
+        power_nets.push_back(curDnet);
+      } else {
+        continue;
       }
     } else {
-      continue;
+      cout << "Error: Net not specifed as VDD or VSS" <<endl;
+      return false;
     }
   }
-  if(vdd_nets.size() == 0) {
-    cout<<"ERROR:No VDD stipes found"<<endl;
+  if(power_nets.size() == 0) {
+    cout<<"ERROR:No power stipes found in design"<<endl;
     return false;
   }
   std::vector<dbNet*>::iterator vIter;
+  for (vIter = power_nets.begin(); vIter != power_nets.end(); ++vIter) {
+    dbNet*                   curDnet = *vIter;
+    dbSet<dbSWire>           swires  = curDnet->getSWires();
+    dbSet<dbSWire>::iterator sIter;
+    for (sIter = swires.begin(); sIter != swires.end(); ++sIter) {
+      dbSWire*                curSWire = *sIter;
+      dbSet<dbSBox>           wires    = curSWire->getWires();
+      dbSet<dbSBox>::iterator wIter;
+      for (wIter = wires.begin(); wIter != wires.end(); ++wIter) {
+        num_wires++;
+        dbSBox* curWire = *wIter;
+        int l;
+        dbTechLayerDir::Value layer_dir; 
+        if (curWire->isVia()) {
+          dbVia* via      = curWire->getBlockVia();
+          dbTechLayer* via_layer = via->getTopLayer();
+          l = via_layer->getRoutingLevel();
+          layer_dir = via_layer->getDirection();
+        } else {
+          dbTechLayer* wire_layer = curWire->getTechLayer();
+          l = wire_layer->getRoutingLevel();
+          layer_dir = wire_layer->getDirection();
+          if (l < m_bottom_layer) {
+            m_bottom_layer = l ; 
+            m_bottom_layer_dir = layer_dir;
+          }
+        }
+        if (l > m_top_layer) {
+          m_top_layer = l ; 
+          m_top_layer_dir = layer_dir;
+        }
+      }
+    }
+  }
   cout<<"Creating Nodes:     ";
   int progress_wires=0;
   int progress_percent=1;
-  for (vIter = vdd_nets.begin(); vIter != vdd_nets.end(); ++vIter) {
+  for (vIter = power_nets.begin(); vIter != power_nets.end(); ++vIter) {
     dbNet*                   curDnet = *vIter;
     dbSet<dbSWire>           swires  = curDnet->getSWires();
     dbSet<dbSWire>::iterator sIter;
@@ -577,12 +590,12 @@ bool IRSolver::CreateGmat(bool connection_only)
   // All new nodes must be inserted by this point
   // initialize G Matrix
 
-  cout << "INFO: Number of nodes: " << m_Gmat->GetNumNodes() << endl;
+  cout << "INFO: Number of nodes on net " << m_power_net <<" =" << m_Gmat->GetNumNodes() << endl;
   cout << "Creating Connections:     ";
   m_Gmat->InitializeGmatDok(num_C4);
   int err_flag_via = 1;
   int err_flag_layer = 1;
-  for (vIter = vdd_nets.begin(); vIter != vdd_nets.end();
+  for (vIter = power_nets.begin(); vIter != power_nets.end();
        ++vIter) {  // only 1 is expected?
     dbNet*                   curDnet = *vIter;
     dbSet<dbSWire>           swires  = curDnet->getSWires();
@@ -845,7 +858,7 @@ bool IRSolver::CheckConnectivity()
       //} else if( uncon_err_flag ==0) {
         //cout<<"node_not_connected ================================="<<endl;
         unconnected_node =true;
-        cout<<"ERROR: Unconnected Node at location x:"<<loc_x<<"um, y:"
+        cout<<"ERROR: Unconnected PDN node on net " << m_power_net<<" at location x:"<<loc_x<<"um, y:"
             <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
       //}
       //if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
@@ -865,7 +878,8 @@ bool IRSolver::CheckConnectivity()
     }
   }
   if(unconnected_node == false){
-    cout<<"INFO: Connection from Vpad to all nodes established"<<endl;
+    cout<<"INFO: No dangling stripe found on net "<<m_power_net<< endl;
+    cout <<"INFO: Connection between all PDN nodes established on net "<<m_power_net <<endl;
   }
   return !unconnected_node;
 }

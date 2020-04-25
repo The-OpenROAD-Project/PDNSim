@@ -54,6 +54,7 @@ PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
   _vsrc_loc(""),
+  _power_net("VDD"),
   _out_file(""),
   _spice_out_file(""){
 };
@@ -62,6 +63,7 @@ PDNSim::~PDNSim() {
   _db = nullptr;
   _sta = nullptr; 
   _vsrc_loc = "";
+  _power_net = "";
   _out_file = "";
   _spice_out_file = "";
 }
@@ -72,6 +74,11 @@ void PDNSim::setDb(odb::dbDatabase* db){
 void PDNSim::setSta(sta::dbSta* sta){
   _sta = sta;
 }
+
+void PDNSim::set_power_net(std::string net){
+  _power_net= net;
+}
+
 
 void PDNSim::import_vsrc_cfg(std::string vsrc)
 {
@@ -92,8 +99,8 @@ void PDNSim::import_spice_out_file(std::string out_file)
 }
 
 void PDNSim::write_pg_spice() {
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
-
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _power_net, _out_file, _spice_out_file);
+ 
   if(!irsolve_h->Build()){
   	delete irsolve_h;
   } else {
@@ -109,7 +116,7 @@ void PDNSim::write_pg_spice() {
 
 int PDNSim::analyze_power_grid(){
   GMat*     gmat_obj;
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc,_power_net, _out_file, _spice_out_file);
   
   if(!irsolve_h->Build()){
   	delete irsolve_h;
@@ -140,7 +147,7 @@ int PDNSim::analyze_power_grid(){
 }
 
 int PDNSim::check_connectivity() {
-  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _out_file, _spice_out_file);
+  IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _power_net,_out_file, _spice_out_file);
   if(!irsolve_h->BuildConnection()){
   	delete irsolve_h;
   	return 0;

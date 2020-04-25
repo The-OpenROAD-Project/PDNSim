@@ -23,6 +23,15 @@ pdnsim_import_vsrc_cfg_cmd(const char* vsrc)
 }
 
 void 
+pdnsim_set_power_net_cmd(const char* net)
+{
+  PDNSim* pdnsim = getPDNSim();
+  pdnsim->set_power_net(net);
+}
+
+
+
+void 
 pdnsim_import_out_file_cmd(const char* out_file)
 {
   PDNSim* pdnsim = getPDNSim();

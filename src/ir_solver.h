@@ -56,12 +56,14 @@ class IRSolver
   IRSolver(odb::dbDatabase*         t_db,
            sta::dbSta*              t_sta,
            std::string              vsrc_loc,
+           std::string              power_net,
            std::string              out_file,
            std::string              spice_out_file)
   {
     m_db           = t_db;
     m_sta          = t_sta;
     m_vsrc_file    = vsrc_loc;
+    m_power_net    = power_net;
     m_out_file      = out_file;
     m_spice_out_file      = spice_out_file;
   }
@@ -105,6 +107,7 @@ class IRSolver
   sta::dbSta*              m_sta;
   //! Voltage source file
   std::string              m_vsrc_file;
+  std::string              m_power_net;
   //! Resistance configuration file
   std::string              m_out_file;
   std::string              m_spice_out_file;

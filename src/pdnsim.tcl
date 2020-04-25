@@ -29,11 +29,12 @@ proc analyze_power_grid { args } {
 }
 
 sta::define_cmd_args "check_power_grid" { 
-  [-vsrc vsrc_file ]}
+  [-vsrc vsrc_file ]
+  [-net power_net]}
 
 proc check_power_grid { args } {
   sta::parse_key_args "check_power_grid" args \
-    keys {-vsrc} flags {}
+    keys {-vsrc -net} flags {}
 
   if { [info exists keys(-vsrc)] } {
     set vsrc_file $keys(-vsrc)
@@ -46,6 +47,16 @@ proc check_power_grid { args } {
       ord::error "key vsrc not defined."
   }
 
+  if { [info exists keys(-net)] } {
+    set net $keys(-net)
+    if { [string equal $net "VDD"] || [string equal $net "VSS"] } {
+      pdnsim_set_power_net $net
+    } else {
+      ord::error "Please specify power or ground net as VDD or VSS."
+    }
+  } else {
+      ord::error "key net not defined."
+  }
   if { [ord::db_has_rows] } {
   	set res [pdnsim_check_connectivity_cmd]
   	return $res
