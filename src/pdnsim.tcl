@@ -34,7 +34,7 @@ sta::define_cmd_args "check_power_grid" {
 
 proc check_power_grid { args } {
   sta::parse_key_args "check_power_grid" args \
-    keys {-vsrc -net} flags {}
+    keys {-net} flags {}
 
   if { [info exists keys(-vsrc)] } {
     set vsrc_file $keys(-vsrc)
@@ -43,9 +43,7 @@ proc check_power_grid { args } {
     } else {
       ord::error "Cannot read $vsrc_file"
     }
-  } else {
-      ord::error "key vsrc not defined."
-  }
+  } 
 
   if { [info exists keys(-net)] } {
     set net $keys(-net)

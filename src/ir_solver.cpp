@@ -204,8 +204,9 @@ void IRSolver::ReadC4Data()
 {
   int unit_micron = (m_db->getTech())->getDbUnitsPerMicron();
   cout << "INFO: Reading location of VDD and VSS sources " << endl;
-  std::ifstream file(m_vsrc_file);    
-  std::string line = "";
+  if(m_vsrc_file != "") {
+  std::ifstream file(m_vsrc_file);
+    std::string line = "";
   // Iterate through each line and split the content using delimiter
   while (getline(file, line)) {
     tuple<int, int, int, double> c4_bump;
@@ -228,6 +229,11 @@ void IRSolver::ReadC4Data()
     m_C4Bumps.push_back(make_tuple(first, second, size, voltage));
   }
   file.close();
+  }
+  else {
+    cout << "Warning: Voltage pad location file not spcified, defaulting pad location to origin" << endl;
+    m_C4Bumps.push_back(make_tuple(0,0,0,0));
+  }
 }
 
 
@@ -513,6 +519,7 @@ bool IRSolver::CreateGmat(bool connection_only)
       }
     }
   }
+  cout<<endl;
   progress_wires =0;
   progress_percent =1;
   // insert c4 bumps as nodes
