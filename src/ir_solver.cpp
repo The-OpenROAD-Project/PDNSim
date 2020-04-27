@@ -352,12 +352,12 @@ bool IRSolver::CreateGmat(bool connection_only)
         continue;
       }
     } else {
-      cout << "Error: Net not specifed as VDD or VSS" <<endl;
+      cout << "Warning: Net not specifed as VDD or VSS. Power grid checker is not run." <<endl;
       return false;
     }
   }
   if(power_nets.size() == 0) {
-    cout<<"ERROR:No power stipes found in design"<<endl;
+    cout<<"Warning:No power stipes found in design. Power grid checker is not run."<<endl;
     return false;
   }
   std::vector<dbNet*>::iterator vIter;
@@ -829,7 +829,7 @@ bool IRSolver::CheckConnectivity()
       //} else if( uncon_err_flag ==0) {
         //cout<<"node_not_connected ================================="<<endl;
         unconnected_node =true;
-        cout<<"ERROR: Unconnected PDN node on net " << m_power_net<<" at location x:"<<loc_x<<"um, y:"
+        cout<<"Warning: Unconnected PDN node on net " << m_power_net<<" at location x:"<<loc_x<<"um, y:"
             <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
       //}
       //if(uncon_inst_cnt>25 && uncon_inst_flag ==0 ) {
@@ -841,7 +841,7 @@ bool IRSolver::CheckConnectivity()
           std::vector<dbInst*>::iterator inst_it;
           for(inst_it = insts.begin();inst_it!=insts.end();inst_it++) {
             uncon_inst_cnt++;
-            cout<<"ERROR: Instance: "<< (*inst_it)->getName() <<"at location x:"<<loc_x<<"um, y:"
+            cout<<"Warning: Instance: "<< (*inst_it)->getName() <<"at location x:"<<loc_x<<"um, y:"
               <<loc_y<<"um ,layer: "<<(*node_list_it)->GetLayerNum()<<endl;
           }
         }
