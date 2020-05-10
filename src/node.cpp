@@ -32,8 +32,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <vector>
-#include <iostream>
+#include <sstream>
 #include "node.h"
+#include "pdnsim/pdnsim.h"
+using namespace pdnsim;
 
 using namespace std;
 
@@ -111,41 +113,15 @@ void Node::SetGLoc(NodeIdx t_loc)
 //! Function to print node details
 void Node::Print()
 {
-  cout << "Node: " << m_node_loc << endl;
-  cout << "    Location: Layer " << m_layer << ", x " << m_loc.first << ", y "
-       << m_loc.second << endl;
-  cout << "    Bounding box: x " << m_bBox.first << ", y " << m_bBox.second
-       << endl;
-  cout << "    Current: " << m_current_src << endl;
-  cout << "    Voltage: " << m_voltage << endl;
-  cout << "    Has connection: " << m_connected <<endl;
-  cout << "    Has instances:  " << m_has_instances <<endl;
-}
-
-//! Function to set the bounding box of the stripe
-void Node::SetBbox(int t_dX, int t_dY)
-{
-  m_bBox = make_pair(t_dX, t_dY);
-}
-
-//! Function to get the bounding box of the stripe
-BBox Node::GetBbox()
-{
-  return m_bBox;
-}
-
-//! Function to update the stripe
-/*
- * \param t_dX Change in the x value
- * \param t_dY Change in the y value
- * \return nothing
- */
-void Node::UpdateMaxBbox(int t_dX, int t_dY)
-{
-  BBox nodeBbox = m_bBox;
-  int  DX       = max(nodeBbox.first, t_dX);
-  int  DY       = max(nodeBbox.second, t_dY);
-  SetBbox(DX, DY);
+  stringstream s;
+  s << "Node: " << m_node_loc << endl
+  << "    Location: Layer " << m_layer << ", x " << m_loc.first << ", y "<<endl
+  << m_loc.second << endl
+  << "    Current: " << m_current_src << endl
+  << "    Voltage: " << m_voltage << endl
+  << "    Has connection: " << m_connected <<endl
+  << "    Has instances:  " << m_has_instances <<endl;
+  PdnsimLogger(INFO, -1, s.str());
 }
 
 //! Function to set the current value at a particular node

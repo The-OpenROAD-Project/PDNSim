@@ -31,13 +31,15 @@ proc analyze_power_grid { args } {
 
 sta::define_cmd_args "check_power_grid" { 
   [-vsrc vsrc_file ]
-  [-net power_net]}
+  [-vdd]
+  [-vss]}
 
 proc check_power_grid { args } {
   sta::parse_key_args "check_power_grid" args \
-    keys {-net} flags {}
+    keys {} flags {-vdd -vss}
 
   if { [info exists keys(-vsrc)] } {
+    set net "VDD"
     set vsrc_file $keys(-vsrc)
     if { [file readable $vsrc_file] } {
       pdnsim_import_vsrc_cfg_cmd $vsrc_file
@@ -46,21 +48,21 @@ proc check_power_grid { args } {
     }
   } 
 
-  if { [info exists keys(-net)] } {
-    set net $keys(-net)
-    if { [string equal $net "VDD"] || [string equal $net "VSS"] } {
-      pdnsim_set_power_net $net
-    } else {
-      ord::error "Please specify power or ground net as VDD or VSS."
-    }
+  set net ""
+  if { [info exists flags(-vdd)] } {
+    set net "VDD"
+    pdnsim_set_power_net $net
+  } elseif {[info exists flags(-vss)]} {
+    set net "VSS"
+    pdnsim_set_power_net $net
   } else {
-      ord::error "key net not defined."
+    ord::error "Please specify either power (-vdd) or ground (-vss) option."
   }
   if { [ord::db_has_rows] } {
   	set res [pdnsim_check_connectivity_cmd]
   	return $res
   } else {
-  	ord::error "no rows defined in design. Use initialize_floorplan to add rows" 
+  	ord::error "No rows defined in design. Use initialize_floorplan to add rows" 
   }
 }
 

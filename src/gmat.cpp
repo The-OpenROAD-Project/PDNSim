@@ -33,10 +33,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include "gmat.h"
 #include "node.h"
+#include "pdnsim/pdnsim.h"
 
 using namespace std;
+using namespace pdnsim;
 
 //! Function to return a pointer to the node with a index
 /*!
@@ -70,11 +73,13 @@ Node* GMat::GetNode(int t_x, int t_y, int t_l, bool t_nearest /*=false*/)
       if (y_itr != x_itr->second.end()) {
         return y_itr->second;
       } else {
-        cout << "ERROR: Node location lookup error for y"<<endl;
+        string s = "Node location lookup error for y";
+        PdnsimLogger(ERROR, 25, s);
         return nullptr;
       }
     } else {
-      cout << "ERROR: Node location lookup error for x"<<endl;
+      string s = "Node location lookup error for x";
+      PdnsimLogger(ERROR, 25, s);
       return nullptr;
     }
   } else {
@@ -152,16 +157,14 @@ void GMat::InsertNode(Node* t_node)
      \param t_x Node index
      \param t_y Node pointer
      \param t_l layer number
-     \param t_bBox layer number
      \return Pointer to the created node
 */
-Node* GMat::SetNode(int t_x, int t_y, int t_layer, BBox t_bBox)
+Node* GMat::SetNode(int t_x, int t_y, int t_layer)
 {
   NodeMap& layer_map = m_layer_maps[t_layer];
   if (layer_map.empty()) {
     Node* node = new Node();
     node->SetLoc(t_x, t_y, t_layer);
-    node->UpdateMaxBbox(t_bBox.first, t_bBox.second);
     InsertNode(node);
     return (node);
   }
@@ -170,12 +173,10 @@ Node* GMat::SetNode(int t_x, int t_y, int t_layer, BBox t_bBox)
     map<int, Node*>::iterator y_itr = x_itr->second.find(t_y);
     if (y_itr != x_itr->second.end()) {
       Node* node = y_itr->second;
-      node->UpdateMaxBbox(t_bBox.first, t_bBox.second);
       return (node);
     } else {
       Node* node = new Node();
       node->SetLoc(t_x, t_y, t_layer);
-      node->UpdateMaxBbox(t_bBox.first, t_bBox.second);
       InsertNode(node);
       return (node);
     }
@@ -183,7 +184,6 @@ Node* GMat::SetNode(int t_x, int t_y, int t_layer, BBox t_bBox)
   } else {
     Node* node = new Node();
     node->SetLoc(t_x, t_y, t_layer);
-    node->UpdateMaxBbox(t_bBox.first, t_bBox.second);
     InsertNode(node);
     return (node);
   }
@@ -194,7 +194,9 @@ Node* GMat::SetNode(int t_x, int t_y, int t_layer, BBox t_bBox)
 //! Function to print the G matrix
 void GMat::Print()
 {
-  std::cout << "GMat obj, with " << m_n_nodes << " nodes\n";
+  std::stringstream s;
+  s << "GMat obj, with " << m_n_nodes << " nodes";
+  PdnsimLogger(INFO, 21, s.str()); 
   for (NodeIdx i = 0; i < m_n_nodes; i++) {
     Node* node_ptr = m_G_mat_nodes[i];
     if (node_ptr != nullptr) {
@@ -235,7 +237,8 @@ void GMat::SetConductance(Node* t_node1, Node* t_node2, double t_cond)
 void GMat::InitializeGmatDok(int t_numC4)
 {
   if (m_n_nodes <= 0) {
-    cout << "ERROR: no nodes in object initialization stopped.\n";
+    string s= "No nodes in object initialization stopped.";
+    PdnsimLogger(CRIT, 22, s);
     exit(1);
   } else {
     m_G_mat_dok.num_cols = m_n_nodes + t_numC4;
@@ -294,8 +297,10 @@ void GMat::GenerateStripeConductance(int                        t_l,
                                      double                     t_rho)
 {
   NodeMap& layer_map = m_layer_maps[t_l];
-  if(t_x_min>t_x_max || t_y_min >t_y_max)
-    cout<<"ERROR: creating stripe condunctance with invalid inputs. Min and max values for X or Y are interchanged."<<endl;
+  if(t_x_min>t_x_max || t_y_min >t_y_max){
+    string s = "Creating stripe condunctance with invalid inputs. Min and max values for X or Y are interchanged.";
+    PdnsimLogger(ERROR, 23, s);
+  }
   if (layer_dir == odb::dbTechLayerDir::Value::HORIZONTAL) {
     NodeMap::iterator x_itr;
     NodeMap::iterator x_prev;
@@ -508,8 +513,8 @@ bool GMat::GenerateACSCMatrix()
 double GMat::GetConductance(NodeIdx t_row, NodeIdx t_col)
 {
   if (m_G_mat_dok.num_cols <= t_col || m_G_mat_dok.num_rows <= t_row) {
-    cout << "ERROR: Index out of bound for getting G matrix conductance. "
-            "Ensure object is initialized to the correct size first.\n";
+    string s = "Index out of bound for getting G matrix conductance. Ensure object is initialized to the correct size first.";
+    PdnsimLogger(CRIT, 24, s);
     exit(1);
   }
   GMatLoc                        key = make_pair(t_col, t_row);
@@ -535,8 +540,8 @@ double GMat::GetConductance(NodeIdx t_row, NodeIdx t_col)
 void GMat::UpdateConductance(NodeIdx t_row, NodeIdx t_col, double t_cond)
 {
   if (m_G_mat_dok.num_cols <= t_col || m_G_mat_dok.num_rows <= t_row) {
-    cout << "ERROR: Index out of bound for setting G matrix conductance. "
-            "Ensure object is initialized to the correct size first.\n";
+    string s = "Index out of bound for setting G matrix conductance. Ensure object is initialized to the correct size first.";
+    PdnsimLogger(CRIT, 24, s);
     exit(1);
   }
   GMatLoc key             = make_pair(t_col, t_row);

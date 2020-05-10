@@ -40,8 +40,7 @@ using odb::dbInst;
 
 
 typedef std::pair<int, int>         NodeLoc;
-typedef std::pair<int, int>         BBox;
-typedef int                         NodeIdx;  // TODO temp as it interfaces with SUPERLU
+typedef int                         NodeIdx;  // TODO temp as it interfaces with SPARSELU
 typedef std::pair<NodeIdx, NodeIdx> GMatLoc;
 
 //! Data structure for the Dictionary of Keys Matrix
@@ -67,7 +66,7 @@ typedef struct
 class Node
 {
  public:
-  Node() : m_loc(std::make_pair(0.0, 0.0)), m_bBox(std::make_pair(0.0, 0.0)) {}
+  Node() : m_loc(std::make_pair(0.0, 0.0)) {}
   ~Node() {}
   //! Get the layer number of the node
   int     GetLayerNum();
@@ -85,12 +84,6 @@ class Node
   void    SetGLoc(NodeIdx loc);
   //! Function to print node details
   void    Print();
-  //! Function to set the bounding box of the stripe
-  void    SetBbox(int dX, int dY);
-  //! Function to get the bounding box of the stripe
-  BBox    GetBbox();
-  //! Function to update the stripe
-  void    UpdateMaxBbox(int dX, int dY);
   //! Function to set the current value at a particular node
   void    SetCurrent(double t_current);
   //! Function to get the value of current at a node
@@ -116,7 +109,6 @@ class Node
   int     m_layer;
   NodeLoc m_loc;  // layer,x,y
   NodeIdx m_node_loc{0};
-  BBox    m_bBox;
   double  m_current_src{0.0};
   double  m_voltage{0.0};
   bool    m_connected{false};

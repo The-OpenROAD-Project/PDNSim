@@ -1,3 +1,0 @@
-[submodule "modules/superlu"]
-	path = modules/superlu
-	url = https://github.com/The-OpenROAD-Project/superlu.git

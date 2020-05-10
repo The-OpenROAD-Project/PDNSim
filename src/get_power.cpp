@@ -40,9 +40,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "sta/Power.hh"
 #include "db_sta/dbNetwork.hh"
 #include "db_sta/dbSta.hh"
+#include "pdnsim/pdnsim.h"
 
 using namespace sta;
 using namespace std;
+using namespace pdnsim;
 
 
 //! Function for power per instance calculation
@@ -55,9 +57,10 @@ using namespace std;
 std::vector<pair<string, double>> PowerInst::executePowerPerInst(
     sta::dbSta* sta)
 {
-  cout << "\n" << endl;
-  cout << "INFO: Executing STA for Power" << endl;
-  cout << "INFO: Execute STA" << endl;
+  //cout << "\n" << endl;
+  string s = "Extracting power information from design" ;
+  PdnsimLogger(INFO, 61, s);
+  //cout << "INFO: Execute STA" << endl;
   // STA object create
   _sta = sta;
 

@@ -75,7 +75,7 @@ class GMat
   //! Function to set attributes of the node with index and node pointer
   void       SetNode(NodeIdx t_node_loc, Node* t_node);
   //! Function to create a node
-  Node*      SetNode(int t_x, int t_y, int t_layer, BBox t_bBox);
+  Node*      SetNode(int t_x, int t_y, int t_layer);
   //! Function to insert a node into the matrix
   void       InsertNode(Node* t_node);
   //! Function that prints the G matrix for debug purposes
@@ -124,7 +124,7 @@ class GMat
   int                  m_num_layers;
   //! Dictionary of keys for G matrix
   DokMatrix            m_G_mat_dok;
-  //! Compressed sparse column matrix for superLU
+  //! Compressed sparse column matrix for sparseLU
   CscMatrix            m_G_mat_csc;
   //! Dictionary of keys for A matrix
   DokMatrix            m_A_mat_dok;

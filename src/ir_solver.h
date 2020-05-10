@@ -34,6 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IRSOLVER_IRSOLVER_
 
 #include "gmat.h"
+#include "node.h"
 #include "opendb/db.h"
 
 namespace sta {
@@ -42,7 +43,7 @@ class dbSta;
 
 //! Class for IR solver
 /* 
- * Builds the equations GV=J and uses SuperLU 
+ * Builds the equations GV=J and uses sparseLU 
  * to solve the matrix equations
  */
 class IRSolver
@@ -95,11 +96,23 @@ class IRSolver
   bool                                        GetResult();
 
   int                                         PrintSpice();
-
+  bool                                        GetPowerNets();
+  void                                        GetPowerNetWires();
+  void FindTopBottomPDNLayer();
+  void CreateNodes();
+  void CreateViaNodes(odb::dbSBox* curWire);
+  bool CreateViaEnclosureConnections(odb::dbTechLayer* via_layer, int x, int y, std::map<std::string, int> via_params_map, int via_layer_num);
+  void CreateViaEnclosureNode(odb::dbTechLayer* layer, int x, int y, std::map<std::string, int> via_params_map, int via_layer);
+  void CreateStripeNodes(odb::dbSBox* curWire);
+  void CreateRDLNodes();
+  bool CreateConnections();
+  bool CreateViaConnections(odb::dbSBox* curWire);
+  bool CreateStripeConnections(odb::dbSBox* curWire);
+  Node* GetViaNode(odb::dbTechLayer* via_layer, int x, int y);
   bool                                        Build();
 
   bool                                        BuildConnection();
- 
+  double GetLayerRho(odb::dbTechLayer* via_layer); 
  private:
   //! Pointer to the Db
   odb::dbDatabase*         m_db;
@@ -127,6 +140,8 @@ class IRSolver
   odb::dbTechLayerDir::Value m_top_layer_dir;
 
   odb::dbTechLayerDir::Value m_bottom_layer_dir;
+  std::vector<odb::dbNet*>                            m_power_nets;
+  std::vector<odb::dbSBox*>                           m_power_wires;
   //! Current vector 1D
   std::vector<double>                            m_J;
   //! C4 bump locations and values
@@ -143,6 +158,7 @@ class IRSolver
   //! Function to create a J vector from the current map
   bool                                           CreateJ();
   //! Function to create a G matrix using the nodes
-  bool                                           CreateGmat(bool connection_only=false);
+  bool                                           CreateGmat();
+  bool                                           m_connection_only;
 };
 #endif

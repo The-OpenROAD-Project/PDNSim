@@ -13,6 +13,10 @@ namespace sta {
 
 namespace pdnsim {
 
+enum pdnsim_status {INFO=3, WARN=2, ERROR=1, CRIT=0};
+
+void PdnsimLogger(pdnsim_status status, int message_id, std::string message);
+
 class PDNSim
 {
   public:

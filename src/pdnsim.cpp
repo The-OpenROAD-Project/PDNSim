@@ -50,6 +50,24 @@ namespace pdnsim {
 
 using namespace std;
 
+void PdnsimLogger(pdnsim_status status, int message_id, string message) {
+  switch(status){
+    case INFO: cout<<"[INFO]";
+          break;
+    case WARN: cout<<"[WARN]";
+          break;
+    case ERROR: cout<<"[ERROR]";
+          break;
+    case CRIT: cout<<"[CRIT]";
+          break;
+    default: cout<<"[ERROR] "<<status;
+  }
+  if(message_id > 0) {
+    cout<<"[PSIM-"<< setfill('0') << setw(4) << message_id <<"]";
+  }
+  cout<<message<<endl;
+}
+
 PDNSim::PDNSim()
   : _db(nullptr),
   _sta(nullptr),
@@ -83,33 +101,40 @@ void PDNSim::set_power_net(std::string net){
 void PDNSim::import_vsrc_cfg(std::string vsrc)
 {
   _vsrc_loc = vsrc;
-  cout << "INFO: Reading Voltage source file " << _vsrc_loc << endl;
+  string s = "Reading Voltage source file " + _vsrc_loc;
+  PdnsimLogger(INFO,-1,s);
 }
 
 void PDNSim::import_out_file(std::string out_file)
 {
   _out_file = out_file;
-  cout << "INFO: Output voltage file specified " << _out_file << endl;
+  string s = "Output voltage file specified " + _out_file;
+  PdnsimLogger(INFO,-1,s);
 }
 
 void PDNSim::import_spice_out_file(std::string out_file)
 {
   _spice_out_file = out_file;
-  cout << "INFO: Output spice file specified " << _spice_out_file << endl;
+  string s = "Output spice file specified " + _spice_out_file;
+  PdnsimLogger(INFO,-1,s);
 }
 
 void PDNSim::write_pg_spice() {
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _power_net, _out_file, _spice_out_file);
  
   if(!irsolve_h->Build()){
+    string s = "IR solver build unsuccessful";
+    PdnsimLogger(ERROR,1,s);
   	delete irsolve_h;
   } else {
     int check_spice = irsolve_h->PrintSpice();
     if(check_spice){
-    	cout << "Spice file written: "<<_spice_out_file <<endl;
+    	string s = "Spice file written: " + _spice_out_file;
+      PdnsimLogger(INFO,-1,s);
     }
     else {
-      cout << "Spice file not written"<< endl;
+      string s = "Spice file not written";
+      PdnsimLogger(ERROR,2,s);
     }
   }
 }
@@ -119,6 +144,8 @@ int PDNSim::analyze_power_grid(){
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc,_power_net, _out_file, _spice_out_file);
   
   if(!irsolve_h->Build()){
+    string s = "IR solver build unsuccessful";
+    PdnsimLogger(ERROR,1,s);
   	delete irsolve_h;
   	return 0;
   }
@@ -134,14 +161,16 @@ int PDNSim::analyze_power_grid(){
       continue;
     NodeLoc loc = node->GetLoc();
   }
-  cout << "\n" << endl;
-  cout << "######################################" << endl;
-  cout << "Worstcase Voltage: " << std::setprecision(5) << irsolve_h->wc_voltage << endl;
-  cout << "Average IR drop  : " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->avg_voltage
-       << endl;
-  cout << "Worstcase IR drop: " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->wc_voltage
-       << endl;
-  cout << "######################################" << endl;
+  //cout << "\n" << endl;
+  //cout << "######################################" << endl;
+  ostringstream s1,s2,s3;
+  s1 << "Worstcase Voltage: " << std::setprecision(5) << irsolve_h->wc_voltage;
+  PdnsimLogger(INFO,11,s1.str());
+  s2 << "Average IR drop  : " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->avg_voltage;
+  PdnsimLogger(INFO,11,s2.str());
+  s3 << "Worstcase IR drop: " << std::setprecision(5) << irsolve_h->vdd - irsolve_h->wc_voltage;
+  PdnsimLogger(INFO,11,s3.str());
+  //cout << "######################################" << endl;
   delete irsolve_h;
   return 1;
 }
@@ -149,6 +178,8 @@ int PDNSim::analyze_power_grid(){
 int PDNSim::check_connectivity() {
   IRSolver* irsolve_h = new IRSolver( _db, _sta, _vsrc_loc, _power_net,_out_file, _spice_out_file);
   if(!irsolve_h->BuildConnection()){
+    string s = "IR solver build unsuccessful";
+    PdnsimLogger(ERROR,1,s);
   	delete irsolve_h;
   	return 0;
   }
