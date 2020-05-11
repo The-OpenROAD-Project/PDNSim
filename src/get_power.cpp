@@ -42,9 +42,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "db_sta/dbSta.hh"
 #include "pdnsim/pdnsim.h"
 
+namespace pdnsim{
 using namespace sta;
 using namespace std;
-using namespace pdnsim;
 
 
 //! Function for power per instance calculation
@@ -65,7 +65,7 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
   _sta = sta;
 
   // environment settings
-  string cornerName = "wst";
+  //string cornerName = "wst";
   // string cornerNameFF="bst";
 
 //  StringSet cornerNameSet;
@@ -80,15 +80,15 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
   std::vector<pair<string, double>> power_report;
 
   sta::dbNetwork* network = _sta->getDbNetwork();
-  sta::Power*   power   = _sta->power();
+  //sta::Power*   power   = _sta->power();
   //cout << "Created power object" << endl;
-  PowerResult   total, sequential, combinational, macro, pad;
-  power->power(corner,
-               total,
-               sequential,
-               combinational,
-               macro,
-               pad);  // TODO called for preamble
+  //PowerResult   total, sequential, combinational, macro, pad;
+  //_sta->power(corner,
+  //             total,
+  //             sequential,
+  //             combinational,
+  //             macro,
+  //             pad);  // TODO called for preamble
   //cout << "Power:" << power<<endl;
   LeafInstanceIterator* inst_iter = network->leafInstanceIterator();
   PowerResult           total_calc;
@@ -99,7 +99,7 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
     LibertyCell* cell = network->libertyCell(inst);
     if (cell) {
       PowerResult inst_power;
-      power->power(inst, corner, inst_power);
+      _sta->power(inst, corner, inst_power);
       total_calc.incr(inst_power);
       power_report.push_back(
           make_pair(string(network->name(inst)), inst_power.total()));
@@ -118,3 +118,5 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
 //{
  // _sta->updateTiming(true);
 //}
+
+}

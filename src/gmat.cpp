@@ -38,8 +38,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "node.h"
 #include "pdnsim/pdnsim.h"
 
-using namespace std;
-using namespace pdnsim;
+namespace pdnsim {
+//using namespace std;
+//using namespace pdnsim;
 
 //! Function to return a pointer to the node with a index
 /*!
@@ -616,4 +617,5 @@ double GMat::GetConductivity(double width, double length, double rho)
 std::vector<Node*> GMat::GetAllNodes()
 {
   return m_G_mat_nodes;
+}
 }

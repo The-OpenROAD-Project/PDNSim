@@ -46,6 +46,9 @@ class dbSta;
  * Builds the equations GV=J and uses sparseLU 
  * to solve the matrix equations
  */
+namespace pdnsim {
+
+
 class IRSolver
 {
  public:
@@ -127,7 +130,7 @@ class IRSolver
   //! G matrix for voltage 
   GMat*                    m_Gmat;
   //! Node density in the lower most layer to append the current sources
-  int m_node_density{5400};  // TODO get from somewhere
+  int m_node_density{10000};  // TODO get from somewhere
   //! Routing Level of the top layer
   int m_top_layer{0};
   
@@ -161,4 +164,6 @@ class IRSolver
   bool                                           CreateGmat();
   bool                                           m_connection_only;
 };
+
+}
 #endif

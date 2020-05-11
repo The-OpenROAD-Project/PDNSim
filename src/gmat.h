@@ -36,6 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "node.h"
 #include "opendb/db.h"
 
+namespace pdnsim {
 
 //! Global variable which holds the G matrix. 
 /*!
@@ -143,5 +144,5 @@ class GMat
   //! Function to find conductivity of a stripe based on width,length, and pitch
   double GetConductivity(double width, double length, double rho);
 };
-
+}
 #endif

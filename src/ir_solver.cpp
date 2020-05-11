@@ -55,6 +55,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "openroad/Error.hh"
 #include "pdnsim/pdnsim.h"
 
+
+//using namespace pdnsim;
+
+namespace pdnsim {
+
+using namespace std;
 using ord::error;
 using ord::warn;
 using odb::dbBlock;
@@ -73,15 +79,13 @@ using odb::dbTechLayerDir;
 using odb::dbVia;
 using odb::dbViaParams;
 
-using namespace std;
+//using namespace std;
 using std::vector;
 using Eigen::Map;
 using Eigen::VectorXd;
 using Eigen::SparseMatrix; 
 using Eigen::SparseLU;
 using Eigen::Success;
-
-using namespace pdnsim;
 
 std::map<string, int> GetViaParams(dbVia* via);
 
@@ -1005,4 +1009,5 @@ bool IRSolver::BuildConnection() {
   }
   m_result = res;
   return m_result;
+}
 }

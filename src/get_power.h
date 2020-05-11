@@ -45,6 +45,7 @@ class dbSta;
   Uses OpenSTA to report total power per instance and 
   use it for IR drop estimation.
 */
+namespace pdnsim{
 class PowerInst
 {
  private:
@@ -56,5 +57,6 @@ class PowerInst
     std::vector<std::pair<std::string, double>> executePowerPerInst(
       sta::dbSta* sta);
 };
+}
  // epower namespace end
 #endif

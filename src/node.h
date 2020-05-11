@@ -36,6 +36,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <map>
 #include "opendb/db.h"
+
+
+namespace pdnsim{
+
+using namespace std;
+
 using odb::dbInst;
 
 
@@ -115,4 +121,5 @@ class Node
   bool    m_has_instances{false};
   std::vector<dbInst*> m_connected_instances;
 };
+}
 #endif

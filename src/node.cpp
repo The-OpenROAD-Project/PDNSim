@@ -35,7 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include "node.h"
 #include "pdnsim/pdnsim.h"
-using namespace pdnsim;
+
+namespace pdnsim{
 
 using namespace std;
 
@@ -191,4 +192,5 @@ void Node::AddInstance(dbInst* inst)
 {
   m_has_instances =true;
   m_connected_instances.push_back(inst);
+}
 }

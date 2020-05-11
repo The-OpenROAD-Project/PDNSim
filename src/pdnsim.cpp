@@ -44,7 +44,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "node.h"
 //#include "parameters.h"
 
-using namespace std;
 
 namespace pdnsim {
 
