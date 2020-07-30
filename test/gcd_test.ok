@@ -91,9 +91,9 @@ INFO: SparseLU finished solving
 
 ######################################
 Worstcase Voltage: 1.1
-Average IR drop  : 6.038e-06
-Worstcase IR drop: 8.0192e-06
+Average IR drop  : 2.382e-05
+Worstcase IR drop: 3.1377e-05
 ######################################
 Differences found at line 2.
-PHY_110, 10.8, 89.6, 1.099994452
+PHY_110, 10.8, 89.6, 1.099978583
 PHY_110, 10.8, 89.6, 1.099993144
