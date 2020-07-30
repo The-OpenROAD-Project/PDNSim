@@ -77,15 +77,6 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
   std::vector<pair<string, double>> power_report;
 
   sta::dbNetwork* network = _sta->getDbNetwork();
-  //cout << "Created power object" << endl;
-  PowerResult   total, sequential, combinational, macro, pad;
-  _sta->power(corner,
-	      total,
-	      sequential,
-	      combinational,
-	      macro,
-	      pad);  // TODO called for preamble
-  //cout << "Power:" << power<<endl;
   LeafInstanceIterator* inst_iter = network->leafInstanceIterator();
   PowerResult           total_calc;
   total_calc.clear();
