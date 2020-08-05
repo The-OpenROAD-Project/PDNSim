@@ -34,10 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "get_power.h"
 #include <iostream>
-#include <tcl.h>
-//#include "util.h"
 
-#include "sta/Power.hh"
 #include "db_sta/dbNetwork.hh"
 #include "db_sta/dbSta.hh"
 
@@ -46,12 +43,6 @@ using namespace std;
 
 
 //! Function for power per instance calculation
-
-/*!
-     \param libName Timing libraries for OpenSTA
-     \return A vector of pairs which has instance name and its corresponding total power
-   */
-
 std::vector<pair<string, double>> PowerInst::executePowerPerInst(
     sta::dbSta* sta)
 {
@@ -93,15 +84,9 @@ std::vector<pair<string, double>> PowerInst::executePowerPerInst(
        //cout << string(network->name(inst)) << inst_power.total() << endl;
     }
   }
-  //cout <<"justoutside loop before delte:" << total.total() << endl;
   delete inst_iter;
 
   //cout <<"Total power:" << total.total() << endl;
   //cout <<"Total power calculated:" << total_calc.total() << endl;
   return power_report;
 }
-
-//void PowerInst::UpdateTimingSta()
-//{
- // _sta->updateTiming(true);
-//}
